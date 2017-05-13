@@ -1,0 +1,9 @@
+*.db
+binary/x64/
+binary/x86/
+documentation/html/
+documentation/latex/
+intermediate/
+library/
+ipch/
+externals/Log Files/GraphicsLog.html

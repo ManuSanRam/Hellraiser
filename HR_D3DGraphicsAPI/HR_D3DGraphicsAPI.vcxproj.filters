@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Texture">
+      <UniqueIdentifier>{a72bf285-ced1-4261-9933-1786d28dd2ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Graphics">
+      <UniqueIdentifier>{2ca46757-1bea-40fa-8347-aee8eb4f4923}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Prerequisites">
+      <UniqueIdentifier>{6d1b208d-8b10-4397-8869-cab84be994ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Buffer">
+      <UniqueIdentifier>{7542637c-3416-42c9-9e9d-840c0e11519b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Viewport">
+      <UniqueIdentifier>{c090c70c-58f9-42b2-a403-ae53ddd7c387}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Viewport">
+      <UniqueIdentifier>{92dc53d3-0ddd-46e9-95c6-84c0a7f21763}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics">
+      <UniqueIdentifier>{ab90eb50-4250-4cd6-ad33-2511b3b42f65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Texture">
+      <UniqueIdentifier>{fad85df7-6a09-41ec-9447-45fcafe1f95d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Buffer">
+      <UniqueIdentifier>{c9adf243-e811-4b01-bd82-924466fae745}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Input Layout">
+      <UniqueIdentifier>{06348f46-2a44-4429-a644-25317bdeafb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Input Layout">
+      <UniqueIdentifier>{88c4a746-0dd0-4eba-a354-5cf83f211fcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Shader">
+      <UniqueIdentifier>{528e1238-1921-47cd-af92-e4102c0024a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shader">
+      <UniqueIdentifier>{8a618295-1d47-492e-8cfd-1d21217dbf28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Camera">
+      <UniqueIdentifier>{299739ee-5ee9-459e-9003-6e3f75e82790}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Camera">
+      <UniqueIdentifier>{76a74e5e-1448-47b9-9761-177b9f057c84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Vertex">
+      <UniqueIdentifier>{c81ff550-747b-4dae-8740-cf977b99ffd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Depth Stencil">
+      <UniqueIdentifier>{8fa0da7e-452b-4c8c-8f0e-c04e69917778}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Depth Stencil">
+      <UniqueIdentifier>{33915f4e-e472-47ac-8910-f48b0efba7e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Debugger">
+      <UniqueIdentifier>{d95f9cf7-973c-4399-a9e7-d5958a818f48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Debugger">
+      <UniqueIdentifier>{5fcd2aeb-1d1d-405a-a113-468b116eb8e0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\HRGraphics_Graphics.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HRGraphics_Prerequisites.h">
+      <Filter>Header Files\Prerequisites</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HRGraphics_Viewport.h">
+      <Filter>Header Files\Viewport</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HRGraphics_Buffer.h">
+      <Filter>Header Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HRGraphics_Texture.h">
+      <Filter>Header Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HRGraphics_Shader.h">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HRGraphics_InputLayout.h">
+      <Filter>Header Files\Input Layout</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HRGraphics_Depth.h">
+      <Filter>Header Files\Depth Stencil</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HRGraphics_GCamera.h">
+      <Filter>Header Files\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HRGraphics_Constant.h">
+      <Filter>Header Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HRGraphics_Vertex.h">
+      <Filter>Header Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HRGraphics_Defines.h">
+      <Filter>Header Files\Prerequisites</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HRGraphics_D3DTypes.h">
+      <Filter>Header Files\Prerequisites</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HRGraphics_DXGITypes.h">
+      <Filter>Header Files\Prerequisites</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\HRGraphics_Viewport.cpp">
+      <Filter>Source Files\Viewport</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HRGraphics_Buffer.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HRGraphics_Texture.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HRGraphics_Shader.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="include\HRGraphics_Graphics.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HRGraphics_InputLayout.cpp">
+      <Filter>Source Files\Input Layout</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HRGraphics_Depth.cpp">
+      <Filter>Source Files\Depth Stencil</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
