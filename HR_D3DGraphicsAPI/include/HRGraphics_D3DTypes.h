@@ -1,19 +1,27 @@
 #pragma once
 
+/*!
+*/
 #include <d3dx11.h>
 #include <d3dcompiler.h>
 #include <D3DX11async.h>
 
+/*!
+*/
 namespace HR_SDK
 {
+	/*!
+	*/
 	namespace D3D_Formats
 	{
+		/*!
+		*/
 		enum E
 		{
-			UNKNOWN,
-			RGBA_32_TYPELESS,
-			RGBA_32_FLOAT,
-			RGBA_32_UINT,
+			UNKNOWN,				/*! Unknown DXGI format. */
+			RGBA_32_TYPELESS,		/*! 32-bit RGBA of non-specific type format. */
+			RGBA_32_FLOAT,			/*! 32-bit RGBA of float type format. */
+			RGBA_32_UINT,			/*!  */
 			RGBA_32_INT,
 			RGB_32_TYPELESS,
 			RGB_32_FLOAT,

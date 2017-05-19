@@ -132,19 +132,27 @@ namespace HR_SDK
 		GraphicsSwapChain* prm_SC
 	)
 	{
+		//! TO-DO: Change this stuff to single reinterpretations - Thursday May 18th, 2017
 		m_Texture = new GraphicsTexture();
-		HRESULT FuncResult = reinterpret_cast<IDXGISwapChain*>(prm_SC->GetPointer())->GetBuffer(0, __uuidof(ID3D11Texture2D), m_Texture->GetReference());
+
+		IDXGISwapChain* TmpSC = reinterpret_cast<IDXGISwapChain*>(prm_SC->GetPointer());
+
+		HRESULT FuncResult = TmpSC->GetBuffer(0, __uuidof(ID3D11Texture2D), m_Texture->GetReference());
 
 		if (FAILED(FuncResult))
 		{
 			return false;
 		}
 
-		FuncResult = reinterpret_cast<ID3D11Device*>(prm_Device->GetPointer())->CreateRenderTargetView
+		ID3D11Device* TmpDev = reinterpret_cast<ID3D11Device*>(prm_Device->GetPointer());
+		ID3D11Resource* TmpRes = reinterpret_cast<ID3D11Resource*>(m_Texture->GetPointer());
+		ID3D11RenderTargetView** TmpRTV = reinterpret_cast<ID3D11RenderTargetView**>(m_RTV->GetReference());
+
+		FuncResult = TmpDev->CreateRenderTargetView
 		(
-			reinterpret_cast<ID3D11Resource*>(m_Texture->GetPointer()), 
+			TmpRes, 
 			NULL, 
-			reinterpret_cast<ID3D11RenderTargetView**>(m_RTV->GetReference())
+			TmpRTV
 		);
 
 		if (FAILED(FuncResult))
@@ -158,34 +166,53 @@ namespace HR_SDK
 
 	void C_Texture::SetRTV(GraphicsDeviceContext* prm_DC, uint32 prm_NumViews, GraphicsDepthStencilView* prm_DSV)
 	{
-		reinterpret_cast<ID3D11DeviceContext*>(prm_DC->GetPointer())->OMSetRenderTargets
+		//! Simplify function, reducing castings to one and using them temporal pointers (They after exiting scope) - Thursday May 18th, 2017
+		ID3D11DeviceContext* TmpDC = reinterpret_cast<ID3D11DeviceContext*>(prm_DC->GetPointer());
+		ID3D11RenderTargetView** TmpRTV = reinterpret_cast<ID3D11RenderTargetView**>(m_RTV->GetReference());
+		ID3D11DepthStencilView* TmpDSV = reinterpret_cast<ID3D11DepthStencilView*>(prm_DSV->GetPointer());
+
+		//! Set the render target to the device context
+		TmpDC->OMSetRenderTargets
 		(
 			prm_NumViews,
-			reinterpret_cast<ID3D11RenderTargetView**>(m_RTV->GetReference()),
-			reinterpret_cast<ID3D11DepthStencilView*>(prm_DSV->GetPointer())
+			TmpRTV,
+			TmpDSV
 		);
 	}
 
 	void C_Texture::ClearRTV(GraphicsDeviceContext* prm_DC, C_LinearColor prm_Color)
 	{
 		float Color[] = { prm_Color.GetRed(), prm_Color.GetGreen(), prm_Color.GetBlue(), prm_Color.GetAlpha() };
-		reinterpret_cast<ID3D11DeviceContext*>(prm_DC->GetPointer())->ClearRenderTargetView
+
+		//! Reduce castings to one. Temporal pointer die after leaving function scope
+		ID3D11DeviceContext* TmpDC = reinterpret_cast<ID3D11DeviceContext*>(prm_DC->GetPointer());
+		ID3D11RenderTargetView* TmpRTV = reinterpret_cast<ID3D11RenderTargetView*>(m_RTV->GetPointer());
+
+		//! Clear RTV - Thursday May 18th, 2017
+		TmpDC->ClearRenderTargetView
 		(
-			reinterpret_cast<ID3D11RenderTargetView*>(m_RTV->GetPointer()),
+			TmpRTV,
 			Color
 		);
 	}
 
 	void C_Texture::Close()
 	{
-		if (reinterpret_cast<ID3D11Texture2D*>(m_Texture->GetPointer()))
+		//! Reduce the castings to single one. Temporal pointers die after leaving function scope
+		ID3D11Texture2D* TmpText = reinterpret_cast<ID3D11Texture2D*>(m_Texture->GetPointer());
+		ID3D11RenderTargetView* TmpRTV = reinterpret_cast<ID3D11RenderTargetView*>(m_RTV->GetPointer());
+
+		//! Verify pointers to perform safe DirectX resource release
+		if (TmpText != NULL)
 		{
-			reinterpret_cast<ID3D11Texture2D*>(m_Texture->GetPointer())->Release();
+			TmpText->Release();
 		}
 
-		if (reinterpret_cast<ID3D11RenderTargetView*>(m_RTV->GetPointer()))
+		//! If not, jut make sure pointer carries no garbage - Thursday May 18th, 2017
+
+		if (TmpRTV != NULL)
 		{
-			reinterpret_cast<ID3D11RenderTargetView*>(m_RTV->GetPointer())->Release();
+			TmpRTV->Release();
 		}
 	}
 }

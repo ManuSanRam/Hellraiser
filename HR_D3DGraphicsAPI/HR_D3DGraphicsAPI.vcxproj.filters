@@ -54,9 +54,6 @@
     <Filter Include="Source Files\Camera">
       <UniqueIdentifier>{76a74e5e-1448-47b9-9761-177b9f057c84}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Vertex">
-      <UniqueIdentifier>{c81ff550-747b-4dae-8740-cf977b99ffd9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Depth Stencil">
       <UniqueIdentifier>{8fa0da7e-452b-4c8c-8f0e-c04e69917778}</UniqueIdentifier>
     </Filter>
