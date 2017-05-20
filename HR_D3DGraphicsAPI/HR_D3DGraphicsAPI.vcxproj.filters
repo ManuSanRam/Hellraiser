@@ -110,6 +110,9 @@
     <ClInclude Include="include\HRGraphics_DXGITypes.h">
       <Filter>Header Files\Prerequisites</Filter>
     </ClInclude>
+    <ClInclude Include="include\HRGraphics_DXHeaders.h">
+      <Filter>Header Files\Prerequisites</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\HRGraphics_Viewport.cpp">

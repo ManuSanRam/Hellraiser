@@ -2,52 +2,9 @@
 
 /*!
 */
-#include <d3dx11.h>
-#include <d3dcompiler.h>
-#include <D3DX11async.h>
 
-/*!
-*/
 namespace HR_SDK
 {
-	/*!
-	*/
-	namespace D3D_Formats
-	{
-		/*!
-		*/
-		enum E
-		{
-			UNKNOWN,				/*! Unknown DXGI format. */
-			RGBA_32_TYPELESS,		/*! 32-bit RGBA of non-specific type format. */
-			RGBA_32_FLOAT,			/*! 32-bit RGBA of float type format. */
-			RGBA_32_UINT,			/*!  */
-			RGBA_32_INT,
-			RGB_32_TYPELESS,
-			RGB_32_FLOAT,
-			RGB_32_UINT,
-			RGB_32_INT,
-			RGBA_16_TYPELESS,
-			RGBA_16_FLOAT,
-			RGBA_16_UNORM,
-			RGBA_16_UINT,
-			RGBA_16_NORM,
-			RGBA_16_INT,
-			RG_32_TYPELESS,
-			RG_32_FLOAT,
-			RG_32_UINT,
-			RG_32_INT,
-			RGBA_8_TYPELESS = 27,
-			RGBA_8_UNORM,
-			RGBA_8_UNORM_SRGB,
-			RGBA_8_UINT,
-			RGBA_8_SNORM,
-			RGBA_8_SINT,
-			R_32_UINT = 42,
-			D_24_UNORM_S8_UINT = 45,
-		};
-	}
-
 	namespace D3D_Drivers
 	{
 		enum E
@@ -145,14 +102,6 @@ namespace HR_SDK
 			TRIANGLE_LIST_ADJ,
 			TRIANGLE_STRIP_ADJ
 		};
-	}
-
-	inline DXGI_FORMAT				TranslateFormat
-	(
-		D3D_Formats::E prm_Format
-	)
-	{
-		return (DXGI_FORMAT)prm_Format;
 	}
 
 	inline D3D_DRIVER_TYPE			TranslateDriver

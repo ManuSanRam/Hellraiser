@@ -264,7 +264,7 @@ namespace HR_SDK
 	void C_IndexBuffer<IndexType>::SetBuffer
 	(
 		GraphicsDeviceContext*	prm_Device,
-		D3D_Formats::E			prm_Format
+		DXGI_Formats::E			prm_Format
 	)
 	{
 		uint32 Offset = 0;

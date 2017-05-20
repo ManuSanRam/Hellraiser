@@ -46,7 +46,7 @@ namespace HR_SDK
 		(
 			uint32			prm_W,
 			uint32			prm_H,
-			D3D_Formats::E	prm_Format,
+			DXGI_Formats::E	prm_Format,
 			D3D_Usages::E	prm_Usage,
 			D3D_Binds::E	prm_Bind,
 			GraphicsDevice*	prm_Device
@@ -58,7 +58,7 @@ namespace HR_SDK
 
 		bool CreateDSView
 		(
-			GraphicsDevice* prm_Device, GraphicsDeviceContext* prm_DC, D3D_Formats::E prm_Format
+			GraphicsDevice* prm_Device, GraphicsDeviceContext* prm_DC, DXGI_Formats::E prm_Format
 		);
 		
 		void ClearDSV

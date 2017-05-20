@@ -66,7 +66,7 @@ namespace HR_SDK
 	(
 		const char* Semantic,
 		uint32 Index, 
-		D3D_Formats::E Format,
+		DXGI_Formats::E Format,
 		uint32 ByteOffset)
 	{
 		D3D11_INPUT_ELEMENT_DESC InputElemDesc;

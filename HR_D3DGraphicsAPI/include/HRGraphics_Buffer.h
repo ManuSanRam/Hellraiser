@@ -210,7 +210,7 @@ namespace HR_SDK
 		void SetBuffer
 		(
 			GraphicsDeviceContext*	prm_DC,
-			D3D_Formats::E			prm_Format
+			DXGI_Formats::E			prm_Format
 		);
 
 		/*!*****************************************************************************************************************************************************************

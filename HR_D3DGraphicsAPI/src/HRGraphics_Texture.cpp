@@ -104,7 +104,7 @@ namespace HR_SDK
 		uint32				prm_Width, 
 		uint32				prm_Height, 
 		uint32				prm_MipLevels, 
-		D3D_Formats::E		prm_Format,
+		DXGI_Formats::E		prm_Format,
 		D3D_Usages::E		prm_Usage,
 		D3D_Binds::E		prm_Bind,
 		D3D_Access::E		prm_Access
@@ -206,13 +206,19 @@ namespace HR_SDK
 		if (TmpText != NULL)
 		{
 			TmpText->Release();
+			delete TmpText;
 		}
 
-		//! If not, jut make sure pointer carries no garbage - Thursday May 18th, 2017
+		//! Make sure that pointer doesn't carry trash
+		TmpText = NULL;
 
+		//! If not, jut make sure pointer carries no garbage - Thursday May 18th, 2017
 		if (TmpRTV != NULL)
 		{
 			TmpRTV->Release();
+			delete TmpRTV;
 		}
+		//! Make sure that pointer doesn't carry trash - Friday May 19th, 2017
+		TmpRTV = NULL;
 	}
 }

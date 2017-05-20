@@ -146,7 +146,7 @@ void C_TestMesh::SetIB
 	GraphicsDeviceContext*	prm_DC
 )
 {
-	m_IB.SetBuffer(prm_DC, D3D_Formats::R_32_UINT);
+	m_IB.SetBuffer(prm_DC, DXGI_Formats::R_32_UINT);
 }
 
 void C_TestMesh::SetVB

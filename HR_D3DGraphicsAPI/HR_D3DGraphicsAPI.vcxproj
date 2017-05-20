@@ -194,6 +194,7 @@
     <ClInclude Include="include\HRGraphics_Constant.h" />
     <ClInclude Include="include\HRGraphics_Depth.h" />
     <ClInclude Include="include\HRGraphics_DXGITypes.h" />
+    <ClInclude Include="include\HRGraphics_DXHeaders.h" />
     <ClInclude Include="include\HRGraphics_GCamera.h" />
     <ClInclude Include="include\HRGraphics_InputLayout.h" />
     <ClInclude Include="include\HRGraphics_Shader.h" />

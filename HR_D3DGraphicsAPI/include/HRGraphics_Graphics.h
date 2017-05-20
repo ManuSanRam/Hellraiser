@@ -65,7 +65,7 @@ namespace HR_SDK
 
 	  /*!
 	  */
-	  bool Init(uint32 prm_ScrW, uint32 prm_ScrH, D3D_Formats::E prm_Format, uint32 prm_Wnd, D3D_Drivers::E prm_DriverType);
+	  bool Init(uint32 prm_ScrW, uint32 prm_ScrH, DXGI_Formats::E prm_Format, uint32 prm_Wnd, D3D_Drivers::E prm_DriverType);
 	  /*!
 	  */
 	  void Present();

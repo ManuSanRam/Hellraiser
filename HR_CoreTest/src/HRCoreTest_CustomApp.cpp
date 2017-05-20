@@ -146,7 +146,7 @@ void C_CustomApp::OnInit()
 	//! Set Pipeline
 	//! Start-up Direct 3D
 	m_Graphics = new C_GraphicsAPI();
-	if (m_Graphics->Init(m_Width, m_Height, D3D_Formats::RGBA_8_UNORM, m_Window->m_Window, D3D_Drivers::HARDWARE))
+	if (m_Graphics->Init(m_Width, m_Height, DXGI_Formats::RGBA_8_UNORM, m_Window->m_Window, D3D_Drivers::HARDWARE))
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Pipeline grafico cargado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
 	}
@@ -175,7 +175,7 @@ void C_CustomApp::OnInit()
 
 	//! Create Depth stencil
 	m_Depth = new C_DepthStencil();
-	if (m_Depth->CreateDSBuffer(m_Width, m_Height, D3D_Formats::D_24_UNORM_S8_UINT, D3D_Usages::DEFAULT, D3D_Binds::DEPTH_STENCIL, m_Graphics->m_Device))
+	if (m_Depth->CreateDSBuffer(m_Width, m_Height, DXGI_Formats::D_24_UNORM_S8_UINT, D3D_Usages::DEFAULT, D3D_Binds::DEPTH_STENCIL, m_Graphics->m_Device))
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Buffer de profundidad creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
 	}
@@ -187,7 +187,7 @@ void C_CustomApp::OnInit()
 		exit(1);
 	}
 
-	if (m_Depth->CreateDSView(m_Graphics->m_Device, m_Graphics->m_DC, D3D_Formats::D_24_UNORM_S8_UINT))
+	if (m_Depth->CreateDSView(m_Graphics->m_Device, m_Graphics->m_DC, DXGI_Formats::D_24_UNORM_S8_UINT))
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Depth Stencil View creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
 	}
@@ -295,8 +295,8 @@ void C_CustomApp::OnInit()
 
 	//!Create input layout
 	m_InputLayout = new C_InputLayout();
-	m_InputLayout->AddInput("POSITION", 0, D3D_Formats::RGB_32_FLOAT, 0);
-	m_InputLayout->AddInput("COLOR", 0, D3D_Formats::RGBA_32_FLOAT, 12);
+	m_InputLayout->AddInput("POSITION", 0, DXGI_Formats::RGB_32_FLOAT, 0);
+	m_InputLayout->AddInput("COLOR", 0, DXGI_Formats::RGBA_32_FLOAT, 12);
 	if (m_InputLayout->CreateInputLayout(m_Graphics->m_Device, m_VShader->m_Blob))
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Input layout creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
