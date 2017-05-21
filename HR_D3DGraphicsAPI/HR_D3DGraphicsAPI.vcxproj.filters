@@ -95,9 +95,6 @@
     <ClInclude Include="include\HRGraphics_GCamera.h">
       <Filter>Header Files\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="include\HRGraphics_Constant.h">
-      <Filter>Header Files\Buffer</Filter>
-    </ClInclude>
     <ClInclude Include="include\HRGraphics_Vertex.h">
       <Filter>Header Files\Buffer</Filter>
     </ClInclude>
@@ -135,6 +132,9 @@
     </ClCompile>
     <ClCompile Include="src\HRGraphics_Depth.cpp">
       <Filter>Source Files\Depth Stencil</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HRGraphics_GCamera.cpp">
+      <Filter>Source Files\Camera</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

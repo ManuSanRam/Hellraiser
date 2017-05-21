@@ -66,8 +66,7 @@ namespace HR_SDK
 	*														BUFFER BASE FUNCTIONS																						   *
 	*																																									   *
 	***********************************************************************************************************************************************************************/
-	template<typename Type>
-	C_BufferBase<Type>::~C_BufferBase()
+	C_BufferBase::~C_BufferBase()
 	{
 		//! Check if the buffer is pointing to information in memory
 		if (m_Buffer)
@@ -113,7 +112,7 @@ namespace HR_SDK
 	* @return Returns a buffer descriptor to be used to pass vertex data to GPU																						   	   *
 	***********************************************************************************************************************************************************************/
 	template<typename VertexType>
-	bool C_VertexBuffer<VertexType>::CreateBuffer
+	bool C_VertexBuffer<VertexType>::Create
 	(
 		GraphicsDevice* prm_Device,
 		uint32 prm_Count,
@@ -213,7 +212,7 @@ namespace HR_SDK
 	* @return Returns a buffer descriptor to be used to pass vertex data to GPU																						   	   *
 	***********************************************************************************************************************************************************************/
 	template<typename IndexType>
-	bool C_IndexBuffer<IndexType>::CreateBuffer
+	bool C_IndexBuffer<IndexType>::Create
 	(
 		GraphicsDevice*		prm_Device,
 		uint32				prm_Count,
@@ -289,13 +288,31 @@ namespace HR_SDK
 	* @param prm_Bind Binding of the buffer in GPU (Vertex, Index, Constant)																						   	   *
 	* @return Returns a buffer descriptor to be used to pass vertex data to GPU																						   	   *
 	***********************************************************************************************************************************************************************/
-	template<typename ConstantType>
-	bool C_ConstantBuffer<ConstantType>::CreateBuffer(GraphicsDevice* prm_Device,
-		uint32 prm_Count,
-		D3D_Binds::E prm_Bind,
-		D3D_Access::E prm_Access,
-		D3D_Usages::E prm_Usage,
-		Vector<ConstantType> prm_Vector)
+	void C_ConstantBuffer::CreateDate
+	(
+		SIZE_T		prm_Size
+	)
+	{
+		m_Constants.resize(prm_Size);
+	}
+
+	bool C_ConstantBuffer::SetData
+	(
+		void*		prm_Date,
+		SIZE_T		prm_Size
+	)
+	{
+
+	}
+	
+	bool C_ConstantBuffer::Create
+	(
+		GraphicsDevice* prm_Device,
+		uint32			prm_Count,
+		D3D_Binds::E	prm_Bind,
+		D3D_Access::E	prm_Access,
+		D3D_Usages::E	prm_Usage
+	)
 	{
 		//! Holds the result of the device passing the data to the GPU
 		HRESULT FuncResult;
@@ -307,14 +324,14 @@ namespace HR_SDK
 		ZeroMemory(&Desc, sizeof(Desc));
 
 		Desc.Usage = TranslateUsage(prm_Usage);
-		Desc.ByteWidth = sizeof(ConstantType) * prm_Count;
+		Desc.ByteWidth = sizeof(Byte);
 		Desc.BindFlags = TranslateBind(prm_Bind);
 		Desc.CPUAccessFlags = TranslateUsage(prm_Usage);
 		Desc.MiscFlags = 0;
 
 		//! Create subresource data
 		ZeroMemory(&SRD, sizeof(SRD));
-		SRD.pSysMem = &prm_Vector[0];
+		SRD.pSysMem = &m_Constants[0];
 
 		//! Pass the data through the parameter device
 		FuncResult = reinterpret_cast<ID3D11Device*>(prm_Device->GetPointer())->CreateBuffer(
@@ -331,8 +348,25 @@ namespace HR_SDK
 		return true;
 	}
 
+	template<typename Object>
+	void C_ConstantBuffer<Object>::Map
+	(
+		GraphicsDeviceContext* prm_DC
+	)
+	{
+		//! Set to the pipeline
+	}
+
+	template<typename Object>
+	void C_ConstantBuffer<Object>::Set
+	(
+		GraphicsDeviceContext* prm_DC
+	)
+	{
+		//! Set to the pipeline
+	}
+
 	template class C_VertexBuffer<S_Vertex>;
 	template class C_IndexBuffer<uint16>;
 	template class C_IndexBuffer<uint32>;
-	template class C_ConstantBuffer<C_ConstantType>;
 }

@@ -191,7 +191,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\HRGraphics_Buffer.h" />
-    <ClInclude Include="include\HRGraphics_Constant.h" />
     <ClInclude Include="include\HRGraphics_Depth.h" />
     <ClInclude Include="include\HRGraphics_DXGITypes.h" />
     <ClInclude Include="include\HRGraphics_DXHeaders.h" />
@@ -210,6 +209,7 @@
     <ClCompile Include="include\HRGraphics_Graphics.cpp" />
     <ClCompile Include="src\HRGraphics_Buffer.cpp" />
     <ClCompile Include="src\HRGraphics_Depth.cpp" />
+    <ClCompile Include="src\HRGraphics_GCamera.cpp" />
     <ClCompile Include="src\HRGraphics_InputLayout.cpp" />
     <ClCompile Include="src\HRGraphics_Shader.cpp" />
     <ClCompile Include="src\HRGraphics_Texture.cpp" />

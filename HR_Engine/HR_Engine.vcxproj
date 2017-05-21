@@ -74,33 +74,32 @@
     <OutDir>$(SolutionDir)\binary\$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)\intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
     <IncludePath>$(SolutionDir)\HR_Utilities\include\;$(SolutionDir)\HR_D3DGraphicsAPI\include\;$(SolutionDir)\HR_Core\include\;$(ASSIMP)\include\assimp\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\;$(ASSIMP)\lib\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\;$(ASSIMP)\Asset Import Libs\$(Configuration)\$(PlatformTarget)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)\binary\$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)\intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
     <IncludePath>$(SolutionDir)\HR_Utilities\include\;$(SolutionDir)\HR_D3DGraphicsAPI\include\;$(SolutionDir)\HR_Core\include\;$(ASSIMP)\include\assimp\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\;$(ASSIMP)\lib\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\;$(ASSIMP)\Asset Import Libs\$(Configuration)\$(PlatformTarget)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)\binary\$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)\intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
     <IncludePath>$(SolutionDir)\HR_Utilities\include\;$(SolutionDir)\HR_D3DGraphicsAPI\include\;$(SolutionDir)\HR_Core\include\;$(ASSIMP)\include\assimp\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\;$(ASSIMP)\lib\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\;$(ASSIMP)\Asset Import Libs\$(Configuration)\$(PlatformTarget)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)\binary\$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)\intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
     <IncludePath>$(SolutionDir)\HR_Utilities\include\;$(SolutionDir)\HR_D3DGraphicsAPI\include\;$(SolutionDir)\HR_Core\include\;$(ASSIMP)\include\assimp\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\;$(ASSIMP)\lib\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\;$(ASSIMP)\Asset Import Libs\$(Configuration)\$(PlatformTarget)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;HR_ENGINE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -118,8 +117,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;HR_ENGINE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -138,8 +136,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -161,8 +158,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>

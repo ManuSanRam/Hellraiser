@@ -20,7 +20,6 @@
  * Here goes any file required for the correct compilation and functionality of the class declared																		   *
 ***************************************************************************************************************************************************************************/
 #include "HRGraphics_Vertex.h"
-#include "HRGraphics_Constant.h"
 
 namespace HR_SDK
 {
@@ -39,7 +38,6 @@ namespace HR_SDK
 	/*!*********************************************************************************************************************************************************************
 	 * @brief Base class to create buffers for Graphics pipeline.																										   *
 	***********************************************************************************************************************************************************************/
-	template <typename Type>
 	class HR_D3DGRAPHICSAPI_EXPORT C_BufferBase
 	{
 	public:
@@ -72,7 +70,7 @@ namespace HR_SDK
 	 * Vertex buffer object also loads data into GPU itself. Only requiring a device.																					   *
 	***********************************************************************************************************************************************************************/
 	template<typename VertexType>
-	class HR_D3DGRAPHICSAPI_EXPORT C_VertexBuffer : public C_BufferBase<VertexType>
+	class HR_D3DGRAPHICSAPI_EXPORT C_VertexBuffer : public C_BufferBase
 	{
 	public:
 		/*!*****************************************************************************************************************************************************************
@@ -119,7 +117,7 @@ namespace HR_SDK
 		* @param prm_Device Pointer to DirectX device																													   *
 		* @return Returns true when buffer is correctly created with all its data into the GPU																			   *
 		*******************************************************************************************************************************************************************/
-		bool CreateBuffer
+		bool Create
 		(
 			GraphicsDevice* prm_Device,
 			uint32 prm_Count,
@@ -149,7 +147,7 @@ namespace HR_SDK
 	 * @brief Declares an index buffer object, used to create indices for 3D geometry																					   *
 	***********************************************************************************************************************************************************************/
 	template<typename IndexType>
-	class HR_D3DGRAPHICSAPI_EXPORT C_IndexBuffer : public C_BufferBase<IndexType>
+	class HR_D3DGRAPHICSAPI_EXPORT C_IndexBuffer : public C_BufferBase
 	{
 	public:
 		/*!*****************************************************************************************************************************************************************
@@ -192,7 +190,7 @@ namespace HR_SDK
 		* @param prm_Device Pointer to DirectX device																													   *
 		* @return Returns true when buffer is correctly created with all its data into the GPU																			   *
 		*******************************************************************************************************************************************************************/
-		bool CreateBuffer
+		bool Create
 		(
 			GraphicsDevice* prm_Device,
 			uint32 prm_Count,
@@ -222,8 +220,7 @@ namespace HR_SDK
 	/*!*********************************************************************************************************************************************************************
 	* @brief Declares a constant buffer, object used to pass information to GPU for graphics rendering																	   *
 	***********************************************************************************************************************************************************************/
-	template<typename ConstantType>
-	class HR_D3DGRAPHICSAPI_EXPORT C_ConstantBuffer : public C_BufferBase<ConstantType>
+	class HR_D3DGRAPHICSAPI_EXPORT C_ConstantBuffer : public C_BufferBase
 	{
 	public:
 		/*!*****************************************************************************************************************************************************************
@@ -232,7 +229,6 @@ namespace HR_SDK
 		C_ConstantBuffer()
 		{
 			m_Buffer = NULL;
-			m_Constants.clear();
 		}
 
 		/*!*****************************************************************************************************************************************************************
@@ -240,37 +236,59 @@ namespace HR_SDK
 		*******************************************************************************************************************************************************************/
 		~C_ConstantBuffer()
 		{
-			m_Constants.clear();
+
 		}
 
-		/*!*****************************************************************************************************************************************************************
-		* @brief Get how many constants are being stored inside the buffer's data array																					   *
-		*******************************************************************************************************************************************************************/
-		uint32 GetCount()
-		{
-			//! Get how many objects is the data array storing
-			return m_Constants.size();
-		}
-
-		/*!*****************************************************************************************************************************************************************
-		 * @brief Creates the buffer and its data into the GPU.																											   *
-		 * @param prm_Device Pointer to DirectX device																													   *
-		 * @return Returns true when buffer is correctly created with all its data into the GPU																			   *
-		*******************************************************************************************************************************************************************/
-		bool CreateBuffer
+		/*!
+		*/
+		void CreateDate
 		(
-			GraphicsDevice* prm_Device,
-			uint32 prm_Count,
-			D3D_Binds::E prm_Bind,
-			D3D_Access::E prm_Access,
-			D3D_Usages::E prm_Usage,
-			Vector<ConstantType> prm_Vector
+			SIZE_T		prm_Size
 		);
 
-		/*!*****************************************************************************************************************************************************************
-		 * @brief Array that stores the data to be passed to GPU																										   *
+		/*!
+		*/
+		bool SetData
+		(
+			void*		prm_Date,
+			SIZE_T		prm_Size
+		);
+
+		/*!****************************************************************************************************************************************************************
+		 * @brief Creates the buffer and its data into the GPU.																											   
+		 * @param prm_Device Pointer to DirectX device
+		 * @param
+		 * @param
+		 * @param
+		 * @return Returns true when buffer is correctly created with all its data into the GPU																			   
 		*******************************************************************************************************************************************************************/
-		Vector<ConstantType> m_Constants;
+		bool Create
+		(
+			GraphicsDevice* prm_Device,
+			uint32			prm_Count,
+			D3D_Binds::E	prm_Bind,
+			D3D_Access::E	prm_Access,
+			D3D_Usages::E	prm_Usage
+		);
+
+		/*!
+		*/
+		void Map
+		(
+			GraphicsDeviceContext* prm_DC
+		);
+
+		/*!
+		*/
+		void Set
+		(
+			GraphicsDeviceContext* prm_DC
+		);
+
+		/*!
+		*/
+		Vector<Byte>	m_Constants;
+
 	};
 
 	/*!
@@ -284,8 +302,4 @@ namespace HR_SDK
 	/*!
 	*/
 	typedef C_IndexBuffer<uint32> C_IBuffer32;
-	
-	/*!
-	*/
-	typedef C_ConstantBuffer<C_ConstantType> C_CBuffer;
 }

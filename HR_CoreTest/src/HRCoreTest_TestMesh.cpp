@@ -109,7 +109,7 @@ bool C_TestMesh::CreateVertexB(GraphicsDevice* prm_Device)
 		return false;
 	}
 
-	m_VB.CreateBuffer(prm_Device, m_VB.GetCount(), D3D_Binds::VERTEX_BUFFER, D3D_Access::WRITE, D3D_Usages::DYNAMIC, m_VB.m_Vertices);
+	m_VB.Create(prm_Device, m_VB.GetCount(), D3D_Binds::VERTEX_BUFFER, D3D_Access::WRITE, D3D_Usages::DYNAMIC, m_VB.m_Vertices);
 	return true;
 
 }
@@ -136,7 +136,7 @@ bool C_TestMesh::CreateIndexB(GraphicsDevice* prm_Device)
 		return false;
 	}
 
-	m_IB.CreateBuffer(prm_Device, m_IB.GetCount(), D3D_Binds::INDEX_BUFFER, D3D_Access::WRITE, D3D_Usages::DEFAULT, m_IB.m_Indices);
+	m_IB.Create(prm_Device, m_IB.GetCount(), D3D_Binds::INDEX_BUFFER, D3D_Access::WRITE, D3D_Usages::DEFAULT, m_IB.m_Indices);
 
 	return true;
 }

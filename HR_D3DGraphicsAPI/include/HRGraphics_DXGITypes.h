@@ -1,5 +1,17 @@
 #pragma once
 
+/*!************************************************************************************************************************************************************************
+ * @file
+ *
+ *
+ *
+ *
+ *
+ * @date
+ * @author
+ * @copyright
+***************************************************************************************************************************************************************************/
+
 namespace HR_SDK
 {
 	/*!********************************************************************************************************************************************************************
@@ -14,33 +26,35 @@ namespace HR_SDK
 			UNKNOWN,				/*! Unknown DXGI format. */
 			RGBA_32_TYPELESS,		/*! 32-bit RGBA of non-specific type format. */
 			RGBA_32_FLOAT,			/*! 32-bit RGBA of float type format. */
-			RGBA_32_UINT,			/*!  */
-			RGBA_32_INT,
-			RGB_32_TYPELESS,
-			RGB_32_FLOAT,
-			RGB_32_UINT,
-			RGB_32_INT,
-			RGBA_16_TYPELESS,
-			RGBA_16_FLOAT,
-			RGBA_16_UNORM,
-			RGBA_16_UINT,
-			RGBA_16_NORM,
-			RGBA_16_INT,
-			RG_32_TYPELESS,
-			RG_32_FLOAT,
-			RG_32_UINT,
-			RG_32_INT,
-			RGBA_8_TYPELESS = 27,
-			RGBA_8_UNORM,
-			RGBA_8_UNORM_SRGB,
-			RGBA_8_UINT,
-			RGBA_8_SNORM,
-			RGBA_8_SINT,
-			R_32_UINT = 42,
-			D_24_UNORM_S8_UINT = 45,
-		};
-	}
+			RGBA_32_UINT,			/*! 32-bit RGBA of unsigned integer type format */
+			RGBA_32_INT,			/*! 32-bit RGBA of signed integer type format */
+			RGB_32_TYPELESS,		/*! 32-bit RGBA of non-specific type format. */
+			RGB_32_FLOAT,			/*! 32-bit RGBA of float type format. */
+			RGB_32_UINT,			/*! 32-bit RGBA of unsigned integer type format */
+			RGB_32_INT,				/*! 32-bit RGBA of signed integer type format */
+			RGBA_16_TYPELESS,		/*! 32-bit RGBA of non-specific type format. */
+			RGBA_16_FLOAT,			/*! 32-bit RGBA of float type format. */
+			RGBA_16_UNORM,			/*! 32-bit RGBA of unsigned integer type format */
+			RGBA_16_UINT,			/*! 32-bit RGBA of signed integer type format */
+			RGBA_16_NORM,			/*! 32-bit RGBA of non-specific type format. */
+			RGBA_16_INT,			/*! 32-bit RGBA of float type format. */
+			RG_32_TYPELESS,			/*! 32-bit RGBA of unsigned integer type format */
+			RG_32_FLOAT,			/*! 32-bit RGBA of signed integer type format */
+			RG_32_UINT,				/*! 32-bit RGBA of non-specific type format. */
+			RG_32_INT,				/*! 32-bit RGBA of float type format. */
+			RGBA_8_TYPELESS = 27,	/*! 32-bit RGBA of unsigned integer type format */
+			RGBA_8_UNORM,			/*! 32-bit RGBA of signed integer type format */
+			RGBA_8_UNORM_SRGB,		/*! 32-bit RGBA of non-specific type format. */
+			RGBA_8_UINT,			/*! 32-bit RGBA of float type format. */
+			RGBA_8_SNORM,			/*! 32-bit RGBA of unsigned integer type format */
+			RGBA_8_SINT,			/*! 32-bit RGBA of signed integer type format */
+			R_32_UINT = 42,			/*! 32-bit RGBA of non-specific type format. */
+			D_24_UNORM_S8_UINT = 45,/*! 32-bit RGBA of float type format. */
+		};							
+	}								
 
+	/*!
+	*/
 	inline DXGI_FORMAT				TranslateFormat
 	(
 		DXGI_Formats::E prm_Format
@@ -49,6 +63,8 @@ namespace HR_SDK
 		return (DXGI_FORMAT)prm_Format;
 	}
 
+	/*!
+	*/
 	namespace DXGI_CPUAccess
 	{
 		const uint32 NONE		 = 0	;
@@ -58,6 +74,8 @@ namespace HR_SDK
 		const uint32 FIELD       = 15	;
 	}
 
+	/*!
+	*/
 	namespace DXGI_Usage
 	{
 		const uint64 SHADER_INPUT			= (1L << (0 + 4));
@@ -69,6 +87,8 @@ namespace HR_SDK
 		const uint64 UNORDERED_ACCESS		= (1L << (6 + 4));
 	}
 
+	/*!
+	*/
 	namespace DXGI_Scanline
 	{
 		enum E
@@ -80,8 +100,12 @@ namespace HR_SDK
 		};
 	}
 
+	/*!
+	*/
 	namespace DXGI_Scaling
 	{
+		/*!
+		*/
 		enum E
 		{
 			UNSPECIFIED,
@@ -90,8 +114,12 @@ namespace HR_SDK
 		};
 	}
 
+	/*!
+	*/
 	namespace DXGI_SwapEffect
 	{
+		/*!
+		*/
 		enum E
 		{
 			DISCARD,
