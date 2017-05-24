@@ -24,7 +24,7 @@
 #include <HRUtility_Vector4D.h>
 #include <HRUtility_Vector3D.h>
 #include <HRUtility_PlatformMath.h>
-#include <xnamath.h>
+
 namespace HR_SDK
 {
 #define CAMERA_NEAR		0.001f
@@ -36,23 +36,71 @@ namespace HR_SDK
 	class HR_D3DGRAPHICSAPI_EXPORT C_GCamera
 	{
 	public:
-	  /*!
-	  */
-	  C_GCamera()
-	  {
+		/*!
+		*/
+		C_GCamera()
+		{
 
-	  }
+		}
 
-	  /*!
-	  */
-	  ~C_GCamera()
-	  {
+		/*!
+		*/
+		~C_GCamera()
+		{
 
-	  }
-	  
-	  C_Vector3D m_Position;
-	  C_Vector3D m_Target;
+		}
 
+		/*!****************************************************************************************************************************************************************
+		 * Update: May 23th, 2017 17:55 pm
+		 *
+		 * Modifying the camera functionality, for setting view and projection matrices for the constant buffers
+		 * This functions are exclusive for the graphics camera. It can rotate and translate.
+		*******************************************************************************************************************************************************************/
 
+		void SetPosition
+		(
+			float prm_x,
+			float prm_y,
+			float prm_z,
+			float prm_w
+		);
+
+		void SetTarget
+		(
+			float prm_x,
+			float prm_y,
+			float prm_z,
+			float prm_w
+		);
+
+		void SetUp
+		(
+			float prm_x,
+			float prm_y,
+			float prm_z,
+			float prm_w
+		);
+
+		C_Matrix4 LookAt
+		(
+			C_Vector4D,
+			C_Vector4D,
+			C_Vector4D
+		);
+
+		C_Matrix4 Projection
+		(
+			float prm_FOVAngle,
+			float prm_Ratio,
+			float prm_NearZ,
+			float prm_FarZ
+		);
+
+		//! This object needs to be defined
+		//! C_Frustrum m_FOV;
+
+		C_Vector4D m_Position;
+		C_Vector4D m_Target;
+		C_Vector4D m_Up;
 	};
 }
