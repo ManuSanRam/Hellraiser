@@ -63,8 +63,7 @@ public:
 	*/
 	void Draw
 	(
-		GraphicsDeviceContext*	prm_DC,
-		uint32					prm_Indices
+		GraphicsDeviceContext*	prm_DC
 	);
 
 	/*!

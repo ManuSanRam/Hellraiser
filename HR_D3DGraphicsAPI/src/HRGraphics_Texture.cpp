@@ -144,6 +144,7 @@ namespace HR_SDK
 			return false;
 		}
 
+		m_RTV = new GraphicsRenderTargetView();
 		ID3D11Device* TmpDev = reinterpret_cast<ID3D11Device*>(prm_Device->GetPointer());
 		ID3D11Resource* TmpRes = reinterpret_cast<ID3D11Resource*>(m_Texture->GetPointer());
 		ID3D11RenderTargetView** TmpRTV = reinterpret_cast<ID3D11RenderTargetView**>(m_RTV->GetReference());
@@ -206,7 +207,6 @@ namespace HR_SDK
 		if (TmpText != NULL)
 		{
 			TmpText->Release();
-			delete TmpText;
 		}
 
 		//! Make sure that pointer doesn't carry trash
@@ -216,7 +216,6 @@ namespace HR_SDK
 		if (TmpRTV != NULL)
 		{
 			TmpRTV->Release();
-			delete TmpRTV;
 		}
 		//! Make sure that pointer doesn't carry trash - Friday May 19th, 2017
 		TmpRTV = NULL;

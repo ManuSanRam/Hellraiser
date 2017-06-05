@@ -64,7 +64,19 @@ namespace HR_SDK
 		IDXGISwapChain* SwapChain;
 	};
 
-	bool C_GraphicsAPI::Init(uint32 prm_ScrW, uint32 prm_ScrH, DXGI_Formats::E prm_Format, uint32 prm_Wnd, D3D_Drivers::E prm_DriverType)
+	bool C_GraphicsAPI::Init
+	(
+		uint32 prm_ScrW,
+		uint32 prm_ScrH,
+		DXGI_Formats::E prm_Format,
+		DXGI_Scanlines::E prm_ScanlineMode,
+		DXGI_Scaling::E prm_ScalingMode,
+		const uint64 prm_DXGIUsage,
+		uint32 prm_Wnd,
+		bool prm_Fullscreen,
+		DXGI_SwapEffect::E prm_SwapEffect,
+		D3D_Drivers::E prm_DriverType
+	)
 	{
 		m_Device = new GraphicsDevice;
 		m_DC = new GraphicsDeviceContext;
@@ -82,8 +94,8 @@ namespace HR_SDK
 		BDesc.RefreshRate.Numerator = 60;
 		BDesc.RefreshRate.Denominator = 1;
 		BDesc.Format = TranslateFormat(prm_Format);
-		BDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-		BDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+		BDesc.ScanlineOrdering = TranslateScanlineOrder(prm_ScanlineMode);
+		BDesc.Scaling = TranslateScaling(prm_ScalingMode);
 
 		//Describe our SwapChain
 		DXGI_SWAP_CHAIN_DESC SCDesc;
@@ -93,11 +105,27 @@ namespace HR_SDK
 		SCDesc.BufferDesc = BDesc;
 		SCDesc.SampleDesc.Count = 1;
 		SCDesc.SampleDesc.Quality = 0;
-		SCDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		SCDesc.BufferUsage = TranslateDXGIUsage(prm_DXGIUsage);
 		SCDesc.BufferCount = 1;
-		SCDesc.OutputWindow = reinterpret_cast<HWND>(prm_Wnd);
-		SCDesc.Windowed = TRUE;
-		SCDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+		//! Get the window index
+		HWND Window = reinterpret_cast<HWND>(prm_Wnd);
+		//! Set the window where graphics will be rendered
+		SCDesc.OutputWindow = Window;
+
+		SetFullscreen(prm_Fullscreen);
+		if (m_Fullscreen)
+		{
+			//! Set swapchain to be in fullscreen
+			SCDesc.Windowed = FALSE;
+		}
+
+		else
+		{
+			//! Set swapchain to be in a windowed rect
+			SCDesc.Windowed = TRUE;
+		}
+		
+		SCDesc.SwapEffect = TranslateSwapEffect(prm_SwapEffect);
 
 
 		//Create our SwapChain

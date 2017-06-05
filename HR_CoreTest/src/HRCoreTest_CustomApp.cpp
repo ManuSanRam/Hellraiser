@@ -6,10 +6,13 @@ struct Window
 	LPCSTR m_AppName;
 	BOOL   m_Fullscreen;
 
+	uint32 m_Width;
+	uint32 m_Height;
+
 	/*!
 	@brief Starts up the Win32 window and message loop
 	*/
-	void StartWin(uint32 prm_Width, uint32 prm_Height);
+	void StartWin();
 	/*!
 	@brief Closes Win32 systems and the app data
 	*/
@@ -31,7 +34,7 @@ void C_CustomApp::Run()
 	}
 }
 
-void Window::StartWin(uint32 prm_Width, uint32 prm_Height)
+void Window::StartWin()
 {
 	WNDCLASSEX wc;
 	DEVMODE dmScreenSettings;
@@ -61,8 +64,8 @@ void Window::StartWin(uint32 prm_Width, uint32 prm_Height)
 	RegisterClassEx(&wc);
 
 	// Determine the resolution of the clients desktop screen.
-	prm_Width = GetSystemMetrics(SM_CXSCREEN);
-	prm_Height = GetSystemMetrics(SM_CYSCREEN);
+	m_Width = GetSystemMetrics(SM_CXSCREEN);
+	m_Height = GetSystemMetrics(SM_CYSCREEN);
 
 	// Setup the screen settings depending on whether it is running in full screen or in windowed mode.
 	if (m_Fullscreen)
@@ -70,8 +73,8 @@ void Window::StartWin(uint32 prm_Width, uint32 prm_Height)
 		// If full screen set the screen to maximum size of the users desktop and 32bit.
 		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
 		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
-		dmScreenSettings.dmPelsWidth = (unsigned long)prm_Width;
-		dmScreenSettings.dmPelsHeight = (unsigned long)prm_Height;
+		dmScreenSettings.dmPelsWidth = (unsigned long)m_Width;
+		dmScreenSettings.dmPelsHeight = (unsigned long)m_Height;
 		dmScreenSettings.dmBitsPerPel = 32;
 		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
@@ -84,18 +87,18 @@ void Window::StartWin(uint32 prm_Width, uint32 prm_Height)
 	else
 	{
 		// If windowed then set it to given resolution.
-		prm_Width = WINDOWED_W;
-		prm_Height = WINDOWED_H;
+		m_Width = WINDOWED_W;
+		m_Height = WINDOWED_H;
 
 		// Place the window in the middle of the screen.
-		posX = (GetSystemMetrics(SM_CXSCREEN) - prm_Width) / 2;
-		posY = (GetSystemMetrics(SM_CYSCREEN) - prm_Height) / 2;
+		posX = (GetSystemMetrics(SM_CXSCREEN) - m_Width) / 2;
+		posY = (GetSystemMetrics(SM_CYSCREEN) - m_Height) / 2;
 	}
 
 	// Create the window with the screen settings and get the handle to it.
 	HWND wind = CreateWindowEx(WS_EX_APPWINDOW, m_AppName, m_AppName,
 		WS_OVERLAPPEDWINDOW | WS_CAPTION | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
-		posX, posY, prm_Width, prm_Height, NULL, NULL, NULL, NULL);
+		posX, posY, m_Width, m_Height, NULL, NULL, NULL, NULL);
 
 	// Bring the window up on the screen and set it as main focus.
 	ShowWindow(wind, SW_SHOW);
@@ -137,16 +140,16 @@ void Window::StopWin()
 void C_CustomApp::OnInit()
 {
 	m_Window = new Window();
-	m_Window->StartWin(WINDOWED_W, WINDOWED_H);
+	m_Window->StartWin();
 
 	m_GraphicsLogger = new C_Logger();
-	m_GraphicsLogger->Init("../externals/Log Files/GraphicsLog.html");
+	m_GraphicsLogger->Init("../externals/Log Files/CoreTestLog.html");
 	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Aplicación iniciada con exito", HR_FILE, HR_FUNCTION, HR_LINE);
 
 	//! Set Pipeline
 	//! Start-up Direct 3D
 	m_Graphics = new C_GraphicsAPI();
-	if (m_Graphics->Init(m_Width, m_Height, DXGI_Formats::RGBA_8_UNORM, m_Window->m_Window, D3D_Drivers::HARDWARE))
+	if (m_Graphics->Init(m_Window->m_Width, m_Window->m_Height, DXGI_Formats::RGBA_8_UNORM, DXGI_Scanlines::UNSPECIFIED, DXGI_Scaling::UNSPECIFIED, DXGI_Usage::RENDER_TARGET_OUTPUT, m_Window->m_Window, m_Fullscreen, DXGI_SwapEffect::DISCARD, D3D_Drivers::HARDWARE))
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Pipeline grafico cargado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
 	}
@@ -154,7 +157,7 @@ void C_CustomApp::OnInit()
 	else
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_FATAL_ERROR, "Pipeline grafico no se pudo cargar", HR_FILE, HR_FUNCTION, HR_LINE);
-		m_GraphicsLogger->Close("HR_GraphicsLogger");
+		m_GraphicsLogger->Close("HR_CoreTestLogger");
 		//this->OnDestroy();
 		exit(1);
 	}
@@ -169,13 +172,13 @@ void C_CustomApp::OnInit()
 	else
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_FATAL_ERROR, "Back buffer no se pudo crear", HR_FILE, HR_FUNCTION, HR_LINE);
-		m_GraphicsLogger->Close("HR_GraphicsLogger");
+		m_GraphicsLogger->Close("HR_CoreTestLogger");
 		exit(1);
 	}
 
 	//! Create Depth stencil
 	m_Depth = new C_DepthStencil();
-	if (m_Depth->CreateDSBuffer(m_Width, m_Height, DXGI_Formats::D_24_UNORM_S8_UINT, D3D_Usages::DEFAULT, D3D_Binds::DEPTH_STENCIL, m_Graphics->m_Device))
+	if (m_Depth->CreateDSBuffer(m_Window->m_Width, m_Window->m_Height, DXGI_Formats::D_24_UNORM_S8_UINT, D3D_Usages::DEFAULT, D3D_Binds::DEPTH_STENCIL, m_Graphics->m_Device))
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Buffer de profundidad creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
 	}
@@ -183,7 +186,7 @@ void C_CustomApp::OnInit()
 	else
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_FATAL_ERROR, "Buffer de profundidad no se pudo crear", HR_FILE, HR_FUNCTION, HR_LINE);
-		m_GraphicsLogger->Close("HR_GraphicsLogger");
+		m_GraphicsLogger->Close("HR_CoreTestLogger");
 		exit(1);
 	}
 
@@ -195,18 +198,19 @@ void C_CustomApp::OnInit()
 	else
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_FATAL_ERROR, "No se pudo crear Depth Stencil View", HR_FILE, HR_FUNCTION, HR_LINE);
-		m_GraphicsLogger->Close("HR_GraphicsLogger");
+		m_GraphicsLogger->Close("HR_CoreTestLogger");
 		exit(1);
 	}
 
 	m_BackBuffer->SetRTV(m_Graphics->m_DC, 1, m_Depth->m_DSV);
 	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Render Target View configurado", HR_FILE, HR_FUNCTION, HR_LINE);
 
+	
 	//! Init geometry to be drawn...
 	//! Compile the shaders...
 	m_VShader = new C_VertexShader();
 	m_PShader = new C_PixelShader();
-	if (m_VShader->Compile("../externals/Shader Files/BasicShader.fx", "VS", "vs_4_0"))
+	if (m_VShader->Compile("../externals/Shader Files/BasicVS.hlsl", "VSMain", "vs_5_0"))
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Shader de vertices compilado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
 	}
@@ -214,11 +218,11 @@ void C_CustomApp::OnInit()
 	else
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "No se pudo compilar shader de vertices", HR_FILE, HR_FUNCTION, HR_LINE);
-		m_GraphicsLogger->Close("HR_GraphicsLogger");
+		m_GraphicsLogger->Close("HR_CoreTestLogger");
 		exit(1);
 	}
 
-	if (m_VShader->Compile("../externals/Shader Files/BasicShader.fx", "PS", "ps_4_0"))
+	if (m_PShader->Compile("../externals/Shader Files/BasicVS.hlsl", "PSMain", "ps_5_0"))
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Shader de pixeles compilado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
 	}
@@ -226,7 +230,7 @@ void C_CustomApp::OnInit()
 	else
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "No se pudo compilar el shader de pixeles", HR_FILE, HR_FUNCTION, HR_LINE);
-		m_GraphicsLogger->Close("HR_GraphicsLogger");
+		m_GraphicsLogger->Close("HR_CoreTestLogger");
 		exit(1);
 	}
 
@@ -238,7 +242,7 @@ void C_CustomApp::OnInit()
 	else
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "No se pudo crear shader de vertices", HR_FILE, HR_FUNCTION, HR_LINE);
-		m_GraphicsLogger->Close("HR_GraphicsLogger");
+		m_GraphicsLogger->Close("HR_CoreTestLogger");
 		exit(1);
 	}
 
@@ -250,7 +254,7 @@ void C_CustomApp::OnInit()
 	else
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "No se pudo crear shader de pixeles", HR_FILE, HR_FUNCTION, HR_LINE);
-		m_GraphicsLogger->Close("HR_GraphicsLogger");
+		m_GraphicsLogger->Close("HR_CoreTestLogger");
 		exit(1);
 	}
 
@@ -270,8 +274,8 @@ void C_CustomApp::OnInit()
 
 	else
 	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "No se puedo crear buffer de indices", HR_FILE, HR_FUNCTION, HR_LINE);
-		m_GraphicsLogger->Close("HR_GraphicsLogger");
+		m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "No se puede crear buffer de indices", HR_FILE, HR_FUNCTION, HR_LINE);
+		m_GraphicsLogger->Close("HR_CoreTestLogger");
 		exit(1);
 	}
 
@@ -286,17 +290,17 @@ void C_CustomApp::OnInit()
 	else
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "No se pudo crear buffer", HR_FILE, HR_FUNCTION, HR_LINE);
-		m_GraphicsLogger->Close("HR_GraphicsLogger");
+		m_GraphicsLogger->Close("HR_CoreTestLogger");
 		exit(1);
 	}
 
 	m_SquareMesh->SetVB(m_Graphics->m_DC);
 	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Buffer de vertices configurado", HR_FILE, HR_FUNCTION, HR_LINE);
-
+	
 	//!Create input layout
 	m_InputLayout = new C_InputLayout();
 	m_InputLayout->AddInput("POSITION", 0, DXGI_Formats::RGB_32_FLOAT, 0);
-	m_InputLayout->AddInput("COLOR", 0, DXGI_Formats::RGBA_32_FLOAT, 12);
+	m_InputLayout->AddInput("COLOR", 0, DXGI_Formats::RGBA_32_FLOAT, D3D11_APPEND_ALIGNED_ELEMENT);
 	if (m_InputLayout->CreateInputLayout(m_Graphics->m_Device, m_VShader->m_Blob))
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Input layout creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
@@ -305,7 +309,7 @@ void C_CustomApp::OnInit()
 	else
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "No se pudo crear el input layout", HR_FILE, HR_FUNCTION, HR_LINE);
-		m_GraphicsLogger->Close("HR_GraphicsLogger");
+		m_GraphicsLogger->Close("HR_CoreTestLogger");
 		exit(1);
 	}
 
@@ -315,21 +319,77 @@ void C_CustomApp::OnInit()
 	m_SquareMesh->SetTopology(m_Graphics->m_DC, D3D_Topologies::TRIANGLE_LIST);
 	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Topologia de primitiva configurada", HR_FILE, HR_FUNCTION, HR_LINE);
 
-	RECT WindowData;
-	GetWindowRect
-	(
-		reinterpret_cast<HWND>(m_Window), 
-		&WindowData
-	);
-
 	m_Viewport = new C_Viewport();
-	m_Viewport->Create(0, 0, m_Width, m_Height, 0.0f, 1.0f);
+	m_Viewport->Create(0, 0, m_Window->m_Width, m_Window->m_Height, 0.0f, 1.0f);
 	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Viewport creado", HR_FILE, HR_FUNCTION, HR_LINE);
 	m_Viewport->Set(m_Graphics->m_DC);
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Viewportmconfigurado", HR_FILE, HR_FUNCTION, HR_LINE);
+	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Viewport configurado", HR_FILE, HR_FUNCTION, HR_LINE);
 
 	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Graficos cargados con exito... Listo para dibujar", HR_FILE, HR_FUNCTION, HR_LINE);
+	/*
+	//! Create world space constant buffer
+	m_WrldBuffer = new C_ConstantBuffer();
+	if (m_WrldBuffer->Create(m_Graphics->m_Device, 1, D3D_Binds::CONST_BUFFER, D3D_Access::WRITE, D3D_Usages::DYNAMIC, sizeof(C_Matrix4)))
+	{
+		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Constant buffer de mundo creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
+	}
 
+	else
+	{
+		m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de mundo", HR_FILE, HR_FUNCTION, HR_LINE);
+		m_GraphicsLogger->Close("HR_CoreTestLogger");
+		exit(1);
+	}
+
+	//! Create view space constant buffer
+	m_ViewBuffer = new C_ConstantBuffer();
+	if(m_ViewBuffer->Create(m_Graphics->m_Device, 1, D3D_Binds::CONST_BUFFER, D3D_Access::WRITE, D3D_Usages::DYNAMIC, sizeof(C_Matrix4)))
+	{
+		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Constant buffer de mundo creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
+	}
+
+	else
+	{
+		m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de mundo", HR_FILE, HR_FUNCTION, HR_LINE);
+		m_GraphicsLogger->Close("HR_CoreTestLogger");
+		exit(1);
+	}
+
+	//! Create projection space constant buffer
+	m_ProjBuffer = new C_ConstantBuffer();
+	if(m_ProjBuffer->Create(m_Graphics->m_Device, 1, D3D_Binds::CONST_BUFFER, D3D_Access::WRITE, D3D_Usages::DYNAMIC, sizeof(C_Matrix4)))
+	{
+		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Constant buffer de mundo creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
+	}
+
+	else
+	{
+		m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de mundo", HR_FILE, HR_FUNCTION, HR_LINE);
+		m_GraphicsLogger->Close("HR_CoreTestLogger");
+		exit(1);
+	}
+
+	//! Create the camera
+	m_StaticCamera = new C_GCamera();
+
+	/*!
+	 * Set the camera's data 
+	
+	//! Position
+	m_StaticCamera->SetPosition
+	(
+		C_Vector3D(0.0f, 0.0f, 0.2f)
+	);
+	//! Target
+	m_StaticCamera->SetTarget
+	(
+		C_Vector3D(0.0f, 0.0f, 0.0f)
+	);
+	//! Up vector
+	m_StaticCamera->SetUp
+	(
+		C_Vector3D(0.0f, 1.0f, 0.0f)
+	);*/
 }
 
 bool C_CustomApp::OnUpdate()
@@ -363,19 +423,43 @@ void C_CustomApp::OnRender()
 	*/
 	C_LinearColor Color;
 
-	Color.SetRed(Red);
-	Color.SetGreen(Green);
-	Color.SetBlue(Blue);
-	Color.SetAlpha(Alpha);
-
-	srand(time(NULL));
+	Color.SetRed(0.0f);
+	Color.SetGreen(0.8f);
+	Color.SetBlue(0.0f);
+	Color.SetAlpha(1.0f);
 
 	m_BackBuffer->ClearRTV(m_Graphics->m_DC, Color);
 
 	m_Depth->ClearDSV(m_Graphics->m_DC);
 
+	//! Set world matrix
+	/*C_Matrix4 World;
+	World.Identity();
+
+	//! Pass world matrix to constant buffer
+	m_WrldBuffer->Map(m_Graphics->m_DC, &World, sizeof(C_Matrix4));
+	m_WrldBuffer->Set(m_Graphics->m_DC, 0, 1);
+
+	//! Get view and projection matrices from camera
+	m_StaticCamera->LookAt();
+	C_Matrix4 View = m_StaticCamera->m_View;
+	View.Transpose();
+
+	//! Get matrices
+	m_StaticCamera->Projection(0.4 * C_PlatformMath::m_Pi, (float)m_Window->m_Width/m_Window->m_Height, 1.0f, 1000.0f);
+	C_Matrix4 Proj = m_StaticCamera->m_Projection;
+	Proj.Transpose();
+
+	//! Pass data to respective constant buffers
+	m_ViewBuffer->Map(m_Graphics->m_DC, &View, sizeof(C_Matrix4));
+	m_ViewBuffer->Set(m_Graphics->m_DC, 1, 1);
+
+	//! Pass view and projection matrices to the constant buffer
+	m_ProjBuffer->Map(m_Graphics->m_DC, &Proj, sizeof(C_Matrix4));
+	m_ProjBuffer->Set(m_Graphics->m_DC, 2, 1);*/
+
 	//! Render your shit here...
-	m_SquareMesh->Draw(m_Graphics->m_DC, m_SquareMesh->m_IB.GetCount());
+	m_SquareMesh->Draw(m_Graphics->m_DC);
 
 	m_Graphics->Present();
 }
@@ -412,13 +496,22 @@ void C_CustomApp::OnDestroy()
 	delete m_Depth;
 	m_Depth = NULL;
 
+	/*delete m_WrldBuffer;
+	m_WrldBuffer = NULL;
+
+	delete m_ViewBuffer;
+	m_ViewBuffer = NULL;
+
+	delete m_ProjBuffer;
+	m_ProjBuffer = NULL;
+	*/
 	/*!
 		Kill the application´s window
 	*/
 	m_Window->StopWin();
 	delete m_Window;
 
-	m_GraphicsLogger->Close("HR_GraphicsLogger");
+	m_GraphicsLogger->Close("HR_CoreTestLogger");
 	delete m_GraphicsLogger;
 }
 
@@ -426,51 +519,6 @@ LRESULT CALLBACK Window::wndProc(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lpa
 {
 	switch (umsg)
 	{
-	case WM_KEYDOWN:
-	{
-		if (wparam == VK_ESCAPE)
-		{
-			PostQuitMessage(0);
-		}
-		// Red
-		if (wparam == 'r' || wparam == 'R')
-		{
-			if (Red < 1.1f)
-				Red += 0.1f;
-		}
-		// Green
-		else if (wparam == 'g' || wparam == 'G')
-		{
-			if (Green < 1.1f)
-				Green += 0.1f;
-		}
-		// Blue
-		else if (wparam == 'b' || wparam == 'B')
-		{
-			if (Blue < 1.1f)
-				Blue += 0.1f;
-		}
-		// Cyan = Green + Blue
-		else if (wparam == 'c' || wparam == 'C')
-		{
-			if (Red > 0.0f)
-				Red -= 0.1f;
-		}
-		// Magenta = Red + Blue
-		else if (wparam == 'm' || wparam == 'M')
-		{
-			if (Green > 0.0f)
-				Green -= 0.1f;
-		}
-		// Yellow = Red + Green
-		else if (wparam == 'y' || wparam == 'Y')
-		{
-			if (Blue > 0.0f)
-				Blue -= 0.1f;
-		}
-	}
-	break;
-
 	case WM_DESTROY:
 	{
 		PostQuitMessage(0);;

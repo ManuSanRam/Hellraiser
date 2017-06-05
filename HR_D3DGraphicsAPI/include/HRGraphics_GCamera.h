@@ -44,9 +44,9 @@ namespace HR_SDK
 
 		}
 
-		/*!
+		/*!****************************************************************************************************************************************************************
 		 * @brief Destructor
-		*/
+		*******************************************************************************************************************************************************************/
 		~C_GCamera()
 		{
 
@@ -58,39 +58,43 @@ namespace HR_SDK
 		 * Modifying the camera functionality, for setting view and projection matrices for the constant buffers
 		 * This functions are exclusive for the graphics camera. It can rotate and translate.
 		*******************************************************************************************************************************************************************/
-
+		/*!****************************************************************************************************************************************************************
+		 * @brief Sets the camera's position in the world
+		 * @param prm_Position Position of the camera in world space
+		*******************************************************************************************************************************************************************/
 		void SetPosition
 		(
-			float prm_x,
-			float prm_y,
-			float prm_z,
-			float prm_w
+			const C_Vector3D prm_Position
 		);
 
+		/*!
+		*/
 		void SetTarget
 		(
-			float prm_x,
-			float prm_y,
-			float prm_z,
-			float prm_w
+			const C_Vector3D prm_Target
 		);
 
+		/*!
+		 * @brief Sets the camera's up vector
+		*/
 		void SetUp
 		(
-			float prm_x,
-			float prm_y,
-			float prm_z,
-			float prm_w
+			const C_Vector3D prm_Up
 		);
 
-		C_Matrix4 LookAt
+		/*!
+		 * @brief Calculates the view space matrix, obtaining the orientation which the camera is pointing at.
+		*/
+		void LookAt
 		(
-			C_Vector4D,
-			C_Vector4D,
-			C_Vector4D
+
 		);
 
-		C_Matrix4 Projection
+		/*!
+		 * @brief Creates the projection space matrix of the camera. This shall be replaced with the frustrum
+		 * @param prm_FOVAngle Angle in radians 
+		*/
+		void Projection
 		(
 			float prm_FOVAngle,
 			float prm_Ratio,
@@ -101,8 +105,11 @@ namespace HR_SDK
 		//! This object needs to be defined
 		//! C_Frustrum m_FOV;
 
-		C_Vector4D m_Position;
-		C_Vector4D m_Target;
-		C_Vector4D m_Up;
+		C_Vector3D m_Position;
+		C_Vector3D m_Target;
+		C_Vector3D m_Up;
+
+		C_Matrix4  m_View;
+		C_Matrix4  m_Projection;
 	};
 }

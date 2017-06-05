@@ -77,39 +77,22 @@ struct HR_SDK::GraphicsIndexBuffer
 
 bool C_TestMesh::CreateVertexB(GraphicsDevice* prm_Device)
 {
-	S_Vertex Vertices[4];
+	S_Vertex V1(-0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f);
+	S_Vertex V2(-0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f);
+	S_Vertex V3(0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f);
+	S_Vertex V4(0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f);
 
-	Vertices[0].m_Position.Set		(-0.5f, -0.5f, 0.5f);
-	Vertices[0].m_Color.Set			(1.0f, 0.0f, 0.0f, 1.0f);
-	Vertices[0].m_TextCoords.Set	(0.0f, 0.0f);
-	Vertices[0].m_Normal.Set		(0.0f , 0.0f, 1.0f);
-
-	Vertices[1].m_Position.Set		(-0.5f, 0.5f, 0.5f);
-	Vertices[1].m_Color.Set			(0.0f, 1.0f, 0.0f, 1.0f);
-	Vertices[1].m_TextCoords.Set	(0.0f, 0.0f);
-	Vertices[1].m_Normal.Set		(0.0f, 0.0f, 1.0f);
-
-	Vertices[2].m_Position.Set		(0.5f, 0.5f, 0.5f);
-	Vertices[2].m_Color.Set			(0.0f, 0.0f, 1.0f, 1.0f);
-	Vertices[2].m_TextCoords.Set	(0.0f, 0.0f);
-	Vertices[2].m_Normal.Set		(0.0f, 0.0f, 1.0f);
-
-	Vertices[3].m_Position.Set		(0.5f, -0.5f, 0.5f);
-	Vertices[3].m_Color.Set			(0.0f, 1.0f, 0.0f, 1.0f);
-	Vertices[3].m_TextCoords.Set	(0.0f, 0.0f);
-	Vertices[3].m_Normal.Set		(0.0f, 0.0f, 1.0f);
-
-	for (auto vert : Vertices)
-	{
-		m_VB.AddVertex(vert);
-	}
+	m_VB.AddVertex(V1);
+	m_VB.AddVertex(V2);
+	m_VB.AddVertex(V3);
+	m_VB.AddVertex(V4);
 
 	if (!m_VB.m_Vertices.size())
 	{
 		return false;
 	}
 
-	m_VB.Create(prm_Device, m_VB.GetCount(), D3D_Binds::VERTEX_BUFFER, D3D_Access::WRITE, D3D_Usages::DYNAMIC, m_VB.m_Vertices);
+	m_VB.Create(prm_Device, m_VB.GetCount(), D3D_Binds::VERTEX_BUFFER, D3D_Access::NONE, D3D_Usages::DEFAULT);
 	return true;
 
 }
@@ -136,7 +119,7 @@ bool C_TestMesh::CreateIndexB(GraphicsDevice* prm_Device)
 		return false;
 	}
 
-	m_IB.Create(prm_Device, m_IB.GetCount(), D3D_Binds::INDEX_BUFFER, D3D_Access::WRITE, D3D_Usages::DEFAULT, m_IB.m_Indices);
+	m_IB.Create(prm_Device, m_IB.GetCount(), D3D_Binds::INDEX_BUFFER, D3D_Access::NONE, D3D_Usages::DEFAULT);
 
 	return true;
 }
@@ -154,9 +137,6 @@ void C_TestMesh::SetVB
 	GraphicsDeviceContext*	prm_DC
 )
 {
-	uint32 Stride = sizeof(S_Vertex);
-	uint32 Offset = 0;
-
 	m_VB.SetBuffer(prm_DC);
 }
 
@@ -174,12 +154,11 @@ void C_TestMesh::SetTopology
 
 void C_TestMesh::Draw
 (
-	GraphicsDeviceContext*	prm_DC,
-	uint32					prm_Indices
+	GraphicsDeviceContext*	prm_DC
 )
 {
 	reinterpret_cast<ID3D11DeviceContext*>(prm_DC->GetPointer())->DrawIndexed
 	(
-		prm_Indices, 0, 0
+		m_IB.GetCount(), 0, 0
 	);
 }

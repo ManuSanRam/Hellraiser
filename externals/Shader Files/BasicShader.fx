@@ -1,3 +1,8 @@
+cbuffer World
+{
+	float4x4 World;
+};
+
 struct VS_OUTPUT
 {
 	float4 Pos : SV_POSITION;

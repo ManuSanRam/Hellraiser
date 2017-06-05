@@ -27,10 +27,9 @@ namespace HR_SDK
 		const C_Vector3D& prm_PointC
 	)
 	{
-		C_Vector3D DirU, DirV;
 
-		DirU.Set(prm_PointB.m_x - prm_PointA.m_x, prm_PointB.m_y - prm_PointA.m_y, prm_PointB.m_z - prm_PointA.m_z);
-		DirV.Set(prm_PointC.m_x - prm_PointA.m_x, prm_PointC.m_y - prm_PointA.m_y, prm_PointC.m_z - prm_PointA.m_z);
+		C_Vector3D DirU(prm_PointB.m_x - prm_PointA.m_x, prm_PointB.m_y - prm_PointA.m_y, prm_PointB.m_z - prm_PointA.m_z);
+		C_Vector3D DirV(prm_PointC.m_x - prm_PointA.m_x, prm_PointC.m_y - prm_PointA.m_y, prm_PointC.m_z - prm_PointA.m_z);
 
 		m_Normal = DirU.Cross(DirV);
 		m_Normal.Normalize();

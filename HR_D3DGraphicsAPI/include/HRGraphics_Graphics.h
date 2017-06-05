@@ -64,8 +64,24 @@ namespace HR_SDK
 	  }
 
 	  /*!
+	   * @brief Initiates the DirectX graphics pipeline. Sets the device, the swap chain and the device context.
+	   * @param
+	   * @return
 	  */
-	  bool Init(uint32 prm_ScrW, uint32 prm_ScrH, DXGI_Formats::E prm_Format, uint32 prm_Wnd, D3D_Drivers::E prm_DriverType);
+	  bool Init
+	  (
+		  uint32 prm_ScrW, 
+		  uint32 prm_ScrH, 
+		  DXGI_Formats::E prm_Format,
+		  DXGI_Scanlines::E prm_ScanlineMode,
+		  DXGI_Scaling::E prm_ScalingMode,
+		  const uint64 prm_DXGIUsage,
+		  uint32 prm_Wnd,
+		  bool prm_Fullscreen,
+		  DXGI_SwapEffect::E prm_SwapEffect,
+		  D3D_Drivers::E prm_DriverType
+	  );
+
 	  /*!
 	  */
 	  void Present();

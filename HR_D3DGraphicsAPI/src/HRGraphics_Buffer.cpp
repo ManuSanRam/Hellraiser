@@ -48,6 +48,7 @@ namespace HR_SDK
 
 	struct GraphicsBuffer
 	{
+		GraphicsBuffer() : Buffer(nullptr) {}
 		void* GetPointer()
 		{
 			return reinterpret_cast<void*>(Buffer);
@@ -68,13 +69,7 @@ namespace HR_SDK
 	***********************************************************************************************************************************************************************/
 	C_BufferBase::~C_BufferBase()
 	{
-		//! Check if the buffer is pointing to information in memory
-		if (m_Buffer)
-		{
-			//! Release memory from RAM
-			reinterpret_cast<ID3D11Buffer*>(m_Buffer->GetPointer())->Release();
-		}
-		//! Point buffer pointer to null memory
+		delete m_Buffer;
 		m_Buffer = NULL;
 	}
 	/*!*********************************************************************************************************************************************************************
@@ -118,10 +113,11 @@ namespace HR_SDK
 		uint32 prm_Count,
 		D3D_Binds::E prm_Bind,
 		D3D_Access::E prm_Access,
-		D3D_Usages::E prm_Usage,
-		Vector<VertexType> prm_Vector
+		D3D_Usages::E prm_Usage
 	)
 	{
+		m_Buffer = new GraphicsBuffer();
+
 		//! Holds the result of the device passing the data to the GPU
 		HRESULT FuncResult;
 
@@ -139,8 +135,8 @@ namespace HR_SDK
 
 		//! Create subresource data
 		ZeroMemory(&SRD, sizeof(SRD));
-		SRD.pSysMem = &prm_Vector[0];
-
+		SRD.pSysMem = &m_Vertices[0];
+		
 		//! Pass the data through the parameter device
 		FuncResult = reinterpret_cast<ID3D11Device*>(prm_Device->GetPointer())->CreateBuffer(
 			&Desc,
@@ -177,6 +173,17 @@ namespace HR_SDK
 			&Stride,
 			&Offset
 		);
+	}
+
+	template<typename VertexType>
+	void C_VertexBuffer<VertexType>::Close()
+	{
+		ID3D11Buffer* TmpBuffer = reinterpret_cast<ID3D11Buffer*>(m_Buffer->GetPointer());
+
+		if (TmpBuffer)
+		{
+			TmpBuffer->Release();
+		}
 	}
 
 	/*!*********************************************************************************************************************************************************************
@@ -218,9 +225,10 @@ namespace HR_SDK
 		uint32				prm_Count,
 		D3D_Binds::E		prm_Bind,
 		D3D_Access::E		prm_Access,
-		D3D_Usages::E		prm_Usage,
-		Vector<IndexType>	prm_Vector)
+		D3D_Usages::E		prm_Usage
+	)
 	{
+		m_Buffer = new GraphicsBuffer();
 		//! Holds the result of the device passing the data to the GPU
 		HRESULT FuncResult;
 
@@ -235,17 +243,17 @@ namespace HR_SDK
 		Desc.BindFlags = TranslateBind(prm_Bind);
 		Desc.CPUAccessFlags = TranslateAccess(prm_Access);
 		Desc.MiscFlags = 0;
-
 		//! Create subresource data
 		ZeroMemory(&SRD, sizeof(SRD));
-		SRD.pSysMem = &prm_Vector[0];
-
+		SRD.pSysMem = &m_Indices[0];
+		
 		//! Pass the data through the parameter device
+		ID3D11Buffer** TmpBuff = reinterpret_cast<ID3D11Buffer**>(m_Buffer->GetReference());
 		FuncResult = reinterpret_cast<ID3D11Device*>(prm_Device->GetPointer())->CreateBuffer
 		(
 			&Desc,
 			&SRD,
-			reinterpret_cast<ID3D11Buffer**>(m_Buffer->GetReference())
+			TmpBuff
 		);
 		//! Check if the device correctly passed the data into the GPU
 		if (FAILED(FuncResult))
@@ -276,6 +284,17 @@ namespace HR_SDK
 		);
 	}
 
+	template<typename IndexType>
+	void C_IndexBuffer<IndexType>::Close()
+	{
+		ID3D11Buffer* TmpBuffer = reinterpret_cast<ID3D11Buffer*>(m_Buffer->GetPointer());
+
+		if (TmpBuffer)
+		{
+			TmpBuffer->Release();
+		}
+	}
+
 	/*!*********************************************************************************************************************************************************************
 	*																																									   *
 	*														CONSTANT BUFFER FUNCTIONS																					   *
@@ -288,55 +307,36 @@ namespace HR_SDK
 	* @param prm_Bind Binding of the buffer in GPU (Vertex, Index, Constant)																						   	   *
 	* @return Returns a buffer descriptor to be used to pass vertex data to GPU																						   	   *
 	***********************************************************************************************************************************************************************/
-	void C_ConstantBuffer::CreateDate
-	(
-		SIZE_T		prm_Size
-	)
-	{
-		m_Constants.resize(prm_Size);
-	}
-
-	bool C_ConstantBuffer::SetData
-	(
-		void*		prm_Date,
-		SIZE_T		prm_Size
-	)
-	{
-
-	}
-	
 	bool C_ConstantBuffer::Create
 	(
 		GraphicsDevice* prm_Device,
 		uint32			prm_Count,
 		D3D_Binds::E	prm_Bind,
 		D3D_Access::E	prm_Access,
-		D3D_Usages::E	prm_Usage
+		D3D_Usages::E	prm_Usage,
+		SIZE_T			prm_Size
 	)
 	{
-		//! Holds the result of the device passing the data to the GPU
+		//! Holds the result of the device passing the data to the shader file
 		HRESULT FuncResult;
 
 		D3D11_BUFFER_DESC Desc;
-		D3D11_SUBRESOURCE_DATA SRD;
 
 		//! Create descriptor of buffer
 		ZeroMemory(&Desc, sizeof(Desc));
 
 		Desc.Usage = TranslateUsage(prm_Usage);
-		Desc.ByteWidth = sizeof(Byte);
+		Desc.ByteWidth = prm_Size;
 		Desc.BindFlags = TranslateBind(prm_Bind);
-		Desc.CPUAccessFlags = TranslateUsage(prm_Usage);
+		Desc.CPUAccessFlags = TranslateAccess(prm_Access);
 		Desc.MiscFlags = 0;
 
-		//! Create subresource data
-		ZeroMemory(&SRD, sizeof(SRD));
-		SRD.pSysMem = &m_Constants[0];
+		m_Buffer = new GraphicsBuffer();
 
 		//! Pass the data through the parameter device
 		FuncResult = reinterpret_cast<ID3D11Device*>(prm_Device->GetPointer())->CreateBuffer(
 			&Desc,
-			&SRD,
+			NULL,
 			reinterpret_cast<ID3D11Buffer**>(m_Buffer->GetReference()));
 		//! Check if the device correctly passed the data into the GPU
 		if (FAILED(FuncResult))
@@ -348,22 +348,69 @@ namespace HR_SDK
 		return true;
 	}
 
-	template<typename Object>
-	void C_ConstantBuffer<Object>::Map
+	/*!
+	 * @brief 
+	*/
+	bool C_ConstantBuffer::Map
 	(
-		GraphicsDeviceContext* prm_DC
+		GraphicsDeviceContext* prm_DC,
+		void* prm_Data,
+		SIZE_T prm_Size
 	)
 	{
+		//! 
+		HRESULT Result;
+		//!
+		D3D11_MAPPED_SUBRESOURCE MpdSbr;
+
 		//! Set to the pipeline
+		ID3D11DeviceContext* TmpDC = reinterpret_cast<ID3D11DeviceContext*>(prm_DC->GetPointer());
+		//!
+		ID3D11Buffer* TmpCBuff = reinterpret_cast<ID3D11Buffer*>(m_Buffer->GetPointer());
+
+		//!
+		Result = TmpDC->Map(TmpCBuff, 0, D3D11_MAP_WRITE_DISCARD, 0, &MpdSbr);
+		
+		//!
+		if (FAILED(Result))
+		{
+			//!
+			return false;
+		}
+
+		//! Pass data to be written into CBuffer
+		void* Data = (void*)MpdSbr.pData;
+
+		Data = prm_Data;
+
+		TmpDC->Unmap(TmpCBuff, 0);
+
+		//! End function
+		return true;
 	}
 
-	template<typename Object>
-	void C_ConstantBuffer<Object>::Set
+	void C_ConstantBuffer::Set
 	(
-		GraphicsDeviceContext* prm_DC
+		GraphicsDeviceContext* prm_DC,
+		uint32		prm_Slot,
+		uint32		prm_NumBuffers
 	)
 	{
 		//! Set to the pipeline
+		ID3D11DeviceContext* TmpDC = reinterpret_cast<ID3D11DeviceContext*>(prm_DC->GetPointer());
+		ID3D11Buffer** TmpCBuff = reinterpret_cast<ID3D11Buffer**>(m_Buffer->GetReference());
+
+		TmpDC->VSSetConstantBuffers(prm_Slot, prm_NumBuffers, TmpCBuff);
+	}
+
+	void C_ConstantBuffer::Close() 
+	{
+		ID3D11Buffer* TmpBuffer = reinterpret_cast<ID3D11Buffer*>(m_Buffer->GetPointer());
+
+		if (TmpBuffer)
+		{
+			TmpBuffer->Release();
+		}
 	}
 
 	template class C_VertexBuffer<S_Vertex>;

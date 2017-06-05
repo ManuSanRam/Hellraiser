@@ -114,13 +114,6 @@ namespace HR_SDK
 		return *this;
 	}
 
-	void Set(float X, float Y, float Z)
-	{
-		m_x = X;
-		m_y = Y;
-		m_z = Z;
-	}
-
 	/*!
 	 * @brief Equal operator checks if the elements of both vectors are the same.
 	*/

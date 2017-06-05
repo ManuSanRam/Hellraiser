@@ -315,39 +315,40 @@ namespace HR_SDK
   *************************************************************************************************************************************************************************/
   bool C_PlatformMath::Intersection_AABBvAABB(const C_AABB& prm_A, const C_AABB& prm_B)
   {
-	  C_Vector3D AABB_AVert[8];
-	  C_Vector3D AABB_BVert[8];
-
-	  AABB_AVert[0].Set(prm_A.m_Min.m_x, prm_A.m_Min.m_y, prm_A.m_Min.m_z);
-	  AABB_AVert[1].Set(prm_A.m_Max.m_x, prm_A.m_Min.m_y, prm_A.m_Min.m_z);
-	  AABB_AVert[2].Set(prm_A.m_Max.m_x, prm_A.m_Max.m_y, prm_A.m_Min.m_z);
-	  AABB_AVert[3].Set(prm_A.m_Min.m_x, prm_A.m_Max.m_y, prm_A.m_Min.m_z);
-	  AABB_AVert[4].Set(prm_A.m_Min.m_x, prm_A.m_Min.m_y, prm_A.m_Max.m_z);
-	  AABB_AVert[5].Set(prm_A.m_Max.m_x, prm_A.m_Min.m_y, prm_A.m_Max.m_z);
-	  AABB_AVert[6].Set(prm_A.m_Max.m_x, prm_A.m_Max.m_y, prm_A.m_Max.m_z);
-	  AABB_AVert[7].Set(prm_A.m_Min.m_x, prm_A.m_Max.m_y, prm_A.m_Max.m_z);
-
-	  AABB_BVert[0].Set(prm_B.m_Min.m_x, prm_B.m_Min.m_y, prm_B.m_Min.m_z);
-	  AABB_BVert[1].Set(prm_B.m_Max.m_x, prm_B.m_Min.m_y, prm_B.m_Min.m_z);
-	  AABB_BVert[2].Set(prm_B.m_Max.m_x, prm_B.m_Max.m_y, prm_B.m_Min.m_z);
-	  AABB_BVert[3].Set(prm_B.m_Min.m_x, prm_B.m_Max.m_y, prm_B.m_Min.m_z);
-	  AABB_BVert[4].Set(prm_B.m_Min.m_x, prm_B.m_Min.m_y, prm_B.m_Max.m_z);
-	  AABB_BVert[5].Set(prm_B.m_Max.m_x, prm_B.m_Min.m_y, prm_B.m_Max.m_z);
-	  AABB_BVert[6].Set(prm_B.m_Max.m_x, prm_B.m_Max.m_y, prm_B.m_Max.m_z);
-	  AABB_BVert[7].Set(prm_B.m_Min.m_x, prm_B.m_Max.m_y, prm_B.m_Max.m_z);
-
-	  return
-		(
-			(AABB_AVert[0] <= AABB_BVert[6]) &&
-			(AABB_AVert[1] >= AABB_BVert[7]) &&
-			(AABB_AVert[2] >= AABB_BVert[4]) &&
-			(AABB_AVert[3] >= AABB_BVert[5]) &&
-			(AABB_AVert[4] >= AABB_BVert[2]) &&
-			(AABB_AVert[5] >= AABB_BVert[3]) &&
-			(AABB_AVert[6] >= AABB_BVert[0]) &&
-			(AABB_AVert[7] >= AABB_BVert[1])
-		)
-		  ;
+	//C_Vector3D AABB_AVert[8];
+	//C_Vector3D AABB_BVert[8];
+	//
+	//AABB_AVert[0].Set(prm_A.m_Min.m_x, prm_A.m_Min.m_y, prm_A.m_Min.m_z);
+	//AABB_AVert[1].Set(prm_A.m_Max.m_x, prm_A.m_Min.m_y, prm_A.m_Min.m_z);
+	//AABB_AVert[2].Set(prm_A.m_Max.m_x, prm_A.m_Max.m_y, prm_A.m_Min.m_z);
+	//AABB_AVert[3].Set(prm_A.m_Min.m_x, prm_A.m_Max.m_y, prm_A.m_Min.m_z);
+	//AABB_AVert[4].Set(prm_A.m_Min.m_x, prm_A.m_Min.m_y, prm_A.m_Max.m_z);
+	//AABB_AVert[5].Set(prm_A.m_Max.m_x, prm_A.m_Min.m_y, prm_A.m_Max.m_z);
+	//AABB_AVert[6].Set(prm_A.m_Max.m_x, prm_A.m_Max.m_y, prm_A.m_Max.m_z);
+	//AABB_AVert[7].Set(prm_A.m_Min.m_x, prm_A.m_Max.m_y, prm_A.m_Max.m_z);
+	//
+	//AABB_BVert[0].Set(prm_B.m_Min.m_x, prm_B.m_Min.m_y, prm_B.m_Min.m_z);
+	//AABB_BVert[1].Set(prm_B.m_Max.m_x, prm_B.m_Min.m_y, prm_B.m_Min.m_z);
+	//AABB_BVert[2].Set(prm_B.m_Max.m_x, prm_B.m_Max.m_y, prm_B.m_Min.m_z);
+	//AABB_BVert[3].Set(prm_B.m_Min.m_x, prm_B.m_Max.m_y, prm_B.m_Min.m_z);
+	//AABB_BVert[4].Set(prm_B.m_Min.m_x, prm_B.m_Min.m_y, prm_B.m_Max.m_z);
+	//AABB_BVert[5].Set(prm_B.m_Max.m_x, prm_B.m_Min.m_y, prm_B.m_Max.m_z);
+	//AABB_BVert[6].Set(prm_B.m_Max.m_x, prm_B.m_Max.m_y, prm_B.m_Max.m_z);
+	//AABB_BVert[7].Set(prm_B.m_Min.m_x, prm_B.m_Max.m_y, prm_B.m_Max.m_z);
+	//
+	//return
+	//(
+	//	(AABB_AVert[0] <= AABB_BVert[6]) &&
+	//	(AABB_AVert[1] >= AABB_BVert[7]) &&
+	//	(AABB_AVert[2] >= AABB_BVert[4]) &&
+	//	(AABB_AVert[3] >= AABB_BVert[5]) &&
+	//	(AABB_AVert[4] >= AABB_BVert[2]) &&
+	//	(AABB_AVert[5] >= AABB_BVert[3]) &&
+	//	(AABB_AVert[6] >= AABB_BVert[0]) &&
+	//	(AABB_AVert[7] >= AABB_BVert[1])
+	//)
+	//  ;
+	  return false;
   }
 
   /*!**********************************************************************************************************************************************************************

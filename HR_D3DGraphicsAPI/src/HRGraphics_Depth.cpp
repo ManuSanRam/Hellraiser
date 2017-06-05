@@ -34,6 +34,7 @@ namespace HR_SDK
 
 	struct GraphicsDepthStencilBuffer
 	{
+		GraphicsDepthStencilBuffer() : Buffer(nullptr) {}
 		void* GetPointer()
 		{
 			return reinterpret_cast<void*>(Buffer);
@@ -49,6 +50,7 @@ namespace HR_SDK
 
 	struct GraphicsDepthStencilState
 	{
+		GraphicsDepthStencilState() : DSS(nullptr) {}
 		void* GetPointer()
 		{
 			return reinterpret_cast<void*>(DSS);
@@ -64,6 +66,7 @@ namespace HR_SDK
 
 	struct GraphicsDepthStencilView
 	{
+		GraphicsDepthStencilView() : DSV(nullptr) {}
 		void* GetPointer()
 		{
 			return reinterpret_cast<void*>(DSV);

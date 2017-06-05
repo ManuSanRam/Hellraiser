@@ -63,6 +63,7 @@ namespace HR_SDK
 
 	struct GraphicsVertexShader
 	{
+		GraphicsVertexShader() : VertexShader(nullptr) {}
 		void* GetPointer()
 		{
 			return reinterpret_cast<void*>(VertexShader);
@@ -78,6 +79,7 @@ namespace HR_SDK
 
 	struct GraphicsPixelShader
 	{
+		GraphicsPixelShader() : PixelShader(nullptr) {}
 		void* GetPointer()
 		{
 			return reinterpret_cast<void*>(PixelShader);
@@ -136,26 +138,23 @@ namespace HR_SDK
 			SIZE_T ErrorSize = ErrorBlob->GetBufferSize();
 			//! Init string to capture error message, allocating correct buffer size and starting content of the string in null pointer
 			String ErrorDesc(ErrorSize + 1, 0);
-
 			//! Save content of error buffer in char pointer - casting buffer content to correct type
 			char* ErrorMsg = (char*)ErrorBlob->GetBufferPointer();
-
 			//! Get error message from blob
 			ErrorDesc.insert(ErrorDesc.begin(), ErrorMsg, ErrorMsg + ErrorSize);
-
 			//! Release reinterpreted error blob, since info has been saved already
 			ErrorBlob->Release();
-			//! Delete error blob pointer
-			delete ErrorBlob;
-
+			
 			//! Just if the blob is currently pointing to memory that will be unused
 			if (m_Blob->Blob)
 			{
 				//! Release shader blob resource
 				reinterpret_cast<ID3D10Blob*>(m_Blob->GetPointer())->Release();
 			}
+			
 			//! Delete shader blob
 			delete m_Blob;
+			
 			//! ERROR: Shader compilation failed - error is saved in a string 
 			return false;
 		}
@@ -172,14 +171,17 @@ namespace HR_SDK
 	{
 		HRESULT Creation;
 
-		m_VShader = new GraphicsVertexShader;
+		m_VShader = new GraphicsVertexShader();
+
+		ID3D10Blob* TmpBlob = reinterpret_cast<ID3D10Blob*>(m_Blob->GetPointer());
+		ID3D11VertexShader** TmpShader /*= nullptr; */= reinterpret_cast<ID3D11VertexShader**>(m_VShader->GetReference());
 
 		Creation = reinterpret_cast<ID3D11Device*>(prm_Device->GetPointer())->CreateVertexShader
 		(
-			reinterpret_cast<ID3D10Blob*>(m_Blob->GetPointer())->GetBufferPointer(),
-			reinterpret_cast<ID3D10Blob*>(m_Blob->GetPointer())->GetBufferSize(),
+			TmpBlob->GetBufferPointer(),
+			TmpBlob->GetBufferSize(),
 			NULL,
-			reinterpret_cast<ID3D11VertexShader**>(m_VShader->GetReference())
+			TmpShader
 		);
 
 		if (FAILED(Creation))
@@ -280,8 +282,6 @@ namespace HR_SDK
 
 			//! Release reinterpreted error blob, since info has been saved already
 			ErrorBlob->Release();
-			//! Delete error blob pointer
-			delete ErrorBlob;
 
 			//! Just if the blob is currently pointing to memory that will be unused
 			if (m_Blob->Blob)
@@ -310,7 +310,7 @@ namespace HR_SDK
 	{
 		HRESULT Creation;
 
-		m_PShader = new GraphicsPixelShader;
+		m_PShader = new GraphicsPixelShader();
 
 		Creation = reinterpret_cast<ID3D11Device*>(prm_Device->GetPointer())->CreatePixelShader
 		(

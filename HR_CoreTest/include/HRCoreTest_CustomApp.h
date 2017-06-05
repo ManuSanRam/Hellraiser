@@ -1,10 +1,14 @@
 #pragma once
 
+/*!
+*/
+
 #include <HRCore_Application.h>
 
 #include <Windows.h>
 
 #include <HRUtility_Vector3D.h>
+#include <HRUtility_Matrix4.h>
 #include <HRUtility_Logger.h>
 
 #include <HRGraphics_Graphics.h>
@@ -17,8 +21,10 @@
 #include <HRGraphics_InputLayout.h>
 
 #include <HRGraphics_Viewport.h>
+#include <HRGraphics_GCamera.h>
 
-
+/*!
+*/
 
 #define WIN32_LEAN_AND_MEAN
 #define WINDOWED_W		1000
@@ -26,29 +32,21 @@
 
 using namespace HR_SDK;
 
+/*!
+*/
 struct Window;
 
+/*!
+*/
 class C_CustomApp : public C_Application
 {
 public:
-	C_CustomApp()
-	{
-		m_Width = 0;
-		m_Height = 0;
-		m_Fullscreen = false;
-		m_Graphics = NULL;
-		m_SquareMesh = NULL;
-
-		Init();
-	}
-
 	C_CustomApp(bool Fullscreen)
 	{
-		m_Width = 0;
-		m_Height = 0;
 		m_Fullscreen = Fullscreen;
 		m_Graphics = NULL;
 		m_SquareMesh = NULL;
+		m_StaticCamera = NULL;
 
 		Init();
 	}
@@ -79,9 +77,6 @@ public:
 
 	bool m_Fullscreen;
 
-	uint32 m_Width;
-	uint32 m_Height;
-
 	Window*					m_Window;
 
 	C_Logger*				m_GraphicsLogger;
@@ -92,6 +87,8 @@ public:
 	C_DepthStencil*			m_Depth;
 
 	C_TestMesh*				m_SquareMesh;
+	ID3D11Buffer*			m_VertexBuffer;
+	ID3D11Buffer*			m_IndexBuffer;
 
 	C_InputLayout*			m_InputLayout;
 
@@ -99,9 +96,10 @@ public:
 	C_PixelShader*			m_PShader;
 
 	C_Viewport*				m_Viewport;
-};
 
-static float Red =		0.0f;
-static float Green =	0.0f;
-static float Blue =		0.0f;
-static float Alpha =	1.0f;
+	C_ConstantBuffer*		m_WrldBuffer;
+	C_ConstantBuffer*		m_ViewBuffer;
+	C_ConstantBuffer*		m_ProjBuffer;
+
+	C_GCamera*				m_StaticCamera;
+};
