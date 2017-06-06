@@ -326,7 +326,7 @@ void C_CustomApp::OnInit()
 	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Viewport configurado", HR_FILE, HR_FUNCTION, HR_LINE);
 
 	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Graficos cargados con exito... Listo para dibujar", HR_FILE, HR_FUNCTION, HR_LINE);
-	/*
+	
 	//! Create world space constant buffer
 	m_WrldBuffer = new C_ConstantBuffer();
 	if (m_WrldBuffer->Create(m_Graphics->m_Device, 1, D3D_Binds::CONST_BUFFER, D3D_Access::WRITE, D3D_Usages::DYNAMIC, sizeof(C_Matrix4)))
@@ -374,22 +374,22 @@ void C_CustomApp::OnInit()
 
 	/*!
 	 * Set the camera's data 
-	
+	*/
 	//! Position
 	m_StaticCamera->SetPosition
 	(
-		C_Vector3D(0.0f, 0.0f, 0.2f)
+		C_Vector3D(0.0f, 0.0f, 0.1f)
 	);
 	//! Target
 	m_StaticCamera->SetTarget
 	(
-		C_Vector3D(0.0f, 0.0f, 0.0f)
+		C_Vector3D(1.0f, 0.0f, 0.0f)
 	);
 	//! Up vector
 	m_StaticCamera->SetUp
 	(
 		C_Vector3D(0.0f, 1.0f, 0.0f)
-	);*/
+	);
 }
 
 bool C_CustomApp::OnUpdate()
@@ -424,7 +424,7 @@ void C_CustomApp::OnRender()
 	C_LinearColor Color;
 
 	Color.SetRed(0.0f);
-	Color.SetGreen(0.8f);
+	Color.SetGreen(0.0f);
 	Color.SetBlue(0.0f);
 	Color.SetAlpha(1.0f);
 
@@ -433,7 +433,7 @@ void C_CustomApp::OnRender()
 	m_Depth->ClearDSV(m_Graphics->m_DC);
 
 	//! Set world matrix
-	/*C_Matrix4 World;
+	C_Matrix4 World;
 	World.Identity();
 
 	//! Pass world matrix to constant buffer
@@ -456,7 +456,7 @@ void C_CustomApp::OnRender()
 
 	//! Pass view and projection matrices to the constant buffer
 	m_ProjBuffer->Map(m_Graphics->m_DC, &Proj, sizeof(C_Matrix4));
-	m_ProjBuffer->Set(m_Graphics->m_DC, 2, 1);*/
+	m_ProjBuffer->Set(m_Graphics->m_DC, 2, 1);
 
 	//! Render your shit here...
 	m_SquareMesh->Draw(m_Graphics->m_DC);

@@ -78,9 +78,9 @@ struct HR_SDK::GraphicsIndexBuffer
 bool C_TestMesh::CreateVertexB(GraphicsDevice* prm_Device)
 {
 	S_Vertex V1(-0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f);
-	S_Vertex V2(-0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f);
+	S_Vertex V2(-0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f);
 	S_Vertex V3(0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f);
-	S_Vertex V4(0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f);
+	S_Vertex V4(0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f);
 
 	m_VB.AddVertex(V1);
 	m_VB.AddVertex(V2);
@@ -92,7 +92,7 @@ bool C_TestMesh::CreateVertexB(GraphicsDevice* prm_Device)
 		return false;
 	}
 
-	m_VB.Create(prm_Device, m_VB.GetCount(), D3D_Binds::VERTEX_BUFFER, D3D_Access::NONE, D3D_Usages::DEFAULT);
+	m_VB.Create(prm_Device, D3D_Binds::VERTEX_BUFFER, D3D_Access::NONE, D3D_Usages::DEFAULT);
 	return true;
 
 }
