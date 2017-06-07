@@ -378,9 +378,7 @@ namespace HR_SDK
 		}
 
 		//! Pass data to be written into CBuffer
-		void* Data = (void*)MpdSbr.pData;
-
-		Data = prm_Data;
+		//memcpy(&prm_Data, &MpdSbr.pData, prm_Size);
 
 		TmpDC->Unmap(TmpCBuff, 0);
 

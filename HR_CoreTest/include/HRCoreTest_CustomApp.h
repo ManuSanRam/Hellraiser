@@ -28,7 +28,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 #define WINDOWED_W		1000
-#define WINDOWED_H		800
+#define WINDOWED_H		900
 
 using namespace HR_SDK;
 
@@ -41,6 +41,8 @@ struct Window;
 class C_CustomApp : public C_Application
 {
 public:
+	/*!
+	*/
 	C_CustomApp(bool Fullscreen)
 	{
 		m_Fullscreen = Fullscreen;
@@ -51,9 +53,10 @@ public:
 		Init();
 	}
 
+	/*!*/
 	~C_CustomApp()
 	{
-		Destroy();
+
 	}
 	
 	/*!

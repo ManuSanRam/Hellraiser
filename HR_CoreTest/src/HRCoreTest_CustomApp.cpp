@@ -32,6 +32,8 @@ void C_CustomApp::Run()
 		//! Render stuff to the screen
 		this->Render();
 	}
+
+	this->Destroy();
 }
 
 void Window::StartWin()
@@ -425,7 +427,7 @@ void C_CustomApp::OnRender()
 
 	Color.SetRed(0.0f);
 	Color.SetGreen(0.0f);
-	Color.SetBlue(0.0f);
+	Color.SetBlue(0.6f);
 	Color.SetAlpha(1.0f);
 
 	m_BackBuffer->ClearRTV(m_Graphics->m_DC, Color);
@@ -496,7 +498,7 @@ void C_CustomApp::OnDestroy()
 	delete m_Depth;
 	m_Depth = NULL;
 
-	/*delete m_WrldBuffer;
+	delete m_WrldBuffer;
 	m_WrldBuffer = NULL;
 
 	delete m_ViewBuffer;
@@ -504,7 +506,7 @@ void C_CustomApp::OnDestroy()
 
 	delete m_ProjBuffer;
 	m_ProjBuffer = NULL;
-	*/
+	
 	/*!
 		Kill the application´s window
 	*/

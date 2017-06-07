@@ -107,6 +107,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>./include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -117,6 +118,9 @@
       <Path>$(SolutionDir)\intermediate\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName).log</Path>
     </BuildLog>
     <ProjectReference />
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
