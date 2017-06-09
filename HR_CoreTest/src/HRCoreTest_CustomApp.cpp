@@ -331,7 +331,7 @@ void C_CustomApp::OnInit()
 	
 	//! Create world space constant buffer
 	m_WrldBuffer = new C_ConstantBuffer();
-	if (m_WrldBuffer->Create(m_Graphics->m_Device, 1, D3D_Binds::CONST_BUFFER, D3D_Access::WRITE, D3D_Usages::DYNAMIC, sizeof(C_Matrix4)))
+	if (m_WrldBuffer->Create(m_Graphics->m_Device, 1, D3D_Binds::CONST_BUFFER, D3D_Access::NONE, D3D_Usages::DEFAULT, sizeof(C_Matrix4)))
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Constant buffer de mundo creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
 	}
@@ -345,7 +345,7 @@ void C_CustomApp::OnInit()
 
 	//! Create view space constant buffer
 	m_ViewBuffer = new C_ConstantBuffer();
-	if(m_ViewBuffer->Create(m_Graphics->m_Device, 1, D3D_Binds::CONST_BUFFER, D3D_Access::WRITE, D3D_Usages::DYNAMIC, sizeof(C_Matrix4)))
+	if(m_ViewBuffer->Create(m_Graphics->m_Device, 1, D3D_Binds::CONST_BUFFER, D3D_Access::NONE, D3D_Usages::DEFAULT, sizeof(C_Matrix4)))
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Constant buffer de mundo creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
 	}
@@ -359,7 +359,7 @@ void C_CustomApp::OnInit()
 
 	//! Create projection space constant buffer
 	m_ProjBuffer = new C_ConstantBuffer();
-	if(m_ProjBuffer->Create(m_Graphics->m_Device, 1, D3D_Binds::CONST_BUFFER, D3D_Access::WRITE, D3D_Usages::DYNAMIC, sizeof(C_Matrix4)))
+	if(m_ProjBuffer->Create(m_Graphics->m_Device, 1, D3D_Binds::CONST_BUFFER, D3D_Access::NONE, D3D_Usages::DEFAULT, sizeof(C_Matrix4)))
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Constant buffer de mundo creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
 	}

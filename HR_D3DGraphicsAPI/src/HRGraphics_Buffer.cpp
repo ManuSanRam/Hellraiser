@@ -363,7 +363,7 @@ namespace HR_SDK
 		ID3D11Buffer* TmpCBuff = reinterpret_cast<ID3D11Buffer*>(m_Buffer->GetPointer());
 
 		//!
-		TmpDC->UpdateSubresource(TmpCBuff, 0, NULL, prm_Data, 0, 0);
+		TmpDC->UpdateSubresource(TmpCBuff, 0, NULL, prm_Data, prm_Size, 0);
 
 		//! End function
 		return true;

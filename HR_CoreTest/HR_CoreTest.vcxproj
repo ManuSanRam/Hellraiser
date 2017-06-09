@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -28,26 +28,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
@@ -73,29 +73,29 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)\binary\$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)\intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
-    <IncludePath>$(SolutionDir)\HR_Utilities\include\;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include\;$(SolutionDir)\HR_D3DGraphicsAPI\include\;$(SolutionDir)\HR_Core\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\$(PlatformTarget)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\HR_Utilities\include\;$(DXSDK_DIR)Include\;$(SolutionDir)\HR_D3DGraphicsAPI\include\;$(SolutionDir)\HR_Core\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\;$(DXSDK_DIR)Lib\$(PlatformTarget)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)\binary\$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)\intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
-    <IncludePath>$(SolutionDir)\HR_Utilities\include\;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include\;$(SolutionDir)\HR_D3DGraphicsAPI\include\;$(SolutionDir)\HR_Core\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\$(PlatformTarget)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\HR_Utilities\include\;$(DXSDK_DIR)Include\;$(SolutionDir)\HR_D3DGraphicsAPI\include\;$(SolutionDir)\HR_Core\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\;$(DXSDK_DIR)Lib\$(PlatformTarget)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)\binary\$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)\intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
-    <IncludePath>$(SolutionDir)\HR_Utilities\include\;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include\;$(SolutionDir)\HR_D3DGraphicsAPI\include\;$(SolutionDir)\HR_Core\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\$(PlatformTarget)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\HR_Utilities\include\;$(DXSDK_DIR)Include\;$(SolutionDir)\HR_D3DGraphicsAPI\include\;$(SolutionDir)\HR_Core\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\;$(DXSDK_DIR)Lib\$(PlatformTarget)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)\binary\$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)\intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
-    <IncludePath>$(SolutionDir)\HR_Utilities\include\;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include\;$(SolutionDir)\HR_D3DGraphicsAPI\include\;$(SolutionDir)\HR_Core\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\$(PlatformTarget)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\HR_Utilities\include\;$(DXSDK_DIR)Include\;$(SolutionDir)\HR_D3DGraphicsAPI\include\;$(SolutionDir)\HR_Core\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\;$(DXSDK_DIR)Lib\$(PlatformTarget)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

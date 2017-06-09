@@ -7,3 +7,5 @@ intermediate/
 library/
 ipch/
 externals/Log Files/GraphicsLog.html
+*.opendb
+.vs/Hellraiser Engine/v15/
