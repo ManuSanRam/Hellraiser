@@ -309,7 +309,6 @@ namespace HR_SDK
 	bool C_ConstantBuffer::Create
 	(
 		GraphicsDevice* prm_Device,
-		uint32			prm_Count,
 		D3D_Binds::E	prm_Bind,
 		D3D_Access::E	prm_Access,
 		D3D_Usages::E	prm_Usage,

@@ -27,8 +27,8 @@
 */
 
 #define WIN32_LEAN_AND_MEAN
-#define WINDOWED_W		1000
-#define WINDOWED_H		900
+#define WINDOWED_W		1080
+#define WINDOWED_H		720
 
 using namespace HR_SDK;
 

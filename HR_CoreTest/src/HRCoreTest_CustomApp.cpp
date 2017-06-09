@@ -331,7 +331,7 @@ void C_CustomApp::OnInit()
 	
 	//! Create world space constant buffer
 	m_WrldBuffer = new C_ConstantBuffer();
-	if (m_WrldBuffer->Create(m_Graphics->m_Device, 1, D3D_Binds::CONST_BUFFER, D3D_Access::NONE, D3D_Usages::DEFAULT, sizeof(C_Matrix4)))
+	if (m_WrldBuffer->Create(m_Graphics->m_Device, D3D_Binds::CONST_BUFFER, D3D_Access::NONE, D3D_Usages::DEFAULT, sizeof(C_Matrix4)))
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Constant buffer de mundo creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
 	}
@@ -345,7 +345,7 @@ void C_CustomApp::OnInit()
 
 	//! Create view space constant buffer
 	m_ViewBuffer = new C_ConstantBuffer();
-	if(m_ViewBuffer->Create(m_Graphics->m_Device, 1, D3D_Binds::CONST_BUFFER, D3D_Access::NONE, D3D_Usages::DEFAULT, sizeof(C_Matrix4)))
+	if(m_ViewBuffer->Create(m_Graphics->m_Device, D3D_Binds::CONST_BUFFER, D3D_Access::NONE, D3D_Usages::DEFAULT, sizeof(C_Matrix4)))
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Constant buffer de mundo creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
 	}
@@ -359,7 +359,7 @@ void C_CustomApp::OnInit()
 
 	//! Create projection space constant buffer
 	m_ProjBuffer = new C_ConstantBuffer();
-	if(m_ProjBuffer->Create(m_Graphics->m_Device, 1, D3D_Binds::CONST_BUFFER, D3D_Access::NONE, D3D_Usages::DEFAULT, sizeof(C_Matrix4)))
+	if(m_ProjBuffer->Create(m_Graphics->m_Device, D3D_Binds::CONST_BUFFER, D3D_Access::NONE, D3D_Usages::DEFAULT, sizeof(C_Matrix4)))
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Constant buffer de mundo creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
 	}
@@ -380,12 +380,12 @@ void C_CustomApp::OnInit()
 	//! Position
 	m_StaticCamera->SetPosition
 	(
-		C_Vector3D(0.0f, 0.0f, -10.0f)
+		C_Vector3D(0.0f, 0.0f, -3.0f)
 	);
 	//! Target
 	m_StaticCamera->SetTarget
 	(
-		C_Vector3D(0.0f, 0.0f, 0.0f)
+		C_Vector3D(1.0f, 0.0f, 0.0f)
 	);
 	//! Up vector
 	m_StaticCamera->SetUp
@@ -404,6 +404,15 @@ bool C_CustomApp::OnUpdate()
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
+
+	C_Matrix4 Rotation, Scalation;
+
+	World.Identity();
+
+	Rotation.RotateY(0.3 * C_PlatformMath::m_Pi, true);
+	//Scalation.Scale(2.0f, 2.0f, 2.0f);
+
+	World = Rotation;
 
 	/*!
 		If user kills window, closes window
@@ -436,7 +445,7 @@ void C_CustomApp::OnRender()
 
 	//! Set world matrix
 	
-	World.Identity();
+	//World.Identity();
 
 	m_WrldBuffer->Map(m_Graphics->m_DC, &World, sizeof(C_Matrix4));
 	m_WrldBuffer->Set(m_Graphics->m_DC, 0, 1);
@@ -452,7 +461,7 @@ void C_CustomApp::OnRender()
 	float Ratio = (float)m_Window->m_Width / (float)m_Window->m_Height;
 
 	//! Get matrices
-	m_StaticCamera->Projection(0.5f * C_PlatformMath::m_Pi, Ratio, CAMERA_NEAR, CAMERA_FAR);
+	m_StaticCamera->Projection(0.4f * C_PlatformMath::m_Pi, Ratio, CAMERA_NEAR, CAMERA_FAR);
 	Proj = m_StaticCamera->m_Projection;
 	Proj.Transpose();
 

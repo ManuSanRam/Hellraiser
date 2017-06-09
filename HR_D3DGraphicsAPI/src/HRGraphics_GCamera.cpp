@@ -33,22 +33,30 @@ namespace HR_SDK
 	{
 		C_Vector3D XAxis, YAxis, ZAxis;
 
-		ZAxis = m_Target - m_Position;		ZAxis.Normalize();
-		XAxis = m_Up.Cross(ZAxis);			XAxis.Normalize();
+		ZAxis = m_Position - m_Target;		
+		XAxis = m_Up;
+
+		ZAxis.Normalize();
+		XAxis.Normalize();
+
+		XAxis = ZAxis.Cross(XAxis);
+		XAxis.Normalize();
+
 		YAxis = ZAxis.Cross(XAxis);
+		YAxis.Normalize();
 
 		float X, Y, Z;
 
-		X = XAxis.Dot(m_Position);
-		Y = YAxis.Dot(m_Position);
-		Z = ZAxis.Dot(m_Position);
+		X = -XAxis.Dot(m_Position);
+		Y = -YAxis.Dot(m_Position);
+		Z = -ZAxis.Dot(m_Position);
 
 		m_View  = C_Matrix4
 		(
 			XAxis.m_x,		YAxis.m_x,		ZAxis.m_x,		0.0f,
 			XAxis.m_y,		YAxis.m_y,		ZAxis.m_y,		0.0f,
 			XAxis.m_z,		YAxis.m_z,		ZAxis.m_z,		0.0f,
-			-X,				-Y,				-Z,				1.0f
+			X,				Y,				Z,				1.0f
 		);
 	}
 
@@ -62,19 +70,19 @@ namespace HR_SDK
 	{
 		float H, W;
 
-		H = 1.0f / C_PlatformMath::Tangent(prm_FOVAngle * (1.0f/2.0f));
-		W = H * prm_AspectRatio;
+		H = 1.0f / (C_PlatformMath::Tangent(prm_FOVAngle * (1.0f/2.0f)));
+		W = H / prm_AspectRatio;
 
 		float _3rd, _4th;
 
-		_3rd = prm_FarZ / (prm_FarZ - prm_NearZ);
-		_4th = -prm_NearZ * prm_FarZ / (prm_FarZ - prm_NearZ);
+		_3rd = (prm_FarZ + prm_NearZ) / (prm_NearZ - prm_FarZ);
+		_4th = (2.0f * prm_NearZ * prm_FarZ) / (prm_NearZ - prm_FarZ);
 
 		m_Projection = C_Matrix4
 		(
 			W,			0.0f,			0.0f,			0.0f,
 			0.0f,		H,				0.0f,			0.0f,
-			0.0f,		0.0f,			_3rd,			1.0f,
+			0.0f,		0.0f,			_3rd,			-1.0f,
 			0.0f,		0.0f,			_4th,			0.0f
 		);
 	}

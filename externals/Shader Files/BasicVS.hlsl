@@ -29,7 +29,7 @@ VS_OUTPUT VSMain(VS_INPUT Input)
 {
 	VS_OUTPUT Output;
 
-	Output.Position = mul(Input.Position, World);
+	Output.Position = mul(float4(Input.Position.xyz, 1.0f), World);
 	Output.Position = mul(Output.Position, View);
 	Output.Position = mul(Output.Position, Proj);
 
