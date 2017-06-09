@@ -7,8 +7,6 @@
 #include <mesh.h>
 
 #include <HRGraphics_Buffer.h>
-#include <HRGraphics_Shader.h>
-#include <HRGraphics_InputLayout.h>
 
 using namespace Assimp;
 
@@ -27,20 +25,14 @@ namespace HR_SDK
 
 		}
 
-		bool CreateMeshFromFile();
+		bool Load(const String& prm_FileName, const aiScene& prm_ModelScene);
 
-		bool SetMesh();
+		bool Init();
+		void Render();
 
-		bool
-
-		Importer*			m_ModelImporter;
+		void Close();
 
 		C_VBuffer*			m_VertexBuffer;
 		C_IBuffer32*		m_IndexBuffer;
-
-		C_VertexShader*		m_VShader;
-		C_PixelShader*		m_PShader;
-
-		C_InputLayout*		m_InputLayout;
 	};
 }

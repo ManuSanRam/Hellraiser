@@ -357,30 +357,13 @@ namespace HR_SDK
 		SIZE_T prm_Size
 	)
 	{
-		//! 
-		HRESULT Result;
-		//!
-		D3D11_MAPPED_SUBRESOURCE MpdSbr;
-
-		//! Set to the pipeline
+		//! Point to the adress using a reinterpreted pointer
 		ID3D11DeviceContext* TmpDC = reinterpret_cast<ID3D11DeviceContext*>(prm_DC->GetPointer());
-		//!
+		//! Point to the adress using a reinterpreted pointer
 		ID3D11Buffer* TmpCBuff = reinterpret_cast<ID3D11Buffer*>(m_Buffer->GetPointer());
 
 		//!
-		Result = TmpDC->Map(TmpCBuff, 0, D3D11_MAP_WRITE_DISCARD, 0, &MpdSbr);
-		
-		//!
-		if (FAILED(Result))
-		{
-			//!
-			return false;
-		}
-
-		//! Pass data to be written into CBuffer
-		//memcpy(&prm_Data, &MpdSbr.pData, prm_Size);
-
-		TmpDC->Unmap(TmpCBuff, 0);
+		TmpDC->UpdateSubresource(TmpCBuff, 0, NULL, prm_Data, 0, 0);
 
 		//! End function
 		return true;

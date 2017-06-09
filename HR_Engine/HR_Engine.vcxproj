@@ -110,7 +110,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>HR_Utilities.lib;d3d11.lib;d3dcompiler.lib;d3dx11.lib;HR_D3DGraphicsAPI.lib;HR_Core.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>HR_Utilities.lib;d3d11.lib;d3dcompiler.lib;d3dx11.lib;HR_D3DGraphicsAPI.lib;HR_Core.lib;assimp-vc140-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <BuildLog>
       <Path>$(SolutionDir)\intermediate\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName).log</Path>
@@ -131,7 +131,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>HR_Utilities.lib;d3d11.lib;d3dcompiler.lib;d3dx11.lib;HR_D3DGraphicsAPI.lib;HR_Core.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>HR_Utilities.lib;d3d11.lib;d3dcompiler.lib;d3dx11.lib;HR_D3DGraphicsAPI.lib;HR_Core.lib;assimp-vc140-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <BuildLog>
       <Path>$(SolutionDir)\intermediate\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName).log</Path>
@@ -153,7 +153,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>HR_Utilities.lib;d3d11.lib;d3dcompiler.lib;d3dx11.lib;HR_D3DGraphicsAPI.lib;HR_Core.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>HR_Utilities.lib;d3d11.lib;d3dcompiler.lib;d3dx11.lib;HR_D3DGraphicsAPI.lib;HR_Core.lib;assimp-vc140-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <BuildLog>
       <Path>$(SolutionDir)\intermediate\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName).log</Path>
@@ -175,7 +175,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>HR_Utilities.lib;d3d11.lib;d3dcompiler.lib;d3dx11.lib;HR_D3DGraphicsAPI.lib;HR_Core.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>HR_Utilities.lib;d3d11.lib;d3dcompiler.lib;d3dx11.lib;HR_D3DGraphicsAPI.lib;HR_Core.lib;assimp-vc140-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <BuildLog>
       <Path>$(SolutionDir)\intermediate\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName).log</Path>
@@ -188,6 +188,7 @@
     <ClInclude Include="include\HREngine_Face.h" />
     <ClInclude Include="include\HREngine_Joint.h" />
     <ClInclude Include="include\HREngine_Key.h" />
+    <ClInclude Include="include\HREngine_Material.h" />
     <ClInclude Include="include\HREngine_Mesh.h" />
     <ClInclude Include="include\HREngine_Model.h" />
     <ClInclude Include="include\HREngine_Node.h" />

@@ -105,4 +105,8 @@ public:
 	C_ConstantBuffer*		m_ProjBuffer;
 
 	C_GCamera*				m_StaticCamera;
+
+	C_Matrix4 World;
+	C_Matrix4 View;
+	C_Matrix4 Proj;
 };

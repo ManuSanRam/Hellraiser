@@ -80,6 +80,9 @@
     <ClInclude Include="include\HREngine_Key.h">
       <Filter>Header Files\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="include\HREngine_Material.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\HREngine_Key.cpp">

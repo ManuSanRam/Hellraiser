@@ -380,12 +380,12 @@ void C_CustomApp::OnInit()
 	//! Position
 	m_StaticCamera->SetPosition
 	(
-		C_Vector3D(0.0f, 0.0f, 0.1f)
+		C_Vector3D(0.0f, 0.0f, -10.0f)
 	);
 	//! Target
 	m_StaticCamera->SetTarget
 	(
-		C_Vector3D(1.0f, 0.0f, 0.0f)
+		C_Vector3D(0.0f, 0.0f, 0.0f)
 	);
 	//! Up vector
 	m_StaticCamera->SetUp
@@ -427,7 +427,7 @@ void C_CustomApp::OnRender()
 
 	Color.SetRed(0.0f);
 	Color.SetGreen(0.0f);
-	Color.SetBlue(0.6f);
+	Color.SetBlue(0.4f);
 	Color.SetAlpha(1.0f);
 
 	m_BackBuffer->ClearRTV(m_Graphics->m_DC, Color);
@@ -435,28 +435,27 @@ void C_CustomApp::OnRender()
 	m_Depth->ClearDSV(m_Graphics->m_DC);
 
 	//! Set world matrix
-	C_Matrix4 World;
+	
 	World.Identity();
 
-	//! Pass world matrix to constant buffer
 	m_WrldBuffer->Map(m_Graphics->m_DC, &World, sizeof(C_Matrix4));
 	m_WrldBuffer->Set(m_Graphics->m_DC, 0, 1);
 
 	//! Get view and projection matrices from camera
 	m_StaticCamera->LookAt();
-	C_Matrix4 View = m_StaticCamera->m_View;
+	View = m_StaticCamera->m_View;
 	View.Transpose();
 
-	//! Get matrices
-	m_StaticCamera->Projection(0.4 * C_PlatformMath::m_Pi, (float)m_Window->m_Width/m_Window->m_Height, 1.0f, 1000.0f);
-	C_Matrix4 Proj = m_StaticCamera->m_Projection;
-	Proj.Transpose();
-
-	//! Pass data to respective constant buffers
 	m_ViewBuffer->Map(m_Graphics->m_DC, &View, sizeof(C_Matrix4));
 	m_ViewBuffer->Set(m_Graphics->m_DC, 1, 1);
 
-	//! Pass view and projection matrices to the constant buffer
+	float Ratio = (float)m_Window->m_Width / (float)m_Window->m_Height;
+
+	//! Get matrices
+	m_StaticCamera->Projection(0.5f * C_PlatformMath::m_Pi, Ratio, CAMERA_NEAR, CAMERA_FAR);
+	Proj = m_StaticCamera->m_Projection;
+	Proj.Transpose();
+
 	m_ProjBuffer->Map(m_Graphics->m_DC, &Proj, sizeof(C_Matrix4));
 	m_ProjBuffer->Set(m_Graphics->m_DC, 2, 1);
 

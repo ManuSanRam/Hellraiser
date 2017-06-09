@@ -1,14 +1,14 @@
-cbuffer World
+cbuffer World : register (b0)
 {
 	float4x4 World;
 };
 
-cbuffer View
+cbuffer View : register (b1)
 {
 	float4x4 View;
 };
 
-cbuffer Proj
+cbuffer Proj : register (b2)
 {
 	float4x4 Proj;
 };
@@ -29,11 +29,11 @@ VS_OUTPUT VSMain(VS_INPUT Input)
 {
 	VS_OUTPUT Output;
 
-	//Output.Position = mul(float4(Input.Position.xyz, 1.0f), World);
-	//Output.Position = mul(float4(Input.Position.xyz, 1.0f), View);
-	//Output.Position = mul(float4(Input.Position.xyz, 1.0f), Proj);
+	Output.Position = mul(Input.Position, World);
+	Output.Position = mul(Output.Position, View);
+	Output.Position = mul(Output.Position, Proj);
 
-	Output.Position = float4(Input.Position.xyz, 1.0f);
+	//Output.Position = float4(Input.Position.xyz, 1.0f);
 
 	Output.Color =		Input.Color;
 
