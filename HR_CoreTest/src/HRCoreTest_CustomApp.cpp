@@ -380,7 +380,7 @@ void C_CustomApp::OnInit()
 	//! Position
 	m_StaticCamera->SetPosition
 	(
-		C_Vector3D(0.0f, 10.0f, -60.0f)
+		C_Vector3D(0.0f, 0.0f, -60.0f)
 	);
 	//! Target
 	m_StaticCamera->SetTarget
@@ -405,17 +405,25 @@ bool C_CustomApp::OnUpdate()
 		DispatchMessage(&msg);
 	}
 
+	RotationFactor += 0.0005f;
+	if (RotationFactor > 6.26f)
+	{
+		RotationFactor = 0.00f;
+	}
+
 	C_Matrix4 Rotation, RotX, RotY, RotZ, Scalation, Translation;
 
 	World.Identity();
 
-	Scalation.Scale(10.0f, 10.0f, 10.0f);
-	//RotY.RotateY(1.3f * C_PlatformMath::m_Pi, true);
-	RotZ.RotateZ(1.3f * C_PlatformMath::m_Pi, true);
-	
-	Rotation = RotZ;
+	Scalation.Scale(15.0f, 15.0f, 15.0f);
 
-	Translation.Translate(7.0f, 0.0f, -6.0f);
+	RotX.RotateX(RotationFactor, true);
+	RotY.RotateY(RotationFactor, true);
+	RotZ.RotateZ(RotationFactor, true);
+	
+	Rotation = RotX * RotY * RotZ;
+
+	Translation.Translate(0.0f, 0.0f, 0.0f);
 
 	World = Scalation * Rotation * Translation;
 	World.Transpose();
@@ -442,7 +450,7 @@ void C_CustomApp::OnRender()
 
 	Color.SetRed(0.0f);
 	Color.SetGreen(0.0f);
-	Color.SetBlue(0.4f);
+	Color.SetBlue(0.0f);
 	Color.SetAlpha(1.0f);
 
 	m_BackBuffer->ClearRTV(m_Graphics->m_DC, Color);

@@ -110,3 +110,5 @@ public:
 	C_Matrix4 View;
 	C_Matrix4 Proj;
 };
+
+static float RotationFactor = 0.01f;
