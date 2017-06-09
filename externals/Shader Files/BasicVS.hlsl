@@ -33,8 +33,6 @@ VS_OUTPUT VSMain(VS_INPUT Input)
 	Output.Position = mul(Output.Position, View);
 	Output.Position = mul(Output.Position, Proj);
 
-	//Output.Position = float4(Input.Position.xyz, 1.0f);
-
 	Output.Color =		Input.Color;
 
 	return Output;

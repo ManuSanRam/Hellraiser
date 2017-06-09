@@ -379,7 +379,7 @@ namespace HR_SDK
 	 * @param prm_TZ Translation factor in Z axis																														  *
 	 * @return A matrix to translate an object in 3D space																												  *
 	**********************************************************************************************************************************************************************/
-	C_Matrix4	Translate
+	C_Matrix4&	Translate
 	(
 		float prm_TX,
 		float prm_TY,
@@ -442,7 +442,7 @@ namespace HR_SDK
 	 * @param prm_SZ Scaling factor on Z axis																															   *
 	 * @return A matrix to scale something																																   *
 	***********************************************************************************************************************************************************************/
-	C_Matrix4	Scale
+	C_Matrix4&	Scale
 	(
 		float prm_SX,
 		float prm_SY,

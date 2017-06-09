@@ -266,6 +266,35 @@ namespace HR_SDK
 		return *this;
 	}
 
+	C_Matrix4&	C_Matrix4::Scale(float prm_SX, float prm_SY, float prm_SZ)
+	{
+		//! If prm_Id is true...
+		Identity();
+
+		//! Modify elements t rotate along Z axis
+		m_Element[0][0] *= prm_SX;
+		m_Element[1][1] *= prm_SY;
+		m_Element[2][2] *= prm_SZ;
+		m_Element[3][3] = 1.0f;
+
+		return *this;
+	}
+
+	C_Matrix4&	C_Matrix4::Translate(float prm_TX, float prm_TY, float prm_TZ)
+	{
+		//! If prm_Id is true...
+		
+			Identity();
+
+		//! Modify elements t rotate along Z axis
+			m_Element[3][0] = prm_TX;
+			m_Element[3][1] = prm_TY;
+			m_Element[3][2] = prm_TZ;
+			m_Element[3][3] = 1.0f;
+
+		return *this;
+	}
+
 	/*!
 	*/
 	C_Matrix4&	C_Matrix4::RotRollPitchYaw(float prm_Pitch, float prm_Yaw, float prm_Roll)

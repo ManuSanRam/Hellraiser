@@ -380,12 +380,12 @@ void C_CustomApp::OnInit()
 	//! Position
 	m_StaticCamera->SetPosition
 	(
-		C_Vector3D(0.0f, 0.0f, -3.0f)
+		C_Vector3D(0.0f, 10.0f, -60.0f)
 	);
 	//! Target
 	m_StaticCamera->SetTarget
 	(
-		C_Vector3D(1.0f, 0.0f, 0.0f)
+		C_Vector3D(0.0f, 0.0f, 0.0f)
 	);
 	//! Up vector
 	m_StaticCamera->SetUp
@@ -405,14 +405,20 @@ bool C_CustomApp::OnUpdate()
 		DispatchMessage(&msg);
 	}
 
-	C_Matrix4 Rotation, Scalation;
+	C_Matrix4 Rotation, RotX, RotY, RotZ, Scalation, Translation;
 
 	World.Identity();
 
-	Rotation.RotateY(0.3 * C_PlatformMath::m_Pi, true);
-	//Scalation.Scale(2.0f, 2.0f, 2.0f);
+	Scalation.Scale(10.0f, 10.0f, 10.0f);
+	//RotY.RotateY(1.3f * C_PlatformMath::m_Pi, true);
+	RotZ.RotateZ(1.3f * C_PlatformMath::m_Pi, true);
+	
+	Rotation = RotZ;
 
-	World = Rotation;
+	Translation.Translate(7.0f, 0.0f, -6.0f);
+
+	World = Scalation * Rotation * Translation;
+	World.Transpose();
 
 	/*!
 		If user kills window, closes window
@@ -444,8 +450,6 @@ void C_CustomApp::OnRender()
 	m_Depth->ClearDSV(m_Graphics->m_DC);
 
 	//! Set world matrix
-	
-	//World.Identity();
 
 	m_WrldBuffer->Map(m_Graphics->m_DC, &World, sizeof(C_Matrix4));
 	m_WrldBuffer->Set(m_Graphics->m_DC, 0, 1);
