@@ -145,7 +145,7 @@ void C_CustomApp::OnInit()
 	m_Window->StartWin();
 
 	m_GraphicsLogger = new C_Logger();
-	m_GraphicsLogger->Init("../externals/Log Files/CoreTestLog.html");
+	m_GraphicsLogger->Init("Log Files/CoreTestLog.html");
 	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Aplicación iniciada con exito", HR_FILE, HR_FUNCTION, HR_LINE);
 
 	//! Set Pipeline
@@ -207,12 +207,27 @@ void C_CustomApp::OnInit()
 	m_BackBuffer->SetRTV(m_Graphics->m_DC, 1, m_Depth->m_DSV);
 	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Render Target View configurado", HR_FILE, HR_FUNCTION, HR_LINE);
 
+	/*C_Texture* Texture = new C_Texture();
+	if (Texture->CreateFromFile("Texture Files/GowLogo.png", m_Graphics->m_Device))
+	{
+		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Textura creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
+	}
+
+	else
+	{
+		m_GraphicsLogger->AddEntry(MessageLevel::_FATAL_ERROR, "No se pudo crear la textura", HR_FILE, HR_FUNCTION, HR_LINE);
+		m_GraphicsLogger->Close("HR_CoreTestLogger");
+		exit(1);
+	}
+
+	delete Texture;*/
+
 	
 	//! Init geometry to be drawn...
 	//! Compile the shaders...
 	m_VShader = new C_VertexShader();
 	m_PShader = new C_PixelShader();
-	if (m_VShader->Compile("../externals/Shader Files/BasicVS.hlsl", "VSMain", "vs_5_0"))
+	if (m_VShader->Compile("Shader Files/BasicVS.hlsl", "VSMain", "vs_5_0"))
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Shader de vertices compilado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
 	}
@@ -224,7 +239,7 @@ void C_CustomApp::OnInit()
 		exit(1);
 	}
 
-	if (m_PShader->Compile("../externals/Shader Files/BasicVS.hlsl", "PSMain", "ps_5_0"))
+	if (m_PShader->Compile("Shader Files/BasicVS.hlsl", "PSMain", "ps_5_0"))
 	{
 		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Shader de pixeles compilado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
 	}
@@ -406,7 +421,7 @@ bool C_CustomApp::OnUpdate()
 	}
 
 	RotationFactor += 0.0005f;
-	if (RotationFactor > 6.26f)
+	if (RotationFactor > C_PlatformMath::m_Two_Pi)
 	{
 		RotationFactor = 0.00f;
 	}
@@ -421,7 +436,7 @@ bool C_CustomApp::OnUpdate()
 	RotY.RotateY(RotationFactor, true);
 	RotZ.RotateZ(RotationFactor, true);
 	
-	Rotation = RotX * RotY * RotZ;
+	Rotation = RotX * RotY;
 
 	Translation.Translate(0.0f, 0.0f, 0.0f);
 
@@ -448,9 +463,9 @@ void C_CustomApp::OnRender()
 	*/
 	C_LinearColor Color;
 
-	Color.SetRed(0.0f);
-	Color.SetGreen(0.0f);
-	Color.SetBlue(0.0f);
+	Color.SetRed(0.22f);
+	Color.SetGreen(0.22f);
+	Color.SetBlue(0.22f);
 	Color.SetAlpha(1.0f);
 
 	m_BackBuffer->ClearRTV(m_Graphics->m_DC, Color);

@@ -1,5 +1,8 @@
 #include "HRGraphics_Texture.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "externals/stb_image.h"
+
 namespace HR_SDK
 {
 	struct GraphicsDevice
@@ -82,6 +85,22 @@ namespace HR_SDK
 		ID3D11RenderTargetView* RTV;
 	};
 
+	struct GraphicsShaderResourceView
+	{
+		GraphicsShaderResourceView() : SRV(nullptr) {}
+		void* GetPointer()
+		{
+			return reinterpret_cast<void*>(SRV);
+		}
+
+		void** GetReference()
+		{
+			return reinterpret_cast<void**>(&SRV);
+		}
+
+		ID3D11ShaderResourceView* SRV;
+	};
+
 	struct GraphicsDepthStencilView
 	{
 		GraphicsDepthStencilView() : DSV(nullptr) {}
@@ -100,29 +119,64 @@ namespace HR_SDK
 
 	bool C_Texture::CreateFromFile
 	(
-		C_Filestream*		prm_File, 
-		uint32				prm_Width, 
-		uint32				prm_Height, 
-		uint32				prm_MipLevels, 
-		DXGI_Formats::E		prm_Format,
-		D3D_Usages::E		prm_Usage,
-		D3D_Binds::E		prm_Bind,
-		D3D_Access::E		prm_Access
-
+		const String&			prm_FileName,
+		GraphicsDevice*			prm_Device,
+		GraphicsDeviceContext*	prm_DC
 	)
 	{
-		D3D11_TEXTURE2D_DESC desc;
+		HRESULT TextResult;
+		int32 Width = 0, Height = 0, CompNum = 0;
 
-		desc.Width = prm_Width;
-		desc.Height = prm_Height;
-		desc.MipLevels = desc.ArraySize = prm_MipLevels;
-		desc.Format = TranslateFormat(prm_Format);
-		desc.SampleDesc.Count = 1;
-		desc.Usage = TranslateUsage(prm_Usage);
-		desc.BindFlags = TranslateBind(prm_Bind);
-		desc.CPUAccessFlags = TranslateAccess(prm_Access);
-		desc.MiscFlags = 0;
+		//! Load data from image
+		unsigned char* ImageData = stbi_load(prm_FileName.c_str(), &Width, &Height, &CompNum, STBI_rgb_alpha);
+		ID3D11Device* TmpDevice = reinterpret_cast<ID3D11Device*>(prm_Device->GetPointer());
+		ID3D11Texture2D* TmpTexture = reinterpret_cast<ID3D11Texture2D*>(m_Texture->GetReference());
+		ID3D11ShaderResourceView* TmpSRV = reinterpret_cast<ID3D11ShaderResourceView*>(m_SRV->GetReference());
 
+		D3D11_TEXTURE2D_DESC T2DDesc;
+		T2DDesc.Width = Width;
+		T2DDesc.Height = Height;
+		T2DDesc.MipLevels = 1; 
+		T2DDesc.ArraySize = 0;
+		T2DDesc.Format = TranslateFormat(DXGI_Formats::RGBA_8_UNORM);
+		T2DDesc.SampleDesc.Count = 1;
+		T2DDesc.Usage = TranslateUsage(D3D_Usages::DEFAULT);
+		T2DDesc.BindFlags = TranslateBind(D3D_Binds::SHADER_RESOURCE);
+		T2DDesc.CPUAccessFlags = TranslateAccess(D3D_Access::NONE);
+		T2DDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
+
+		//! Create texture object
+		TextResult = TmpDevice->CreateTexture2D(&T2DDesc, NULL, &TmpTexture);
+		if (FAILED(TextResult))
+		{
+			return false;
+		}
+
+		//! Save copy of Device Context
+		ID3D11DeviceContext* TmpDC = reinterpret_cast<ID3D11DeviceContext*>(prm_DC->GetPointer());
+
+		//! Update image data into texture object
+		TmpDC->UpdateSubresource(TmpTexture, 0, NULL, ImageData, (Width * 4) * sizeof(unsigned char), 0);
+
+		D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc;
+
+		SRVDesc.Format = T2DDesc.Format;
+		SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		SRVDesc.Texture2D.MostDetailedMip = 0;
+		SRVDesc.Texture2D.MipLevels = -1;
+
+		// Create the shader resource view for the texture.
+		TextResult = TmpDevice->CreateShaderResourceView(TmpTexture, &SRVDesc, &TmpSRV);
+		if (FAILED(TextResult))
+		{
+			return false;
+		}
+
+		// Generate mipmaps for this texture.
+		TmpDC->GenerateMips(TmpSRV);
+
+		TmpTexture->Release();
+		stbi_image_free(ImageData);
 		return true;
 	}
 

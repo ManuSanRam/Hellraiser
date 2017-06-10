@@ -66,6 +66,9 @@
     <Filter Include="Source Files\Debugger">
       <UniqueIdentifier>{5fcd2aeb-1d1d-405a-a113-468b116eb8e0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Sampler State">
+      <UniqueIdentifier>{145e247a-9b44-4752-ae5c-c38e2ec65319}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\HRGraphics_Graphics.h">

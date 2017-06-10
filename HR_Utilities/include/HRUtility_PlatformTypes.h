@@ -194,7 +194,7 @@ namespace HR_SDK
   /*!
    * Memory type
   */
-  typedef char				Byte;
+  typedef char	   Byte;
 
   /*!
    * Size types, depending of the PC's architecture
