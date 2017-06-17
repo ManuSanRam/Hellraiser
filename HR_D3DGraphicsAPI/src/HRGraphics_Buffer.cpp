@@ -221,7 +221,6 @@ namespace HR_SDK
 	bool C_IndexBuffer<IndexType>::Create
 	(
 		GraphicsDevice*		prm_Device,
-		uint32				prm_Count,
 		D3D_Binds::E		prm_Bind,
 		D3D_Access::E		prm_Access,
 		D3D_Usages::E		prm_Usage
@@ -238,7 +237,7 @@ namespace HR_SDK
 		ZeroMemory(&Desc, sizeof(Desc));
 
 		Desc.Usage = TranslateUsage(prm_Usage);
-		Desc.ByteWidth = sizeof(IndexType) * prm_Count;
+		Desc.ByteWidth = sizeof(IndexType) * m_Indices.size();
 		Desc.BindFlags = TranslateBind(prm_Bind);
 		Desc.CPUAccessFlags = TranslateAccess(prm_Access);
 		Desc.MiscFlags = 0;

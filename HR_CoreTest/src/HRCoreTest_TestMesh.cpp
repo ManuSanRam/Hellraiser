@@ -79,26 +79,26 @@ bool C_TestMesh::CreateVertexB(GraphicsDevice* prm_Device)
 {
 	S_Vertex V1
 	(
-		-1.0f, -1.0f, -1.0f, 
+		-1.0f, -1.0f, -1.0f,
 		1.0f, 0.0f, 0.0f, 1.0f
 	);
-	
+
 	S_Vertex V2
 	(
-		-1.0f, 1.0f, -1.0f, 
+		-1.0f, 1.0f, -1.0f,
 		1.0f, 0.0f, 0.0f, 1.0f
 	);
-	
+
 	S_Vertex V3
 	(
-		1.0f, 1.0f, -1.0f, 
+		1.0f, 1.0f, -1.0f,
 		1.0f, 0.0f, 0.0f, 1.0f
 	);
-	
+
 
 	S_Vertex V4
 	(
-		1.0f, -1.0f, -1.0f, 
+		1.0f, -1.0f, -1.0f,
 		1.0f, 0.0f, 0.0f, 1.0f
 	);
 
@@ -127,22 +127,22 @@ bool C_TestMesh::CreateVertexB(GraphicsDevice* prm_Device)
 		0.5f, 0.0f, 0.0f, 1.0f
 	);
 
+	m_SolidVB.AddVertex(V1);
+	m_SolidVB.AddVertex(V2);
+	m_SolidVB.AddVertex(V3);
+	m_SolidVB.AddVertex(V4);
+	m_SolidVB.AddVertex(V5);
+	m_SolidVB.AddVertex(V6);
+	m_SolidVB.AddVertex(V7);
+	m_SolidVB.AddVertex(V8);
 
-	m_VB.AddVertex(V1);
-	m_VB.AddVertex(V2);
-	m_VB.AddVertex(V3);
-	m_VB.AddVertex(V4);
-	m_VB.AddVertex(V5);
-	m_VB.AddVertex(V6);
-	m_VB.AddVertex(V7);
-	m_VB.AddVertex(V8);
 
-	if (!m_VB.m_Vertices.size())
+	if (!m_SolidVB.m_Vertices.size())
 	{
 		return false;
 	}
 
-	if (m_VB.Create(prm_Device, D3D_Binds::VERTEX_BUFFER, D3D_Access::NONE, D3D_Usages::DEFAULT))
+	if (m_SolidVB.Create(prm_Device, D3D_Binds::VERTEX_BUFFER, D3D_Access::NONE, D3D_Usages::DEFAULT))
 	{
 		return true;
 	}
@@ -183,15 +183,15 @@ bool C_TestMesh::CreateIndexB(GraphicsDevice* prm_Device)
 	};
 	for (auto indc : Indices)
 	{
-		m_IB.AddIndex(indc);
+		m_SolidIB.AddIndex(indc);
 	}
 
-	if (!m_IB.m_Indices.size())
+	if (!m_SolidIB.m_Indices.size())
 	{
 		return false;
 	}
 
-	if (m_IB.Create(prm_Device, m_IB.GetCount(), D3D_Binds::INDEX_BUFFER, D3D_Access::NONE, D3D_Usages::DEFAULT))
+	if (m_SolidIB.Create(prm_Device, D3D_Binds::INDEX_BUFFER, D3D_Access::NONE, D3D_Usages::DEFAULT))
 	{
 		return true;
 	}
@@ -207,7 +207,7 @@ void C_TestMesh::SetIB
 	GraphicsDeviceContext*	prm_DC
 )
 {
-	m_IB.SetBuffer(prm_DC, DXGI_Formats::R_32_UINT);
+	m_SolidIB.SetBuffer(prm_DC, DXGI_Formats::R_32_UINT);
 }
 
 void C_TestMesh::SetVB
@@ -215,7 +215,7 @@ void C_TestMesh::SetVB
 	GraphicsDeviceContext*	prm_DC
 )
 {
-	m_VB.SetBuffer(prm_DC);
+	m_SolidVB.SetBuffer(prm_DC);
 }
 
 void C_TestMesh::SetTopology
@@ -237,6 +237,6 @@ void C_TestMesh::Draw
 {
 	reinterpret_cast<ID3D11DeviceContext*>(prm_DC->GetPointer())->DrawIndexed
 	(
-		m_IB.GetCount(), 0, 0
+		m_SolidIB.GetCount(), 0, 0
 	);
 }

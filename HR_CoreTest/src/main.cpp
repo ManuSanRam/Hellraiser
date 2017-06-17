@@ -5,12 +5,12 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
 {
-	C_CustomApp* App = new C_CustomApp(false);
+	g_mainApp = new C_CustomApp(false);
 
-	App->Run();
+	g_mainApp->Run();
 
-	delete App;
-	App = NULL;
+	delete g_mainApp;
+	g_mainApp = nullptr;
 
 	return 0;
 }

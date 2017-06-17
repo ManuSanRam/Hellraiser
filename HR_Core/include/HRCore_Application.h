@@ -15,6 +15,9 @@
 * @copyright	Infernal Coders S.A.
 *************************************************************************************************************************************************************/
 
+#define WINDOWED_W		1366
+#define WINDOWED_H		768
+
 namespace HR_SDK
 {
 	/*!
@@ -24,36 +27,62 @@ namespace HR_SDK
 	{
 	public:
 		/*!
+		*/
+		struct Window;
+
+		Window* m_Window;
+
+		uint32 m_WinIndex;
+		uint32 m_Width;
+		uint32 m_Height;
+		
+		/*!
+		*/
+		void Run();
+
+		/*!
 		 * @brief This function performs the correct initialization of the application
 		 * Loads any prerequisite necessary for the correct performance of the app
 		*/
 		virtual void OnInit() = 0;
+		
 		/*!
 		 * @brief This function performs the update of the app
 		 * Performs the change of state of the application, performs calculations, manages the app's message loop
 		*/
-		virtual bool OnUpdate() = 0;
+		virtual void OnUpdate() = 0;
+
+		/*!
+		*/
+		virtual void OnResize() = 0;
+
 		/*!
 		 * @brief This function performs the rendering of the app
 		 * Updates the number of viewports used by the app to show anything to screen.
 		*/
 		virtual void OnRender() = 0;
+		
 		/*!
 		 * @brief This function performs the shutdown of the app
 		 * Deallocates and destroys any memory resource used by the app, making sure no memory leaks remain and any resource is deallocated
 		*/
 		virtual void OnDestroy() = 0;
+		
 		/*!
 		 * @brief Initialiase the data for an application to run.
 		 * This function, as well as the class, is maintained as virtual for extensebility purposes.
-		 * User can create amy application type
+		 * User can create amy application type;
+}
 		*/
 	public:
 		void Init();
 		/*!
 		 @brief Updates the applications data
 		*/
-		bool Update();
+		void Update(bool &prm_Stop);
+
+		void Resize();
+
 		/*!
 		*/
 		void Render();
@@ -61,4 +90,6 @@ namespace HR_SDK
 		*/
 		void Destroy();
 	};
+
+	static C_Application* g_mainApp = nullptr;
 }

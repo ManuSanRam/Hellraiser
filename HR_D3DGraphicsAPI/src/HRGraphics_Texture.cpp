@@ -1,5 +1,8 @@
 #include "HRGraphics_Texture.h"
 
+/*!
+*/
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "externals/stb_image.h"
 
@@ -130,20 +133,26 @@ namespace HR_SDK
 		//! Load data from image
 		unsigned char* ImageData = stbi_load(prm_FileName.c_str(), &Width, &Height, &CompNum, STBI_rgb_alpha);
 		ID3D11Device* TmpDevice = reinterpret_cast<ID3D11Device*>(prm_Device->GetPointer());
-		ID3D11Texture2D* TmpTexture = reinterpret_cast<ID3D11Texture2D*>(m_Texture->GetReference());
-		ID3D11ShaderResourceView* TmpSRV = reinterpret_cast<ID3D11ShaderResourceView*>(m_SRV->GetReference());
+
+		m_Texture = new GraphicsTexture();
+		ID3D11Texture2D* TmpTexture = reinterpret_cast<ID3D11Texture2D*>(m_Texture->GetPointer());
+		m_SRV = new GraphicsShaderResourceView();
+		ID3D11ShaderResourceView* TmpSRV = reinterpret_cast<ID3D11ShaderResourceView*>(m_SRV->GetPointer());
 
 		D3D11_TEXTURE2D_DESC T2DDesc;
+		ZeroMemory(&T2DDesc, sizeof(D3D11_TEXTURE2D_DESC));
+
 		T2DDesc.Width = Width;
 		T2DDesc.Height = Height;
 		T2DDesc.MipLevels = 1; 
-		T2DDesc.ArraySize = 0;
+		T2DDesc.ArraySize = 1;
 		T2DDesc.Format = TranslateFormat(DXGI_Formats::RGBA_8_UNORM);
 		T2DDesc.SampleDesc.Count = 1;
+		T2DDesc.SampleDesc.Quality = 0;
 		T2DDesc.Usage = TranslateUsage(D3D_Usages::DEFAULT);
 		T2DDesc.BindFlags = TranslateBind(D3D_Binds::SHADER_RESOURCE);
 		T2DDesc.CPUAccessFlags = TranslateAccess(D3D_Access::NONE);
-		T2DDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
+		T2DDesc.MiscFlags = 0;
 
 		//! Create texture object
 		TextResult = TmpDevice->CreateTexture2D(&T2DDesc, NULL, &TmpTexture);
@@ -160,6 +169,7 @@ namespace HR_SDK
 
 		D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc;
 
+		ZeroMemory(&SRVDesc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
 		SRVDesc.Format = T2DDesc.Format;
 		SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		SRVDesc.Texture2D.MostDetailedMip = 0;
@@ -253,25 +263,35 @@ namespace HR_SDK
 
 	void C_Texture::Close()
 	{
-		//! Reduce the castings to single one. Temporal pointers die after leaving function scope
-		ID3D11Texture2D* TmpText = reinterpret_cast<ID3D11Texture2D*>(m_Texture->GetPointer());
-		ID3D11RenderTargetView* TmpRTV = reinterpret_cast<ID3D11RenderTargetView*>(m_RTV->GetPointer());
-
 		//! Verify pointers to perform safe DirectX resource release
-		if (TmpText != NULL)
+		if (m_Texture != NULL)
 		{
-			TmpText->Release();
+			ID3D11Texture2D* TmpText = reinterpret_cast<ID3D11Texture2D*>(m_Texture->GetPointer());
+			if (TmpText) { TmpText->Release(); }
+			
 		}
 
 		//! Make sure that pointer doesn't carry trash
-		TmpText = NULL;
+		m_Texture = NULL;
 
 		//! If not, jut make sure pointer carries no garbage - Thursday May 18th, 2017
-		if (TmpRTV != NULL)
+		if (m_RTV != NULL)
 		{
-			TmpRTV->Release();
+			ID3D11RenderTargetView* TmpRTV = reinterpret_cast<ID3D11RenderTargetView*>(m_RTV->GetPointer());
+			if (TmpRTV) { TmpRTV->Release(); }
+			
 		}
+
+		m_RTV = NULL;
+
+		if (m_SRV != NULL)
+		{
+			ID3D11ShaderResourceView* TmpSRV = reinterpret_cast<ID3D11ShaderResourceView*>(m_SRV->GetPointer());
+			if (TmpSRV) { TmpSRV->Release(); }
+			
+		}
+
 		//! Make sure that pointer doesn't carry trash - Friday May 19th, 2017
-		TmpRTV = NULL;
+		m_SRV = NULL;
 	}
 }
