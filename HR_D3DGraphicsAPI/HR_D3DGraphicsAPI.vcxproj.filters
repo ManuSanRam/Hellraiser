@@ -66,8 +66,23 @@
     <Filter Include="Source Files\Debugger">
       <UniqueIdentifier>{5fcd2aeb-1d1d-405a-a113-468b116eb8e0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Sampler State">
+    <Filter Include="Header Files\Render Target">
+      <UniqueIdentifier>{8820710f-5fa3-45fd-9932-4f4b7c09eda1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render Target">
+      <UniqueIdentifier>{1ddb01f0-d6e0-411f-82fd-b0ade6b56d00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Sampler">
       <UniqueIdentifier>{145e247a-9b44-4752-ae5c-c38e2ec65319}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Sampler">
+      <UniqueIdentifier>{75b64cea-ea8a-441d-916b-ac60322452a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Shader\Shader Resource">
+      <UniqueIdentifier>{31dc9061-7b65-49f8-ace9-7403ad2d9ab5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shader\Shader Resource">
+      <UniqueIdentifier>{3583f891-ebb4-415e-906f-5f86096948d3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -112,6 +127,15 @@
     </ClInclude>
     <ClInclude Include="include\HRGraphics_DXHeaders.h">
       <Filter>Header Files\Prerequisites</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HRGraphics_ShaderResource.h">
+      <Filter>Header Files\Shader\Shader Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HRGraphics_Sampler.h">
+      <Filter>Header Files\Sampler</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HRGraphics_RenderTarget.h">
+      <Filter>Header Files\Render Target</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

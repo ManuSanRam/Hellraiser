@@ -1,19 +1,43 @@
 #include "HRCoreTest_CustomApp.h"
 
-
+/*!************************************************************************************************************************************************************************
+*
+*	@file		HRCore_Application.h
+*
+*	This file contains the declaration of class C_Application.
+*	This class is used as an interface to create, control and render applications in any platform.
+*	The basic functions of this class are:
+*	- Initialize: Starts the application, passing any parameters to correctly start up the application.
+*	- Update: Updates the application's window and the logic of the application.
+*	-
+*
+*	@date			26-09-2016
+*	@author			Manuel Aldair Santos Ramón (ManuSanRam)
+*	@copyright		Infernal Coders S.A.
+*
+***************************************************************************************************************************************************************************/
 
 void C_CustomApp::OnInit()
 {
+	//! Allocate the log file
 	m_GraphicsLogger = new C_Logger();
+	//! Open file prepare to receive logging messages
 	m_GraphicsLogger->Init("Log Files/CoreTestLog.html");
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Aplicación iniciada con exito", HR_FILE, HR_FUNCTION, HR_LINE);
+	//! Report message to log file.
+	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Application successfully initialized", HR_FILE, HR_FUNCTION, HR_LINE);
 
-	//! Set Pipeline
-	//! Start-up Direct 3D
+	/*!********************************************************************************************************************************************************************
+	 *
+	 *	INITIALIZE THE PIPELINE
+	 *
+	***********************************************************************************************************************************************************************/
+	//! Allocate the graphics API
 	m_Graphics = new C_GraphicsAPI();
+	//! Create the COM objects for the pipeline
 	if (m_Graphics->Init(m_Width, m_Height, DXGI_Formats::RGBA_8_UNORM, DXGI_Scanlines::UNSPECIFIED, DXGI_Scaling::UNSPECIFIED, DXGI_Usage::RENDER_TARGET_OUTPUT, m_WinIndex, m_Fullscreen, DXGI_SwapEffect::DISCARD, D3D_Drivers::HARDWARE))
 	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Pipeline grafico cargado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
+		//! COM objects created successfully: report message to log file.
+		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Graphics pipeline successfully initialized", HR_FILE, HR_FUNCTION, HR_LINE);
 	}
 
 	else
@@ -85,19 +109,31 @@ void C_CustomApp::OnInit()
 	delete Texture;
 
 	
-	//! Init geometry to be drawn...
-	//! Compile the shaders...
+	/*!********************************************************************************************************************************************************************
+	 *
+	 *	INITIALIZE GEOMETRY TO BE RENDERED
+	 *
+	***********************************************************************************************************************************************************************/
+	//! Allocate vertex shader
 	m_VShader = new C_VertexShader();
+	//! Allocate pixel shader
 	m_PShader = new C_PixelShader();
+
+	//! Comile th vertex shader using specified file
 	if (m_VShader->Compile("Shader Files/BasicVS.hlsl", "VSMain", "vs_5_0"))
 	{
+		//! Shader compilation succedeed: report to log file.
 		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Shader de vertices compilado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
+		//! Continue the program
 	}
 
 	else
 	{
+		//! Shader compilation failed: report to log file.
 		m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "No se pudo compilar shader de vertices", HR_FILE, HR_FUNCTION, HR_LINE);
+		//! Write information to file, close file
 		m_GraphicsLogger->Close("HR_CoreTestLogger");
+		//! Stop the program reporting an error
 		exit(1);
 	}
 
@@ -250,6 +286,7 @@ void C_CustomApp::OnInit()
 
 	//! Create the camera
 	m_StaticCamera = new C_GCamera();
+	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
 
 	/*!
 	 * Set the camera's data 
@@ -259,16 +296,21 @@ void C_CustomApp::OnInit()
 	(
 		C_Vector3D(0.0f, 0.0f, -60.0f)
 	);
+	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
+
 	//! Target
 	m_StaticCamera->SetTarget
 	(
 		C_Vector3D(0.0f, 0.0f, 0.0f)
 	);
+	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
+
 	//! Up vector
 	m_StaticCamera->SetUp
 	(
 		C_Vector3D(0.0f, 1.0f, 0.0f)
 	);
+	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
 }
 
 void C_CustomApp::OnUpdate()
@@ -310,8 +352,8 @@ void C_CustomApp::OnRender()
 	C_LinearColor Color;
 
 	Color.SetRed(0.0f);
-	Color.SetGreen(0.0f);
-	Color.SetBlue(0.0f);
+	Color.SetGreen(0.2f);
+	Color.SetBlue(0.46f);
 	Color.SetAlpha(1.0f);
 
 	m_BackBuffer->ClearRTV(m_Graphics->m_DC, Color);
@@ -349,47 +391,64 @@ void C_CustomApp::OnRender()
 
 void C_CustomApp::OnDestroy()
 {
+	//! Close the back buffer render target 
 	m_BackBuffer->Close();
+	//! Deallocate back buffer
 	delete m_BackBuffer;
+	//! Point back buffer to null
 	m_BackBuffer = NULL;
-	/*!
-	Shutdown Graphics API
-	*/
+	//! Report 
+	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Back buffer cerrado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
+
+	//!
 	m_Graphics->Close();
 	delete m_Graphics;
 	m_Graphics = NULL;
+	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
 
+	//!
 	delete m_SquareMesh;
 	m_SquareMesh = NULL;
+	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
 
+	//!
 	m_VShader->Close();
 	delete m_VShader;
 	m_VShader = NULL;
+	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
 
+	//!
 	m_PShader->Close();
 	delete m_PShader;
 	m_PShader = NULL;
+	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
 
+	//!
 	m_InputLayout->Close();
 	delete m_InputLayout;
 	m_InputLayout = NULL;
+	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
 
 	//! Close the depth
 	m_Depth->Close();
 	delete m_Depth;
 	m_Depth = NULL;
+	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
 
 	//! Close the world matrix
 	delete m_WrldBuffer;
 	m_WrldBuffer = NULL;
+	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
 
 	//! Close the view matrix
 	delete m_ViewBuffer;
 	m_ViewBuffer = NULL;
+	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
 
 	//! Close the projection matrix
 	delete m_ProjBuffer;
 	m_ProjBuffer = NULL;
+	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
 
 	m_GraphicsLogger->Close("HR_CoreTestLogger");
 	delete m_GraphicsLogger;

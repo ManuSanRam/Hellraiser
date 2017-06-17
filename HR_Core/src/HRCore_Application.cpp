@@ -1,54 +1,95 @@
 #include "HRCore_Application.h"
 #include <Windows.h>
 
-/*!***********************************************************************************************************************************************************
-* @file		HRCore_Application.cpp
+/*!************************************************************************************************************************************************************************
 *
-* This file contains the definition of the functions of the C_Application class
-* The function implementations are as follows:
-*   - Initialize any resource used by any custom application.
-*   - Updates any message used by said application.
-*   - Renders the application's rect to screen.
-*   - Deallocates and frees any memory used by the application.
+*	@file		HRCore_Application.cpp
 *
-* @date         26-09-2016
-* @author		Manuel Aldair Santos Ramón (ManuSanRam)
-* @copyright	Infernal Coders S.A.
-*************************************************************************************************************************************************************/
-
+*	This file contains the definition of the functions of class C_Application.
+*
+*	@date			26-09-2016
+*	@author			Manuel Aldair Santos Ramón (ManuSanRam)
+*	@copyright		Infernal Coders S.A.
+*
+***************************************************************************************************************************************************************************/
+/*!************************************************************************************************************************************************************************
+ * @brief Defines optimizations for the Win32 library
+***************************************************************************************************************************************************************************/
 #define WIN32_LEAN_AND_MEAN
 
+/*!************************************************************************************************************************************************************************
+ * @brief Message pump for the application's window.
+ * @param hwnd Window that receives input for the pump to process
+ * @param umsg Message to be processed by the pump
+ * @param wparam wParameter object to process any parameter needed by any funciton
+ * @param lparam lParameter object to process any parameter needed by any function
+ * @return Event to control the window.
+***************************************************************************************************************************************************************************/
 static LRESULT CALLBACK wndProc(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
 
 namespace HR_SDK
 {
+	/*!********************************************************************************************************************************************************************
+	 *
+	 *	@brief Structure to control the window where the application will be controlled, viewed and processed.
+	 *
+	***********************************************************************************************************************************************************************/
 	struct C_Application::Window
 	{
+		/*!****************************************************************************************************************************************************************
+		 *
+		 *	@brief Name of the App
+		 *
+		*******************************************************************************************************************************************************************/
 		LPCSTR m_AppName;
+		
+		/*!****************************************************************************************************************************************************************
+		 *
+		 *	@brief Flag to determine if the app will be in fullscreen or windowed.
+		 *
+		*******************************************************************************************************************************************************************/
 		BOOL   m_Fullscreen;
 
-		/*!
-		@brief Starts up the Win32 window and message loop
-		*/
+		/*!****************************************************************************************************************************************************************
+		 *
+		 *	@brief Starts up the Win32 window and message loop
+		 *
+		 *	@param prm_Width Width of the window
+		 *	@param prm_Height Height of the window
+		 *	@param prm_WindowIndex Index to the window that will be controlled
+		 *
+		*******************************************************************************************************************************************************************/
 		void StartWin(uint32 &prm_Width, uint32 &prm_Height, uint32 &prm_WindowIndex);
-		/*!
-		@brief Closes Win32 systems and the app data
-		*/
+		/*!****************************************************************************************************************************************************************
+		 *
+		 *	@brief Closes Win32 systems and the app data
+		 *
+		 *	@param WindowIndex Index to the window that will be controlled
+		 *
+		*******************************************************************************************************************************************************************/
 		void StopWin(uint32 &prm_WindowIndex);
 	};
 
+	/*!********************************************************************************************************************************************************************
+	*
+	*	@brief Starts up the Win32 window and message loop
+	*
+	*	@param prm_Width Width of the window
+	*	@param prm_Height Height of the window
+	*	@param prm_WindowIndex Index to the window that will be controlled
+	*
+	***********************************************************************************************************************************************************************/
 	void C_Application::Window::StartWin(uint32 &prm_Width, uint32 &prm_Height, uint32 &prm_WindowIndex)
 	{
 		WNDCLASSEX wc;
 		DEVMODE dmScreenSettings;
+		//! Window position on screen space
 		int32 posX, posY;
+		//! Window dimensions on screen space
 		uint32 Width, Height;
 
-		// Get an external pointer to this object.	
-		//ApplicationHandle = this;
-
 		// Give the application a name.
-		m_AppName = "HELLRAISER GAME ENGINE - Core Project Unit Test";
+		m_AppName = "Hellraiser Engine - Core Unit Test";
 
 		// Setup the windows class with default settings.
 		wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
@@ -104,8 +145,6 @@ namespace HR_SDK
 			WS_OVERLAPPEDWINDOW | WS_CAPTION | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
 			posX, posY, Width, Height, NULL, NULL, NULL, NULL);
 
-		SetWindowLong(wind, GWL_STYLE, 0);
-
 		// Bring the window up on the screen and set it as main focus.
 		ShowWindow(wind, SW_SHOW);
 		SetForegroundWindow(wind);
@@ -122,6 +161,13 @@ namespace HR_SDK
 		return;
 	}
 
+	/*!********************************************************************************************************************************************************************
+	*
+	*	@brief Closes Win32 systems and the app data
+	*
+	*	@param WindowIndex Index to the window that will be controlled
+	*
+	***********************************************************************************************************************************************************************/
 	void C_Application::Window::StopWin(uint32 &prm_WindowIndex)
 	{
 		// Show the mouse cursor.
@@ -148,11 +194,22 @@ namespace HR_SDK
 	*/
 	void C_Application::Run()
 	{
-		bool Stop = false;
-		while (!Stop)
+		MSG msg;
+		memset(&msg, 0, sizeof(MSG));
+		msg.message = WM_NULL;
+
+		this->Init();
+
+		while (msg.message != WM_QUIT)
 		{
+			if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+			{
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+			}
+
 			//! Update scene
-			this->Update(Stop);
+			this->Update();
 			//! Render scene
 			this->Render();
 		}
@@ -181,23 +238,8 @@ namespace HR_SDK
 	 * @brief Updates the application
 	 * Performs calculations, manages message dispatcher and controls the app's main loop
 	*/
-	void C_Application::Update(bool &prm_Stop)
+	void C_Application::Update()
 	{
-		MSG msg;
-
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-
-		//! If message to leave arrives...
-		if (msg.message == WM_QUIT)
-		{
-			prm_Stop = true;
-			return;
-		}
-
 		OnUpdate();
 	}
 

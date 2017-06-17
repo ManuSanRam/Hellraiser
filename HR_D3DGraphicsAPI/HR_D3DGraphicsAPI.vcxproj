@@ -200,7 +200,10 @@
     <ClInclude Include="include\HRGraphics_DXHeaders.h" />
     <ClInclude Include="include\HRGraphics_GCamera.h" />
     <ClInclude Include="include\HRGraphics_InputLayout.h" />
+    <ClInclude Include="include\HRGraphics_RenderTarget.h" />
+    <ClInclude Include="include\HRGraphics_Sampler.h" />
     <ClInclude Include="include\HRGraphics_Shader.h" />
+    <ClInclude Include="include\HRGraphics_ShaderResource.h" />
     <ClInclude Include="include\HRGraphics_Texture.h" />
     <ClInclude Include="include\HRGraphics_Vertex.h" />
     <ClInclude Include="include\HRGraphics_Viewport.h" />

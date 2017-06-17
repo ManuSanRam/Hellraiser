@@ -1,7 +1,21 @@
 #pragma once
 
-/*!
-*/
+/*!************************************************************************************************************************************************************************
+*
+*	@file		HRCore_Application.h
+*
+*	This file contains the declaration of class C_Application.
+*	This class is used as an interface to create, control and render applications in any platform.
+*	The basic functions of this class are:
+*	- Initialize: Starts the application, passing any parameters to correctly start up the application.
+*	- Update: Updates the application's window and the logic of the application.
+*	-
+*
+*	@date			26-09-2016
+*	@author			Manuel Aldair Santos Ramón (ManuSanRam)
+*	@copyright		Infernal Coders S.A.
+*
+***************************************************************************************************************************************************************************/
 
 #include <HRCore_Application.h>
 
@@ -40,8 +54,6 @@ public:
 		m_Graphics = NULL;
 		m_SquareMesh = NULL;
 		m_StaticCamera = NULL;
-
-		Init();
 	}
 
 	/*!
