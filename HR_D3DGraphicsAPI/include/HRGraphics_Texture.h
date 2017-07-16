@@ -70,6 +70,7 @@ namespace HR_SDK
 		bool						CreateFromFile
 		(
 			const String&			prm_FileName,
+			DXGI_Formats::E			_Format,
 			GraphicsDevice*			prm_Device,
 			GraphicsDeviceContext*	prm_DC
 		);

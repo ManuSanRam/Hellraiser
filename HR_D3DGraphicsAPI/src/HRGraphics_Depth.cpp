@@ -14,9 +14,13 @@ namespace HR_SDK
 			return reinterpret_cast<void**>(&Device);
 		}
 
+		/*!
+		*/
 		ID3D11Device* Device;
 	};
 
+	/*!
+	*/
 	struct GraphicsDeviceContext
 	{
 		void* GetPointer()
@@ -29,9 +33,13 @@ namespace HR_SDK
 			return reinterpret_cast<void**>(&DevCon);
 		}
 
+		/*!
+		*/
 		ID3D11DeviceContext* DevCon;
 	};
 
+	/*!
+	*/
 	struct GraphicsDepthStencilBuffer
 	{
 		GraphicsDepthStencilBuffer() : Buffer(nullptr) {}
@@ -48,6 +56,8 @@ namespace HR_SDK
 		ID3D11Texture2D* Buffer;
 	};
 
+	/*!
+	*/
 	struct GraphicsDepthStencilState
 	{
 		GraphicsDepthStencilState() : DSS(nullptr) {}
@@ -64,6 +74,8 @@ namespace HR_SDK
 		ID3D11DepthStencilState* DSS;
 	};
 
+	/*!
+	*/
 	struct GraphicsDepthStencilView
 	{
 		GraphicsDepthStencilView() : DSV(nullptr) {}
@@ -80,6 +92,8 @@ namespace HR_SDK
 		ID3D11DepthStencilView* DSV;
 	};
 
+	/*!
+	*/
 	bool C_DepthStencil::CreateDSBuffer
 	(
 		uint32			prm_W, 
@@ -117,6 +131,8 @@ namespace HR_SDK
 		return true;
 	}
 
+	/*!
+	*/
 	bool C_DepthStencil::CreateDSState
 	(
 		GraphicsDevice*				prm_Device, 
@@ -164,6 +180,8 @@ namespace HR_SDK
 		return true;
 	}
 
+	/*!
+	*/
 	bool C_DepthStencil::CreateDSView
 	(
 		GraphicsDevice*				prm_Device, 
@@ -196,7 +214,8 @@ namespace HR_SDK
 		return true;
 	}
 
-
+	/*!
+	*/
 	void C_DepthStencil::ClearDSV
 	(
 		GraphicsDeviceContext* prm_DC
@@ -211,10 +230,14 @@ namespace HR_SDK
 		);
 	}
 
+	/*!
+	*/
 	void C_DepthStencil::Close()
 	{
+		//! Check if Depth Stencil View exists
 		if (m_DSV)
 		{
+			//! Check if 
 			if (m_DSV->DSV)
 			{
 				reinterpret_cast<ID3D11DepthStencilView*>(m_DSV->GetPointer())->Release();

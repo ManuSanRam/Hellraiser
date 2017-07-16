@@ -16,6 +16,15 @@
 * @copyright	Infernal Coders S.A.																																	   *
 ***************************************************************************************************************************************************************************/
 
+#include "HRGraphics_RenderTarget.h"
+#include "HRGraphics_Depth.h"
+
+#include "HRGraphics_Shader.h"
+
+#include "HRGraphics_Buffer.h"
+
+#include "HRGraphics_InputLayout.h"
+
 namespace HR_SDK
 {
 	struct GraphicsDevice;
@@ -81,10 +90,33 @@ namespace HR_SDK
 		  DXGI_SwapEffect::E prm_SwapEffect,
 		  D3D_Drivers::E prm_DriverType
 	  );
+	  
+	  //! Output Merger
+	  void SetRenderTarget();
+	  void SetDepth();
+
+	  //! Vertex shader stage
+	  void SetVertexShader();
+
+	  //! Pixel shader stage
+	  void SetPixelShader();
+
+	  //! Geometry
+	  void SetVertexBuffer();
+	  void SetIndexBuffer();
+
+	  //! Input Assembler
+	  void SetInputLayout();
+
+	  //! Rasterization stage
+	  void SetViewport();
+
+	  //! Constant buffer
+	  void SetConstantBuffer();
 
 	  /*!
 	  */
-	  void Present();
+	  void Render();
 	  /*!
 	  */
 	  void Close();

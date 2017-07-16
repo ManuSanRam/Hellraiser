@@ -12,20 +12,8 @@
     <Filter Include="Header Files\Parsing">
       <UniqueIdentifier>{12d7372b-37dd-41da-b267-318eb160d388}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Parsing\Parser">
-      <UniqueIdentifier>{4a8cc6df-d108-408d-bbcd-41ea41294fe0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Parsing\Token">
-      <UniqueIdentifier>{40a98a85-c69b-41ab-83e3-5677d36e0d01}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Parsing">
       <UniqueIdentifier>{daee6806-3ae1-4d18-b0f0-9b13997a4117}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Parsing\Token">
-      <UniqueIdentifier>{01177f7e-2e90-409d-a7c9-69e1884b9d90}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Parsing\Parser">
-      <UniqueIdentifier>{70f845c7-6ab0-49c1-b51e-96e58b810736}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Application">
       <UniqueIdentifier>{d98e65e5-5357-422b-aa76-83d6749cfd9f}</UniqueIdentifier>
@@ -33,33 +21,30 @@
     <Filter Include="Header Files\Prerequisites">
       <UniqueIdentifier>{78b47c81-5962-4fab-9ca0-a0be57d5a8f1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Prerequisites\Platform-specifics">
-      <UniqueIdentifier>{05efc8cd-94b6-4142-8f64-a109cf900b35}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Application">
       <UniqueIdentifier>{83884396-9978-45a7-a161-b13a6e391b19}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\HRCore_Parser.h">
-      <Filter>Header Files\Parsing\Parser</Filter>
-    </ClInclude>
     <ClInclude Include="include\HRCore_Application.h">
       <Filter>Header Files\Application</Filter>
     </ClInclude>
     <ClInclude Include="include\HRCore_Prerequisites.h">
       <Filter>Header Files\Prerequisites</Filter>
     </ClInclude>
+    <ClInclude Include="include\HRCore_Parser.h">
+      <Filter>Header Files\Parsing</Filter>
+    </ClInclude>
     <ClInclude Include="include\HRCore_Defines.h">
-      <Filter>Header Files\Prerequisites\Platform-specifics</Filter>
+      <Filter>Header Files\Prerequisites</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\HRCore_Parser.cpp">
-      <Filter>Source Files\Parsing\Parser</Filter>
-    </ClCompile>
     <ClCompile Include="src\HRCore_Application.cpp">
       <Filter>Source Files\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HRCore_Parser.cpp">
+      <Filter>Source Files\Parsing</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

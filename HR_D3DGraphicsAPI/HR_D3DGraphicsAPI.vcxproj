@@ -200,6 +200,7 @@
     <ClInclude Include="include\HRGraphics_DXHeaders.h" />
     <ClInclude Include="include\HRGraphics_GCamera.h" />
     <ClInclude Include="include\HRGraphics_InputLayout.h" />
+    <ClInclude Include="include\HRGraphics_Rasterizer.h" />
     <ClInclude Include="include\HRGraphics_RenderTarget.h" />
     <ClInclude Include="include\HRGraphics_Sampler.h" />
     <ClInclude Include="include\HRGraphics_Shader.h" />
@@ -218,7 +219,11 @@
     <ClCompile Include="src\HRGraphics_Depth.cpp" />
     <ClCompile Include="src\HRGraphics_GCamera.cpp" />
     <ClCompile Include="src\HRGraphics_InputLayout.cpp" />
+    <ClCompile Include="src\HRGraphics_Rasterizer.cpp" />
+    <ClCompile Include="src\HRGraphics_RenderTarget.cpp" />
+    <ClCompile Include="src\HRGraphics_Sampler.cpp" />
     <ClCompile Include="src\HRGraphics_Shader.cpp" />
+    <ClCompile Include="src\HRGraphics_ShaderResource.cpp" />
     <ClCompile Include="src\HRGraphics_Texture.cpp" />
     <ClCompile Include="src\HRGraphics_Viewport.cpp" />
   </ItemGroup>

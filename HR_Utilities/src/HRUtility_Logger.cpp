@@ -55,11 +55,16 @@ namespace HR_SDK
 
 	void C_Logger::Close(const String& LogTitle)
 	{
-		char Part1[] = { "<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<title>" };
-		char Part2[] = { "</title>" };
-		char Part3[] = { "\n\t\t<style>\n\t\ttable{border-collapse: collapse;width: 100 % ;}table, td, th {border: 1px solid #000;text - align: center;}th, td{padding: 12px;}\n</style>\n</head>\n<body><h1 style=\"font-family:verdana;text-align:center;\">\n" };
-		char Part4[] = { "\n</h1>\n<p style=\"font-family:verdana;text-align:center;\"><b>" };
-		char Part5[] = { "</b></p><table align=\"center\">\n" };
+		char Part1[] = 
+		{ "<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<title>" };
+		char Part2[] = 
+		{ "</title>" };
+		char Part3[] = 
+		{ "\n\t\t<style>\n\t\ttable{border-collapse: collapse;width: 100 % ;}table, td, th {border: 1px solid #000;text - align: center;}th, td{padding: 12px;}\n</style>\n</head>\n<body><h1 style=\"font-family:verdana;text-align:center;\">\n" };
+		char Part4[] = 
+		{ "\n</h1>\n<p style=\"font-family:verdana;text-align:center;\"><b>" };
+		char Part5[] = 
+		{ "</b></p><table align=\"center\">\n" };
 
 		m_LoggerFile->Write(Part1, sizeof(Part1));
 		m_LoggerFile->Write((char*)(LogTitle.c_str()), LogTitle.size());

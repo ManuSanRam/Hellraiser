@@ -153,7 +153,40 @@ namespace HR_SDK
 		return true;
 	}
 
-	void C_GraphicsAPI::Present()
+	//! Output Merger
+	void C_GraphicsAPI::SetRenderTarget()
+	{}
+	void C_GraphicsAPI::SetDepth()
+	{}
+
+	//! Vertex shader stage
+	void C_GraphicsAPI::SetVertexShader()
+	{}
+
+	//! Pixel shader stage
+	void C_GraphicsAPI::SetPixelShader()
+	{}
+
+	//! Geometry
+	void C_GraphicsAPI::SetVertexBuffer()
+	{}
+
+	void C_GraphicsAPI::SetIndexBuffer()
+	{}
+
+	//! Input Assembler
+	void C_GraphicsAPI::SetInputLayout()
+	{}
+
+	//! Rasterization stage
+	void C_GraphicsAPI::SetViewport()
+	{}
+
+	//! Constant buffer
+	void C_GraphicsAPI::SetConstantBuffer()
+	{}
+
+	void C_GraphicsAPI::Render()
 	{
 		reinterpret_cast<IDXGISwapChain*>(m_SwapChain->GetPointer())->Present(0, 0);
 	}

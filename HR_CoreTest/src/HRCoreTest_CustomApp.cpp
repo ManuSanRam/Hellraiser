@@ -286,7 +286,7 @@ void C_CustomApp::OnInit()
 
 	//! Create the camera
 	m_StaticCamera = new C_GCamera();
-	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
+	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Camara de gráficos", HR_FILE, HR_FUNCTION, HR_LINE);
 
 	/*!
 	 * Set the camera's data 
@@ -294,23 +294,23 @@ void C_CustomApp::OnInit()
 	//! Position
 	m_StaticCamera->SetPosition
 	(
-		C_Vector3D(0.0f, 0.0f, -60.0f)
+		C_Vector3D(0.0f, 0.0f, -40.0f)
 	);
-	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
+	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Posición de la camara configurada" , HR_FILE, HR_FUNCTION, HR_LINE);
 
 	//! Target
 	m_StaticCamera->SetTarget
 	(
 		C_Vector3D(0.0f, 0.0f, 0.0f)
 	);
-	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
+	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Punto de objetivo de la camara configurado", HR_FILE, HR_FUNCTION, HR_LINE);
 
 	//! Up vector
 	m_StaticCamera->SetUp
 	(
 		C_Vector3D(0.0f, 1.0f, 0.0f)
 	);
-	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
+	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Vector de arriba de la camara configurado", HR_FILE, HR_FUNCTION, HR_LINE);
 }
 
 void C_CustomApp::OnUpdate()
@@ -352,8 +352,8 @@ void C_CustomApp::OnRender()
 	C_LinearColor Color;
 
 	Color.SetRed(0.0f);
-	Color.SetGreen(0.2f);
-	Color.SetBlue(0.46f);
+	Color.SetGreen(0.0f);
+	Color.SetBlue(0.0f);
 	Color.SetAlpha(1.0f);
 
 	m_BackBuffer->ClearRTV(m_Graphics->m_DC, Color);
@@ -386,7 +386,7 @@ void C_CustomApp::OnRender()
 	//! Render your shit here...
 	m_SquareMesh->Draw(m_Graphics->m_DC);
 
-	m_Graphics->Present();
+	m_Graphics->Render();
 }
 
 void C_CustomApp::OnDestroy()
@@ -404,51 +404,51 @@ void C_CustomApp::OnDestroy()
 	m_Graphics->Close();
 	delete m_Graphics;
 	m_Graphics = NULL;
-	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
+	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Pipeline cerrado con éxito", HR_FILE, HR_FUNCTION, HR_LINE);
 
 	//!
 	delete m_SquareMesh;
 	m_SquareMesh = NULL;
-	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
+	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Geometria cerrada con exito", HR_FILE, HR_FUNCTION, HR_LINE);
 
 	//!
 	m_VShader->Close();
 	delete m_VShader;
 	m_VShader = NULL;
-	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
+	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Vertex shader cerrado con éxito", HR_FILE, HR_FUNCTION, HR_LINE);
 
 	//!
 	m_PShader->Close();
 	delete m_PShader;
 	m_PShader = NULL;
-	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
+	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Pixel shader cerrado con éxito", HR_FILE, HR_FUNCTION, HR_LINE);
 
 	//!
 	m_InputLayout->Close();
 	delete m_InputLayout;
 	m_InputLayout = NULL;
-	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
+	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Input layout cerrado con éxito", HR_FILE, HR_FUNCTION, HR_LINE);
 
 	//! Close the depth
 	m_Depth->Close();
 	delete m_Depth;
 	m_Depth = NULL;
-	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
+	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Profundidad cerrada con éxito", HR_FILE, HR_FUNCTION, HR_LINE);
 
 	//! Close the world matrix
 	delete m_WrldBuffer;
 	m_WrldBuffer = NULL;
-	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
+	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Buffer de mundo cerrado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
 
 	//! Close the view matrix
 	delete m_ViewBuffer;
 	m_ViewBuffer = NULL;
-	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
+	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Buffer de vista cerrado con éxito", HR_FILE, HR_FUNCTION, HR_LINE);
 
 	//! Close the projection matrix
 	delete m_ProjBuffer;
 	m_ProjBuffer = NULL;
-	m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
+	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Buffer de proyección cerrado con éxito", HR_FILE, HR_FUNCTION, HR_LINE);
 
 	m_GraphicsLogger->Close("HR_CoreTestLogger");
 	delete m_GraphicsLogger;

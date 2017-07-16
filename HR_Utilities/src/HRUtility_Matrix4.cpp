@@ -297,21 +297,68 @@ namespace HR_SDK
 
 	/*!
 	*/
-	C_Matrix4&	C_Matrix4::RotRollPitchYaw(float prm_Pitch, float prm_Yaw, float prm_Roll)
+	C_Matrix4		C_Matrix4::LookAt
+	(
+		C_Vector3D prm_Position,
+		C_Vector3D prm_Target,
+		C_Vector3D prm_Up
+	)
 	{
-		C_Matrix4 Roll(1), Pitch(1), Yaw(1);
+		C_Vector3D XAxis, YAxis, ZAxis;
 
-		*this *= Roll.RotateX(prm_Roll, true);
-		*this *= Pitch.RotateY(prm_Pitch, true);
-		*this *= Yaw.RotateZ(prm_Yaw, true);
+		ZAxis = prm_Position - prm_Target;
+		XAxis = prm_Up;
 
-		return *this;
+		ZAxis.Normalize();
+		XAxis.Normalize();
+
+		XAxis = ZAxis.Cross(XAxis);
+		XAxis.Normalize();
+
+		YAxis = ZAxis.Cross(XAxis);
+		YAxis.Normalize();
+
+		float X, Y, Z;
+
+		X = -XAxis.Dot(prm_Position);
+		Y = -YAxis.Dot(prm_Position);
+		Z = -ZAxis.Dot(prm_Position);
+
+		return C_Matrix4
+		(
+			XAxis.m_x, YAxis.m_x, ZAxis.m_x, 0.0f,
+			XAxis.m_y, YAxis.m_y, ZAxis.m_y, 0.0f,
+			XAxis.m_z, YAxis.m_z, ZAxis.m_z, 0.0f,
+			X, Y, Z, 1.0f
+		);
 	}
 
 	/*!
 	*/
-	void		C_Matrix4::LookAt(C_Vector3D prm_Target)
+	C_Matrix4		C_Matrix4::Projection
+	(
+		float prm_FOVAngle,
+		float prm_Ratio,
+		float prm_NearZ,
+		float prm_FarZ
+	)
 	{
+		float H, W;
 
+		H = 1.0f / (C_PlatformMath::Tangent(prm_FOVAngle * (1.0f / 2.0f)));
+		W = H / prm_Ratio;
+
+		float _3rd, _4th;
+
+		_3rd = (prm_FarZ + prm_NearZ) / (prm_NearZ - prm_FarZ);
+		_4th = (2.0f * prm_NearZ * prm_FarZ) / (prm_NearZ - prm_FarZ);
+
+		C_Matrix4
+		(
+			W, 0.0f, 0.0f, 0.0f,
+			0.0f, H, 0.0f, 0.0f,
+			0.0f, 0.0f, _3rd, -1.0f,
+			0.0f, 0.0f, _4th, 0.0f
+		);
 	}
 }

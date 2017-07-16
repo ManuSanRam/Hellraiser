@@ -1,89 +1,205 @@
 #include "HRGraphics_GCamera.h"
 
+/*!
+*/
+
 namespace HR_SDK
 {
+	/*!**************************************************************************************************************************************************************************
+	
+		@brief Updates the data of the camera in each frame,
+	
+	****************************************************************************************************************************************************************************/
 	void C_GCamera::SetPosition
 	(
-		const C_Vector3D prm_Position
+		float prm_X,
+		float prm_Y,
+		float prm_Z
 	)
 	{
-		memcpy(&m_Position, &prm_Position, sizeof(C_Vector3D));
+		m_Position.Set(prm_X, prm_Y, prm_Z);
 	}
 
+	/*!**************************************************************************************************************************************************************************
+	****************************************************************************************************************************************************************************/
+	void C_GCamera::SetPositionVector
+	(
+		const C_Vector3D& prm_Position
+	)
+	{
+		m_Position = prm_Position;
+	}
+
+	/*!**************************************************************************************************************************************************************************
+	****************************************************************************************************************************************************************************/
 	void C_GCamera::SetTarget
 	(
-		const C_Vector3D prm_Target
+		float prm_X,
+		float prm_Y,
+		float prm_Z
 	)
 	{
-		memcpy(&m_Target, &prm_Target, sizeof(C_Vector3D));
+		m_Target.Set(prm_X, prm_Y, prm_Z);
 	}
 
+	/*!**************************************************************************************************************************************************************************
+	
+		@brief Updates the data of the camera in each frame,
+	
+	****************************************************************************************************************************************************************************/
+	void C_GCamera::SetTargetVector
+	(
+		const C_Vector3D& prm_Target
+	)
+	{
+		//! Reset the target
+		m_Target = prm_Target;
+
+		//! Recalculate the front, right and Up vectors, to censerve them orthonormal
+		//! Front
+		m_Front = m_Target - m_Position;
+		m_Front.Normalize();
+
+		//! Right
+		m_Right = m_Front.Cross(m_Up);
+		m_Right.Normalize();
+
+		//! Up
+		m_Up = m_Front.Cross(m_Right);
+		m_Up.Normalize();
+	}
+
+	/*!**************************************************************************************************************************************************************************
+	****************************************************************************************************************************************************************************/
 	void C_GCamera::SetUp
 	(
-		const C_Vector3D prm_Up
+		float prm_X,
+		float prm_Y,
+		float prm_Z
 	)
 	{
-		memcpy(&m_Up, &prm_Up, sizeof(C_Vector3D));
+		m_Up.Set(prm_X, prm_Y, prm_Z);
 	}
 
-	void C_GCamera::LookAt
+	/*!**************************************************************************************************************************************************************************
+	
+		@brief Updates the data of the camera in each frame.
+		This updating occurs if the @var m_Perform
+	
+	****************************************************************************************************************************************************************************/
+	void C_GCamera::		Update
 	(
 
 	)
 	{
-		C_Vector3D XAxis, YAxis, ZAxis;
-
-		ZAxis = m_Position - m_Target;		
-		XAxis = m_Up;
-
-		ZAxis.Normalize();
-		XAxis.Normalize();
-
-		XAxis = ZAxis.Cross(XAxis);
-		XAxis.Normalize();
-
-		YAxis = ZAxis.Cross(XAxis);
-		YAxis.Normalize();
-
-		float X, Y, Z;
-
-		X = -XAxis.Dot(m_Position);
-		Y = -YAxis.Dot(m_Position);
-		Z = -ZAxis.Dot(m_Position);
-
-		m_View  = C_Matrix4
-		(
-			XAxis.m_x,		YAxis.m_x,		ZAxis.m_x,		0.0f,
-			XAxis.m_y,		YAxis.m_y,		ZAxis.m_y,		0.0f,
-			XAxis.m_z,		YAxis.m_z,		ZAxis.m_z,		0.0f,
-			X,				Y,				Z,				1.0f
-		);
+		//! Check if any changes were made
+		if (m_Perform)
+		{
+			//! Perform recalculation of view matrix
+			m_View.LookAt(m_Position, m_Target, m_Up);
+		}
 	}
 
-	void C_GCamera::Projection
+	/*!**************************************************************************************************************************************************************************
+	
+		@brief Calculates the view space matrix, obtaining the orientation which the camera is pointing at.
+	
+	****************************************************************************************************************************************************************************/
+	void			C_GCamera::LookAt
 	(
-		float prm_FOVAngle,
-		float prm_AspectRatio,
-		float prm_NearZ,
-		float prm_FarZ
+		const C_Vector3D& prm_Target
+	) 
+	{
+		//! Reset camera's target
+		SetTargetVector(prm_Target);
+		//! Reset the updating switch
+		m_Perform = true;
+	}
+
+	/*!**************************************************************************************************************************************************************************
+	
+	
+	
+	****************************************************************************************************************************************************************************/
+	void			C_GCamera::Move
+	(
+		const C_Vector3D& prm_Position
 	)
 	{
-		float H, W;
 
-		H = 1.0f / (C_PlatformMath::Tangent(prm_FOVAngle * (1.0f/2.0f)));
-		W = H / prm_AspectRatio;
-
-		float _3rd, _4th;
-
-		_3rd = (prm_FarZ + prm_NearZ) / (prm_NearZ - prm_FarZ);
-		_4th = (2.0f * prm_NearZ * prm_FarZ) / (prm_NearZ - prm_FarZ);
-
-		m_Projection = C_Matrix4
-		(
-			W,			0.0f,			0.0f,			0.0f,
-			0.0f,		H,				0.0f,			0.0f,
-			0.0f,		0.0f,			_3rd,			-1.0f,
-			0.0f,		0.0f,			_4th,			0.0f
-		);
 	}
+
+	/*!**************************************************************************************************************************************************************************
+	
+		@brief Moves the camera and the target towards a certain direction
+	
+		@param prm_Direction Direction in which the camera and the target will move.
+	
+	****************************************************************************************************************************************************************************/
+	void			C_GCamera::Pan
+	(
+		const C_Vector3D& prm_Direction
+	)
+	{
+
+	}
+
+	/*!**************************************************************************************************************************************************************************
+	****************************************************************************************************************************************************************************/
+	C_Matrix4		C_GCamera::Rotate
+	(
+		const C_Vector3D& prm_Axis
+	)
+	{
+
+	}
+
+	/*!**************************************************************************************************************************************************************************
+	
+		@brief	Calculates rotation matrix with given X, Y and Z rotation factors																							
+		W factor is left as 1																																				
+		@param	Pitch 'X' rotation factor																																	
+	
+	****************************************************************************************************************************************************************************/
+	void			C_GCamera::Pitch
+	(
+		float prm_PitchValue
+	)
+	{
+		C_Matrix4 rotation;
+		rotation.RotateX(prm_PitchValue, true);
+
+		m_Front = rotation * m_Front;
+	}
+
+	/*!**************************************************************************************************************************************************************************
+	
+		@brief	Calculates rotation matrix with given X, Y and Z rotation factors																							
+		W factor is left as 1																																				
+		@param	Pitch 'X' rotation factor																																	
+	
+	****************************************************************************************************************************************************************************/
+	void			C_GCamera::Yaw
+	(
+		float prm_YawValue
+	)
+	{
+
+	}
+
+	/*!**************************************************************************************************************************************************************************
+	*
+	*	@brief	Calculates rotation matrix with given X, Y and Z rotation factors																							
+	*	W factor is left as 1																																				
+	*	@param	Pitch 'X' rotation factor																																	
+	*
+	****************************************************************************************************************************************************************************/
+	void			C_GCamera::Roll
+	(
+		float prm_RollValue
+	)
+	{
+
+	}
+
 }

@@ -136,22 +136,26 @@ namespace HR_SDK
 
 	bool C_Texture::CreateFromFile
 	(
-		const String&			prm_FileName,
-		GraphicsDevice*			prm_Device,
-		GraphicsDeviceContext*	prm_DC
+		const String&			_FileName,
+		DXGI_Formats::E			_Format,
+		GraphicsDevice*			_Device,
+		GraphicsDeviceContext*	_DC
 	)
 	{
 		HRESULT TextResult;
 		int32 Width = 0, Height = 0, CompNum = 0;
 
 		//! Load data from image
-		unsigned char* ImageData = stbi_load(prm_FileName.c_str(), &Width, &Height, &CompNum, STBI_rgb_alpha);
-		ID3D11Device* TmpDevice = reinterpret_cast<ID3D11Device*>(prm_Device->GetPointer());
+		unsigned char* ImageData = stbi_load(_FileName.c_str(), &Width, &Height, &CompNum, STBI_rgb_alpha);
 
+		ID3D11Device* TmpDevice = reinterpret_cast<ID3D11Device*>(_Device->GetPointer());
+
+		//! Create texture buffer
 		m_Texture = new GraphicsTexture();
 		ID3D11Texture2D* TmpTexture = reinterpret_cast<ID3D11Texture2D*>(m_Texture->GetPointer());
-		m_SRV = new GraphicsShaderResourceView();
-		ID3D11ShaderResourceView* TmpSRV = reinterpret_cast<ID3D11ShaderResourceView*>(m_SRV->GetPointer());
+
+
+		
 
 		D3D11_TEXTURE2D_DESC T2DDesc;
 		ZeroMemory(&T2DDesc, sizeof(D3D11_TEXTURE2D_DESC));
@@ -160,7 +164,7 @@ namespace HR_SDK
 		T2DDesc.Height = Height;
 		T2DDesc.MipLevels = 1; 
 		T2DDesc.ArraySize = 1;
-		T2DDesc.Format = TranslateFormat(DXGI_Formats::RGBA_8_UNORM);
+		T2DDesc.Format = TranslateFormat(_Format);
 		T2DDesc.SampleDesc.Count = 1;
 		T2DDesc.SampleDesc.Quality = 0;
 		T2DDesc.Usage = TranslateUsage(D3D_Usages::DEFAULT);
@@ -176,33 +180,17 @@ namespace HR_SDK
 		}
 
 		//! Save copy of Device Context
-		ID3D11DeviceContext* TmpDC = reinterpret_cast<ID3D11DeviceContext*>(prm_DC->GetPointer());
+		ID3D11DeviceContext* TmpDC = reinterpret_cast<ID3D11DeviceContext*>(_DC->GetPointer());
 
 		//! Update image data into texture object
 		TmpDC->UpdateSubresource(TmpTexture, 0, NULL, ImageData, (Width * 4) * sizeof(unsigned char), 0);
-
-		D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc;
-
-		ZeroMemory(&SRVDesc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
-		SRVDesc.Format = T2DDesc.Format;
-		SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-		SRVDesc.Texture2D.MostDetailedMip = 0;
-		SRVDesc.Texture2D.MipLevels = -1;
-
-		// Create the shader resource view for the texture.
-		TextResult = TmpDevice->CreateShaderResourceView(TmpTexture, &SRVDesc, &TmpSRV);
-		if (FAILED(TextResult))
-		{
-			return false;
-		}
-
-		// Generate mipmaps for this texture.
-		TmpDC->GenerateMips(TmpSRV);
 
 		TmpTexture->Release();
 		stbi_image_free(ImageData);
 		return true;
 	}
+
+
 
 	bool C_Texture::CreateAsRTV
 	(

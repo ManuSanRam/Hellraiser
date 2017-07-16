@@ -145,6 +145,8 @@ namespace HR_SDK
 			WS_OVERLAPPEDWINDOW | WS_CAPTION | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
 			posX, posY, Width, Height, NULL, NULL, NULL, NULL);
 
+		SetWindowLong(wind, GWL_STYLE, 0);
+
 		// Bring the window up on the screen and set it as main focus.
 		ShowWindow(wind, SW_SHOW);
 		SetForegroundWindow(wind);

@@ -2,281 +2,693 @@
 
 #include "HRUtility_Prerequisites.h"
 
-/*!***********************************************************************************************************************************************************
- * @file		HRUtility_Vector3D.h
- *
- * This file contains mathematic functions for vectorial operations in 3D space.
- * The vectorial operations are as follows(in order):
- * - Length (Squared and normal).
- * - Normalization of vector.
- * - Dot product.
- * - Cross product.
- * - Unit cross product.
- * - Perpendicular vector.
- * - Unitary perpendicular vector.
- * - Direction of vector (Angle).
- * - Thresholds.
- * - Truncations (Integer and Floating-point).
- * - Roundings (Floor, Round, Ceil).
- * - Fractional.
- * - Modulo.
- * - Power.
- * - Exponential.
- * - Logarithms (n-base, 2-base, x-base).
- * - Square roots - Normal and Inverted (Includes degrees and radians square roots).
- * - Check for limits (NaN, infinite and negative number).
- * - Trigonometrics - Sine[Arc], Cosine[Arc], Tangent[Arc, Arc2] (Degrees and Radians).
- * - Linear interpolation.
- * - Minimum and maximum number.
- *
- * @date        26-09-2016
- * @author		Manuel Aldair Santos Ramón (ManuSanRam)
- * @copyright	Infernal Coders S.A.
-*************************************************************************************************************************************************************/
+/*!******************************************************************************************************************************************************************************
+
+	@file		HRUtility_Vector3D.h
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	This file contains mathematic functions for vectorial operations in 3D space.
+	The vectorial operations are as follows(in order):
+	- Length (Squared and non-squared).
+	- Normalization of vector.
+	- Dot product.
+	- Cross product.
+	- Unit cross product.
+	- Orthonormalization.
+	- Angle between two vectors.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	@date			26-09-2016
+	@author			Manuel Aldair Santos Ramón (ManuSanRam)
+	@copyright		Infernal Coders S.A.
+
+********************************************************************************************************************************************************************************/
+
 
 
 namespace HR_SDK
 {
-  /*!
-    @class C_Vector3D
-	@brief Declares the 3D vector structure for a point in 3D space
-  */
-  class HR_UTILITY_EXPORT C_Vector3D
-  {
-  public:
-
-    /*!
-    * @brief Defines the class' default constructor
-    */
-    C_Vector3D() : m_x(0.0f), m_y(0.0f), m_z(0.0f)
-    {
-  
-    }
-  
-    //! Param
-    C_Vector3D(float prm_x, float prm_y, float prm_z) : m_x(prm_x), m_y(prm_y), m_z(prm_z)
-    {
-  
-    }
-  
-    //! Copy
-    C_Vector3D(C_Vector3D& prm_Vector)
-    {
-  	  m_x = prm_Vector.m_x;
-  	  m_y = prm_Vector.m_y;
-  	  m_z = prm_Vector.m_z;
-    }
-  
-    /*!
-     * @brief Defines the class destructor
-    */
-    ~C_Vector3D()
-    {
-  
-    }
-
-    /*!
-     * @brief Declares the vector's 'x' coordinate.
-    */
-    float m_x;
-  
-    /*!
-     * @brief Declares the vector's 'y' coordinate.
-    */
-    float m_y;
-  
-	/*!
-	 * @brief Declares the vector's 'z' coordinate.
-	*/
-    float m_z;
-
-	/*!
-	 * @brief Access operator to the vector's members.
-	 * @param prm_Index Index to the element's vector.
-	 * @return The reference to one of the vector's coordinates (x, y, z).
-	*/
-	float&      operator [](uint32 prm_Index)
+	/*!**************************************************************************************************************************************************************************
+																																												
+		@class C_Vector3D
+																																												
+		@brief This object is used to describe objects in 3 dimensional [x,y,z] space.
+		This object is used to describe:
+		- Positions in 3D space.
+		- Directions in 3D space.
+		- 
+																																												
+	****************************************************************************************************************************************************************************/
+	class HR_UTILITY_EXPORT C_Vector3D
 	{
-		//! Make sure the index passed as parameter is not negative or surpasses the limit of coordinates (3)
-		HR_ASSERTION(prm_Index > 0 && prm_Index < 3);
-		//! Return the reference to the vector's element (either x, y or z)
-		return (&m_x)[prm_Index];
-	}
+	public:
+		/*!**********************************************************************************************************************************************************************
 
-	/*!
-	 * @brief Assignment operator between 3D vectors
-	*/
-	C_Vector3D operator = (const C_Vector3D& prm_Vector)
-	{
-		//! Copy the memory of the parameter into this object
-		memcpy(this, &prm_Vector, sizeof(C_Vector3D));
-		//! Return the current instance, which is carrying the current data
-		return *this;
-	}
+			@brief Constructor [Default]
+			Creates a null vector (All elements equal to zero).
 
-	/*!
-	 * @brief Equal operator checks if the elements of both vectors are the same.
-	*/
-    bool       operator == (const C_Vector3D& prm_Vector)
-	{
-		//! If any of the vector's element mismatch with its correspondant element in the parameter, returns false. Else return true.
-		return (this->m_x == prm_Vector.m_x && this->m_y == prm_Vector.m_y && this->m_z == prm_Vector.m_z);
-	}
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	/*!
-	 * @brief Equal operator checks if the elements of both vectors are the same.
-	*/
-    bool       operator != (const C_Vector3D& prm_Vector)
-	{
-		return (this->m_x != prm_Vector.m_x && this->m_y != prm_Vector.m_y && this->m_z != prm_Vector.m_z);
-	}
+			@return A null vector.
 
-	/*!
-	 * @brief Equal operator checks if the elements of both vectors are the same.
-	*/
-    bool       operator < (const C_Vector3D& prm_Vector)
-	{
-		return (this->m_x < prm_Vector.m_x && this->m_y < prm_Vector.m_y && this->m_z < prm_Vector.m_z);
-	}
+		************************************************************************************************************************************************************************/
+		C_Vector3D
+		(
+		)
+		{
+			//! Transform into a null vector
+			NullVector();
+		}
 
-	/*!
-	 * @brief Equal operator checks if the elements of both vectors are the same.
-	*/
-    bool       operator <= (const C_Vector3D& prm_Vector)
-	{
-		return (this->m_x <= prm_Vector.m_x && this->m_y <= prm_Vector.m_y && this->m_z <= prm_Vector.m_z);
-	}
+		/*!**********************************************************************************************************************************************************************
 
-	/*!
-	 * @brief Equal operator checks if the elements of both vectors are the same.
-	*/
-    bool       operator > (const C_Vector3D& prm_Vector)
-	{
-		return (this->m_x > prm_Vector.m_x && this->m_y > prm_Vector.m_y && this->m_z > prm_Vector.m_z);
-	}
+			@brief Constructor [Parameter]
+			Assigns values to each component of the vector.
 
-	/*!
-	 * @brief Equal operator checks if the elements of both vectors are the same.
-	*/
-    bool       operator >= (const C_Vector3D& prm_Vector)
-	{
-		return (this->m_x >= prm_Vector.m_x && this->m_y >= prm_Vector.m_y && this->m_z >= prm_Vector.m_z);
-	}
-  
-	/*!
-	 * @brief Equal operator checks if the elements of both vectors are the same.
-	*/
-    C_Vector3D operator + (const C_Vector3D& prm_Vector) const
-	{
-		C_Vector3D result(this->m_x + prm_Vector.m_x, this->m_y + prm_Vector.m_y, this->m_z + prm_Vector.m_z);
-		return result;
-	}
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	/*!
-	 * @brief Equal operator checks if the elements of both vectors are the same.
-	*/
-    C_Vector3D operator += (const C_Vector3D& prm_Vector) const
-	{
-		return *this + prm_Vector;
-	}
+			@param[in] _X Value given to the 'X' component of the vector.
+			@param[in] _Y Value given to the 'Y' component of the vector.
+			@param[in] _Z Value given to the 'Z' component of the vector.
 
-	/*!
-	 * @brief Equal operator checks if the elements of both vectors are the same.
-	*/
-    C_Vector3D operator - (const C_Vector3D& prm_Vector) const
-	{
-		C_Vector3D result(this->m_x - prm_Vector.m_x, this->m_y - prm_Vector.m_y, this->m_z - prm_Vector.m_z);
-		return result;
-	}
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	/*!
-	 * @brief Equal operator checks if the elements of both vectors are the same.
-	*/
-    C_Vector3D operator -= (const C_Vector3D& prm_Vector) const
-	{
-		return *this - prm_Vector;
-	}
-  
-	/*!
-	 * @brief Equal operator checks if the elements of both vectors are the same.
-	*/
-    C_Vector3D operator * (const float prm_Scalar) const
-	{
-		C_Vector3D result(this->m_x * prm_Scalar, this->m_y * prm_Scalar, this->m_z * prm_Scalar);
-		return result;
-	}
+			@return A new vector object, generated with the values passed as parameters.
 
-	/*!
-	 * @brief Equal operator checks if the elements of both vectors are the same.
-	*/
-    C_Vector3D operator *= (const float prm_Scalar) const
-	{
-		return *this * prm_Scalar;
-	}
+		************************************************************************************************************************************************************************/
+		C_Vector3D
+		(
+			float _X,
+			float _Y,
+			float _Z
+		)
+			: //! Values are assigned here.
+			m_x(_X),	//! 'X' value
+			m_y(_Y),	//! 'Y' value
+			m_z(_Z)		//! 'Z' value
+		{
 
-	/*!
-	 * @brief Equal operator checks if the elements of both vectors are the same.
-	*/
-    C_Vector3D operator / (const float prm_Scalar) const
-	{
-		C_Vector3D result(this->m_x / prm_Scalar, this->m_y / prm_Scalar, this->m_z / prm_Scalar);
-		return result;
-	}
+		}
 
-	/*!
-	 * @brief Equal operator checks if the elements of both vectors are the same.
-	*/
-	C_Vector3D operator /= (const float prm_Scalar) const
-	{
-		return *this / prm_Scalar;
-	}
-  
-	/*!
-	* @brief Obtains the length of the vector.
-	* @retun Length of the vector
-	*/
-    float      Length() const;
-    
-	/*!
-	* @brief Obtains the squared length of the vector.
-	* @return The length of the vector squared.
-	*/
-	float      SqrLength() const;
-    
-	/*!
-	 * @brief Calculates the scalar/dot product between to vectors
-	 * @param prm_Vector Vector used for the method.
-	 * @return Returns the proyection of one vector over the other
-	*/
-	float      Dot(const C_Vector3D& prm_Vector) const;
-    
-	/*!
-	* @brief Obtains the angle in which the vector is pointig towards
-	* @return The angle of the vector expressed in degrees.
-	*/
-	float      Angle(const C_Vector3D& prm_Vector) const;
-  
-	/*!
-	* @brief Equal operator checks if the elements of both vectors are the same.
-	*/
-	void       Normalize();
+		/*!**********************************************************************************************************************************************************************
+		
+			@brief Constructor [Copy]
+			Assigns the values of a given vector to the newly created vector object.
 
-	/*!
-	* @brief Equal operator checks if the elements of both vectors are the same.
-	*/
-	C_Vector3D Cross(const C_Vector3D& prm_Vector);
-    
-	/*!
-	* @brief Equal operator checks if the elements of both vectors are the same.
-	*/
-	C_Vector3D UnitCross(const C_Vector3D& prm_Vector);
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	/*!
-	*/
-	void NullVector();
+			@param[in] _V Vector used to copy the values into the new constructed vector.
 
-	/*!
-	*/
-	void UnitVector();
-  };
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@return A new vector object, constructed from the values of another given vector
+
+		************************************************************************************************************************************************************************/
+		C_Vector3D
+		(
+			const C_Vector3D& _V
+		)
+		{
+			//! Assign the respective values to the vector's components
+			m_x = _V.m_x;	//! 'X' component
+			m_y = _V.m_y;	//! 'Y' component
+			m_z = _V.m_z;	//! 'Z' component
+		}
+
+		/*!**********************************************************************************************************************************************************************
+
+			@brief Destructor
+
+		************************************************************************************************************************************************************************/
+		~C_Vector3D
+		(
+
+		)
+		{
+
+		}
+
+		/*!**********************************************************************************************************************************************************************
+																																													
+			@brief Access operator to the vector's members.
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+																																													
+			@param[in] _Index Index to the element's vector.
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+																																													
+			@return A reference to any of the vector's components (x, y, z).																										
+																																													
+		************************************************************************************************************************************************************************/
+		float&      operator []
+		(
+			uint32 _Index
+		)
+		{
+			//! Check parameter is not greater than 3 dimensions and less than 0
+			HR_ASSERTION(_Index > 0 && _Index < 3);
+			//! Return the requested component.
+			return (&m_x)[_Index];
+		}
+
+		/*!**********************************************************************************************************************************************************************
+
+			@brief Assign the component values from a given vector object into this vector.
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@param[in] _V Given vector used to copy its values into the vector object.
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@return The vector object containing the new values.
+
+		************************************************************************************************************************************************************************/
+		C_Vector3D operator = 
+		(
+			const C_Vector3D& _V
+		)
+		{
+			//! Copy the data from the parameter vector into this object
+			memcpy(this, &_V, sizeof(C_Vector3D));
+			//! Return this vector with the new data loaded into it.
+			return *this;
+		}
+
+		/*!**********************************************************************************************************************************************************************
+		
+			@brief Check if two vectors are equal.
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@param[in] _V Vector to check condition
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@return True if the all the components of both vectors match, false if any of the components mismatch
+		
+		************************************************************************************************************************************************************************/
+		bool       operator == 
+		(
+			const C_Vector3D& _V
+		)
+		{
+			//! Check that the vector's component match with it's respective component in the parameter.
+			return 
+				(
+					this->m_x == _V.m_x &&	//! Check if 'x' components are equal.
+					this->m_y == _V.m_y &&	//! Check if 'y' components are equal.
+					this->m_z == _V.m_z		//! Check if 'z' components are equal.
+				);
+		}
+
+		/*!**********************************************************************************************************************************************************************
+
+			@brief Check if two vectors are different.
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@param[in] _V Vector to check condition
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@return True if any of the components mismatch, false if the components are all the same
+
+		************************************************************************************************************************************************************************/
+		bool       operator != 
+		(
+			const C_Vector3D& _V
+		)
+		{
+			//! Perform an equal-equal comparison and negate the result (If condition is true, then return false here)
+			return !this->operator==(_V);
+		}
+
+		/*!**********************************************************************************************************************************************************************
+
+			@brief Check if a vector is less than another vector
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@param[in] _V Vector to check condition
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@return True if vector is less than the given, false if vector is greater than the given
+		
+		************************************************************************************************************************************************************************/
+		bool       operator < 
+		(
+			const C_Vector3D& _V
+		)
+		{
+			return 
+				(
+					this->m_x < _V.m_x &&
+					this->m_y < _V.m_y &&
+					this->m_z < _V.m_z
+				);
+		}
+
+		/*!**********************************************************************************************************************************************************************
+
+			@brief checks if the elements of both vectors are the same.
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@param[in] _V Vector to check condition
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@return
+
+		************************************************************************************************************************************************************************/
+		bool       operator <= 
+		(
+			const C_Vector3D& _V
+		)
+		{
+			return 
+				(
+					this->m_x <= _V.m_x &&
+					this->m_y <= _V.m_y &&
+					this->m_z <= _V.m_z
+				);
+		}
+
+		/*!**********************************************************************************************************************************************************************
+
+			@brief Determines if a vector is greater than other.
+			This is determined by the values of its elements
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@param[in] _V Vector to check condition
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@return
+
+		************************************************************************************************************************************************************************/
+		bool       operator > 
+		(
+			const C_Vector3D& _V
+		)
+		{
+			return 
+				!this->operator<(_V);
+		}
+
+		/*!**********************************************************************************************************************************************************************
+
+			@brief Equal operator checks if the elements of both vectors are the same.
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@param[in] _V Vector to check condition
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@return
+
+		************************************************************************************************************************************************************************/
+		bool       operator >= 
+		(
+			const C_Vector3D& _V
+		)
+		{
+			return 
+				!this->operator<=(_V);
+		}
+
+		/*!**********************************************************************************************************************************************************************
+		
+			@brief Equal operator checks if the elements of both vectors are the same.
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@param[in] _V Vector to check condition
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@return
+
+		************************************************************************************************************************************************************************/
+		C_Vector3D operator + 
+		(
+			const C_Vector3D& _V
+		) const
+		{
+			return C_Vector3D
+			(
+				this->m_x + _V.m_x,
+				this->m_y + _V.m_y,
+				this->m_z + _V.m_z
+			);
+		}
+
+		/*!**********************************************************************************************************************************************************************
+
+			@brief Equal operator checks if the elements of both vectors are the same.
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@param[in] _V Vector to check condition
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@return
+
+		************************************************************************************************************************************************************************/
+		C_Vector3D& operator += 
+		(
+			const C_Vector3D& _V
+		) const
+		{
+			return *this + _V;
+		}
+
+		/*!**********************************************************************************************************************************************************************
+
+			@brief Substract two vectors 
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@param[in] _V Vector to  
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@return 
+
+		************************************************************************************************************************************************************************/
+		C_Vector3D operator - 
+		(
+			const C_Vector3D& _V
+		) const
+		{
+			return C_Vector3D
+			(
+				this->m_x - _V.m_x,
+				this->m_y - _V.m_y,
+				this->m_z - _V.m_z
+			);
+		}
+
+		/*!**********************************************************************************************************************************************************************
+
+			@brief Equal operator checks if the elements of both vectors are the same.
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@param[in] _V Vector used to substract the vector 
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@return
+
+		************************************************************************************************************************************************************************/
+		C_Vector3D& operator -= 
+		(
+			const C_Vector3D& _V
+		) const
+		{
+			return *this - _V;
+		}
+
+		/*!**********************************************************************************************************************************************************************
+
+			@brief Multiplies a vector by a scalar and constructs a new vector.
+			The result of this operation is a new vector containing:
+
+			V = { U.'x' * Scalar, U.'Y' * Scalar, U.'Z' * Scalar }
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@param[in] _Scalar Scalar number used to multiply vector by
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@return A new vector, constructed by the vector multiplied by the scalar
+
+		************************************************************************************************************************************************************************/
+		C_Vector3D operator * 
+		(
+			const float _Scalar
+		) const
+		{
+			//! Construct a vector with the result of every of its components multiplied by the scalar
+			return C_Vector3D
+			(
+				this->m_x * _Scalar,	//! 'X' component
+				this->m_y * _Scalar,	//! 'Y' component
+				this->m_z * _Scalar		//! 'Z' component
+			);
+		}
+
+		/*!**********************************************************************************************************************************************************************
+
+			@brief Multiplies a vector by a scalar number.
+			The result of this operation is the same vector but with its components modified
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@param[in] _Scalar Scalar number used to multiply vector by.
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@return The vector, multiplied by a scalar. The vector's components are changed, so no new vector is created
+
+		************************************************************************************************************************************************************************/
+		C_Vector3D& operator *= 
+		(
+			const float _Scalar
+		) const
+		{
+			return *this * _Scalar;
+		}
+
+		/*!**********************************************************************************************************************************************************************
+																																												
+			@brief Divide the vector by a scalar to obtain a new vector.																										
+			The result of this operation is a new vector containing:																											
+			
+			V = { 'X' / Scalar, 'Y' / Scalar, 'Z' / Scalar }
+		
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@param[in] _Scalar Scalar number used to divide each of the vector's components by.
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@return
+																																												
+		************************************************************************************************************************************************************************/
+		C_Vector3D operator /
+		(
+			const float _Scalar
+		) const
+		{
+			//! Save the result of the division as calculated above.
+			return C_Vector3D
+			(
+				this->m_x / _Scalar,
+				this->m_y / _Scalar,
+				this->m_z / _Scalar
+			);
+		}
+
+		/*!**********************************************************************************************************************************************************************
+																																													
+			@brief Divide the vector by a scalar.																																	
+			This operation is made on the same vector. It doesn't create a new vector object.																					
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+																																													
+			@param[in] _Scalar Scalar number used to divide all the vector's components by.																							
+						
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@return Vector containing the result of the division.																													
+																																													
+		************************************************************************************************************************************************************************/
+		C_Vector3D& operator /= 
+		(
+			const float _Scalar
+		) const
+		{
+			//! Perform the division on the same vector and return it.
+			return *this / _Scalar;
+		}
+
+		/*!**********************************************************************************************************************************************************************
+																																													
+			@brief Set the elements of a vector to the respective values given.
+			This function is mainly used to set values in the classes that use a vector object for other purposes
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+																																													
+			@param[in] _X Value given for the 'x' component																															
+			@param[in] _Y Value given for the 'y' component																															
+			@param[in] _Z Value given for the 'z' component																															
+																																													
+		************************************************************************************************************************************************************************/
+		void		Set
+		(
+			float _X,
+			float _Y,
+			float _Z
+		);
+
+		/*!**********************************************************************************************************************************************************************
+																																													
+			@brief Obtains the length of the vector.
+			The calculation of the vector is performed as:
+
+			Length  =  Squared Root ( x^2  +  y^2 )
+			
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@return Length of the vector.																																		
+																																													
+		************************************************************************************************************************************************************************/
+		float      Length
+		(
+
+		) const;
+
+		/*!**********************************************************************************************************************************************************************
+																																													
+			@brief Obtains the squared length of the vector.
+			The calculation of the vector is performed as:
+
+			Length  =  ( x^2  +  y^2 )
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@return The length of the vector squared.																																
+																																													
+		************************************************************************************************************************************************************************/
+		float      SqrLength
+		(
+
+		) const;
+
+		/*!**********************************************************************************************************************************************************************
+																																													
+			@brief Calculates the scalar/dot product between to vectors																												
+		
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@param[in] _V Vector used for the method.																															
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@return Returns the projection of one vector over the other																												
+																																													
+		************************************************************************************************************************************************************************/
+		float      Dot
+		(
+			const C_Vector3D& _V
+		) const;
+
+		/*!**********************************************************************************************************************************************************************
+																																													
+			@brief Obtains the angle in which the vector is pointing towards, respective to an angle
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+																																													
+			@param[in] _V Vector to calculate the angle with
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+																																													
+			@return The angle of the vector expressed in degrees.																													
+																																													
+		************************************************************************************************************************************************************************/
+		float      Angle
+		(
+			const C_Vector3D& _V
+		) const;
+
+		/*!**********************************************************************************************************************************************************************
+																																													
+			@brief Reduces the vector's components so its length equals 1.																											
+			Usually this operation is performed to reduce vectors that are used to describe directions.																				
+																																													
+		************************************************************************************************************************************************************************/
+		void       Normalize
+		(
+
+		);
+
+		/*!**********************************************************************************************************************************************************************
+																																												
+			@brief Performs the cross product operation with another vector.																									
+			This operation is performed to find another vector that is orthogonal to the other 2.
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+																																												
+			@param[in] prm_Vector Vector to perform cross product with.
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+																																												
+			@return A vector that is perpendicular to both vector used in the calculation.																						
+																																												
+		************************************************************************************************************************************************************************/
+		C_Vector3D Cross
+		(
+			const C_Vector3D& _V
+		);
+
+		/*!**********************************************************************************************************************************************************************
+																																												
+			@brief Equal operator checks if the elements of both vectors are the same.
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+																																												
+			@param[in] _V Vector used to calculate cross product.
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+																																												
+			@return A normalized vector, perpendicular to both vectors used in the calculation .																				
+																																												
+		************************************************************************************************************************************************************************/
+		C_Vector3D UnitCross
+		(
+			const C_Vector3D& _V
+		);
+
+		/*!**********************************************************************************************************************************************************************
+																																												
+			@brief Transform into null vector, modifying its elements to all be equal to 0.																						
+																																												
+		************************************************************************************************************************************************************************/
+		void NullVector
+		(
+
+		);
+
+		/*!**********************************************************************************************************************************************************************
+
+			@brief Declares the 'X' component.
+
+		************************************************************************************************************************************************************************/
+		float m_x;
+
+		/*!**********************************************************************************************************************************************************************
+
+			@brief Declares the 'Y' component.
+
+		************************************************************************************************************************************************************************/
+		float m_y;
+
+		/*!**********************************************************************************************************************************************************************
+
+			@brief Declares the 'Z' component.
+
+		************************************************************************************************************************************************************************/
+		float m_z;
+	};
 }

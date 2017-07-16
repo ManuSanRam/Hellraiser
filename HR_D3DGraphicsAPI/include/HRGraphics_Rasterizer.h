@@ -2,55 +2,70 @@
 
 /*!******************************************************************************************************************************************************************************
 
-	@file	HRGraphics_ShaderResource.h
+	@file
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+	@brief
 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	@date
+	@author
+	@copyright
 
 ********************************************************************************************************************************************************************************/
 
 #include "HRGraphics_Prerequisites.h"
-#include "HRGraphics_Texture.h"
 
-namespace HR_SDK
+/*!
+*/
+namespace HR_SDK 
 {
+	/*!
+	*/
 	struct GraphicsDevice;
+	
+	/*!
+	*/
 	struct GraphicsDeviceContext;
-	struct GraphicsTexture;
-	struct GraphicsShaderResource;
+	
+	/*!
+	*/
+	struct GraphicsRasterizerState;
 
-	class HR_D3DGRAPHICSAPI_EXPORT C_ShaderResource
+	/*!
+	*/
+	class HR_D3DGRAPHICSAPI_EXPORT C_Rasterizer
 	{
 	public:
 		/*!
 		*/
-		C_ShaderResource
+		C_Rasterizer
 		(
 
 		)
 		{
-			m_ShaderResource = nullptr;
+
 		}
 
 		/*!
 		*/
-		~C_ShaderResource
+		~C_Rasterizer
 		(
 
 		)
 		{
-
+			
 		}
 
 		/*!
 		*/
 		bool Create
 		(
-			DXGI_Formats::E			_Format,
-			C_Texture*				_Texture,
-			GraphicsDevice*			_Device,
-			GraphicsDeviceContext*	_DC
+			uint32 _FillMode,
+			uint32 _CullMode,
+			GraphicsDevice* _Device
 		);
 
 		/*!
@@ -64,13 +79,12 @@ namespace HR_SDK
 		*/
 		void Set
 		(
-			GraphicsDeviceContext* _DC,
-			uint32 _slot,
-			uint32 _numSRVs
+			GraphicsDeviceContext* _DC
 		);
 
 		/*!
 		*/
-		GraphicsShaderResource* m_ShaderResource;
+		GraphicsRasterizerState* m_Rasterizer;
 	};
+
 }

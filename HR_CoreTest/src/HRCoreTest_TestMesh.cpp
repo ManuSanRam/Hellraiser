@@ -106,25 +106,25 @@ bool C_TestMesh::CreateVertexB(GraphicsDevice* prm_Device)
 	S_Vertex V5
 	(
 		-1.0f, -1.0f, 1.0f,
-		0.5f, 0.0f, 0.0f, 1.0f
+		0.22f, 0.0f, 0.0f, 1.0f
 	);
 
 	S_Vertex V6
 	(
 		-1.0f, 1.0f, 1.0f,
-		0.5f, 0.0f, 0.0f, 1.0f
+		0.22f, 0.0f, 0.0f, 1.0f
 	);
 
 	S_Vertex V7
 	(
 		1.0f, 1.0f, 1.0f,
-		0.5f, 0.0f, 0.0f, 1.0f
+		0.22f, 0.0f, 0.0f, 1.0f
 	);
 
 	S_Vertex V8
 	(
 		1.0f, -1.0f, 1.0f,
-		0.5f, 0.0f, 0.0f, 1.0f
+		0.22f, 0.0f, 0.0f, 1.0f
 	);
 
 	m_SolidVB.AddVertex(V1);
