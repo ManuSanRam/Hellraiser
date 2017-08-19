@@ -55,16 +55,6 @@ namespace HR_SDK
 
 	/*!
 	*/
-	inline DXGI_FORMAT				TranslateFormat
-	(
-		DXGI_Formats::E prm_Format
-	)
-	{
-		return (DXGI_FORMAT)prm_Format;
-	}
-
-	/*!
-	*/
 	namespace DXGI_CPUAccess
 	{
 		const uint32 NONE		 = 0	;
@@ -89,16 +79,6 @@ namespace HR_SDK
 
 	/*!
 	*/
-	inline DXGI_USAGE				TranslateDXGIUsage
-	(
-		uint64 prm_Usage
-	)
-	{
-		return (DXGI_USAGE)prm_Usage;
-	}
-
-	/*!
-	*/
 	namespace DXGI_Scanlines
 	{
 		enum E
@@ -108,16 +88,6 @@ namespace HR_SDK
 			UPPER_FIELD_FIRST,
 			LOWER_FIELD_FIRST
 		};
-	}
-
-	/*!
-	*/
-	inline DXGI_MODE_SCANLINE_ORDER				TranslateScanlineOrder
-	(
-		DXGI_Scanlines::E prm_ScanlineOrder
-	)
-	{
-		return (DXGI_MODE_SCANLINE_ORDER)prm_ScanlineOrder;
 	}
 
 	/*!
@@ -136,16 +106,6 @@ namespace HR_SDK
 
 	/*!
 	*/
-	inline DXGI_MODE_SCALING				TranslateScaling
-	(
-		DXGI_Scaling::E prm_Scaling
-	)
-	{
-		return (DXGI_MODE_SCALING)prm_Scaling;
-	}
-
-	/*!
-	*/
 	namespace DXGI_SwapEffect
 	{
 		/*!
@@ -156,15 +116,4 @@ namespace HR_SDK
 			SEQUENTIAL
 		};
 	}
-
-	/*!
-	*/
-	inline DXGI_SWAP_EFFECT			TranslateSwapEffect
-	(
-		DXGI_SwapEffect::E prm_SE
-	)
-	{
-		return (DXGI_SWAP_EFFECT)prm_SE;
-	}
-
 }

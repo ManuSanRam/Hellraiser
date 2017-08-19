@@ -1,4 +1,5 @@
 #include "HRGraphics_Viewport.h"
+#include <d3d11.h>
 
 namespace HR_SDK
 {

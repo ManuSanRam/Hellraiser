@@ -1,318 +1,881 @@
 #include "HRCoreTest_CustomApp.h"
 
-/*!************************************************************************************************************************************************************************
-*
-*	@file		HRCore_Application.h
-*
-*	This file contains the declaration of class C_Application.
-*	This class is used as an interface to create, control and render applications in any platform.
-*	The basic functions of this class are:
-*	- Initialize: Starts the application, passing any parameters to correctly start up the application.
-*	- Update: Updates the application's window and the logic of the application.
-*	-
-*
-*	@date			26-09-2016
-*	@author			Manuel Aldair Santos Ramón (ManuSanRam)
-*	@copyright		Infernal Coders S.A.
-*
-***************************************************************************************************************************************************************************/
+/*!******************************************************************************************************************************************************************************
 
+	@file		HRCore_Application.h
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	This file contains the declaration of class C_Application.
+	This class is used as an interface to create, control and render applications in any platform.
+	The basic functions of this class are:
+	- Initialize: Starts the application, passing any parameters to correctly start up the application.
+	- Update: Updates the application's window and the logic of the application.
+	- Render:
+	- Close:
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	@date			26-09-2016
+	@author			Manuel Aldair Santos Ramón (ManuSanRam)
+	@copyright		Infernal Coders S.A.
+
+********************************************************************************************************************************************************************************/
+
+
+/*!******************************************************************************************************************************************************************************
+
+	@brief Initialize every object for the app.
+
+********************************************************************************************************************************************************************************/
 void C_CustomApp::OnInit()
 {
 	//! Allocate the log file
-	m_GraphicsLogger = new C_Logger();
+	m_AppLogger = new C_Logger();
+
+
+
 	//! Open file prepare to receive logging messages
-	m_GraphicsLogger->Init("Log Files/CoreTestLog.html");
+	m_AppLogger->Init("Log Files/CoreTestLog.html");
+
+
+
 	//! Report message to log file.
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Application successfully initialized", HR_FILE, HR_FUNCTION, HR_LINE);
+	m_AppLogger->AddEntry
+	(
+		MessageLevel::_MESSAGE, 
+		"Application successfully initialized",
+		HR_FILE,
+		HR_FUNCTION,
+		HR_LINE
+	);
 
-	/*!********************************************************************************************************************************************************************
-	 *
-	 *	INITIALIZE THE PIPELINE
-	 *
-	***********************************************************************************************************************************************************************/
-	//! Allocate the graphics API
+
+
+	/// Graphics pipeline ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//! Allocate the graphics object
 	m_Graphics = new C_GraphicsAPI();
-	//! Create the COM objects for the pipeline
-	if (m_Graphics->Init(m_Width, m_Height, DXGI_Formats::RGBA_8_UNORM, DXGI_Scanlines::UNSPECIFIED, DXGI_Scaling::UNSPECIFIED, DXGI_Usage::RENDER_TARGET_OUTPUT, m_WinIndex, m_Fullscreen, DXGI_SwapEffect::DISCARD, D3D_Drivers::HARDWARE))
+
+	if(m_Graphics->Init(m_Width,m_Height,DXGI_Formats::RGBA_8_UNORM,DXGI_Scanlines::UNSPECIFIED,DXGI_Scaling::UNSPECIFIED,DXGI_Usage::RENDER_TARGET_OUTPUT,m_WinIndex,m_Fullscreen,DXGI_SwapEffect::DISCARD,D3D_Drivers::HARDWARE))
 	{
-		//! COM objects created successfully: report message to log file.
-		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Graphics pipeline successfully initialized", HR_FILE, HR_FUNCTION, HR_LINE);
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,
+			"Successful pipeline initializing",
+			HR_FILE,
+			HR_FUNCTION,
+			HR_LINE
+		);
 	}
 
 	else
 	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_FATAL_ERROR, "Pipeline grafico no se pudo cargar", HR_FILE, HR_FUNCTION, HR_LINE);
-		m_GraphicsLogger->Close("HR_CoreTestLogger");
-		//this->OnDestroy();
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_FATAL_ERROR, 
+			"Error initializing pipeline", 
+			HR_FILE, 
+			HR_FUNCTION, 
+			HR_LINE
+		);
+
+		m_AppLogger->Close("HR_CoreTestLogger");
 		exit(1);
 	}
 
-	//! Create Back buffer (Render Target View)
-	m_BackBuffer = new C_Texture();
-	if (m_BackBuffer->CreateAsRTV(m_Graphics->m_Device, m_Graphics->m_SwapChain))
+	/// Back buffer /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//! Allocate render target object to operate on it
+	m_BackBuffer = new C_RenderTarget();
+
+	//! Create the back buffer's render target ----------------------------------------------------------------------------------------------------------------------------------
+	if(m_Graphics->CreateRenderTarget(m_BackBuffer))
 	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Back buffer creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,
+			"Back buffer created", 
+			HR_FILE,
+			HR_FUNCTION,
+			HR_LINE
+		);
 	}
 
 	else
 	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_FATAL_ERROR, "Back buffer no se pudo crear", HR_FILE, HR_FUNCTION, HR_LINE);
-		m_GraphicsLogger->Close("HR_CoreTestLogger");
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_FATAL_ERROR,
+			"Error creating the back buffer",
+			HR_FILE,
+			HR_FUNCTION,
+			HR_LINE
+		);
+
+		m_AppLogger->Close("HR_CoreTestLogger");
 		exit(1);
 	}
 
-	//! Create Depth stencil
+	/// Depth-stencil ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//! Allocate depth stencil for use
 	m_Depth = new C_DepthStencil();
-	if (m_Depth->CreateDSBuffer(m_Width, m_Height, DXGI_Formats::D_24_UNORM_S8_UINT, D3D_Usages::DEFAULT, D3D_Binds::DEPTH_STENCIL, m_Graphics->m_Device))
+
+	if(m_Graphics->CreateDepthStencil(m_Width,m_Height,DXGI_Formats::D_24_UNORM_S8_UINT,D3D_Usages::DEFAULT,D3D_Binds::DEPTH_STENCIL,m_Depth))
 	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Buffer de profundidad creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,
+			"Depth-stencil created",
+			HR_FILE,
+			HR_FUNCTION,
+			HR_LINE
+		);
 	}
 
 	else
 	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_FATAL_ERROR, "Buffer de profundidad no se pudo crear", HR_FILE, HR_FUNCTION, HR_LINE);
-		m_GraphicsLogger->Close("HR_CoreTestLogger");
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_FATAL_ERROR,
+			"Error creating the depth-stencil",
+			HR_FILE,
+			HR_FUNCTION,
+			HR_LINE
+		);
+
+		m_AppLogger->Close("HR_CoreTestLogger");
 		exit(1);
 	}
 
-	if (m_Depth->CreateDSView(m_Graphics->m_Device, m_Graphics->m_DC, DXGI_Formats::D_24_UNORM_S8_UINT))
+	//! Set the render target as active -----------------------------------------------------------------------------------------------------------------------------------------
+	if(m_Graphics->SetRenderTarget(1,m_Depth,m_BackBuffer))
 	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Depth Stencil View creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,
+			"Back buffer set",
+			HR_FILE,
+			HR_FUNCTION,
+			HR_LINE
+		);
 	}
 
 	else
 	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_FATAL_ERROR, "No se pudo crear Depth Stencil View", HR_FILE, HR_FUNCTION, HR_LINE);
-		m_GraphicsLogger->Close("HR_CoreTestLogger");
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_FATAL_ERROR,
+			"Error setting the back buffer",
+			HR_FILE,
+			HR_FUNCTION,
+			HR_LINE
+		);
+
+		m_AppLogger->Close("HR_CoreTestLogger");
 		exit(1);
 	}
-
-	m_BackBuffer->SetRTV(m_Graphics->m_DC, 1, m_Depth->m_DSV);
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Render Target View configurado", HR_FILE, HR_FUNCTION, HR_LINE);
-
-	C_Texture* Texture = new C_Texture();
-	if (Texture->CreateFromFile("Texture Files/GowLogo.png", m_Graphics->m_Device, m_Graphics->m_DC))
-	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Textura creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
-	}
-
-	else
-	{
-		delete Texture;
-		m_GraphicsLogger->AddEntry(MessageLevel::_FATAL_ERROR, "No se pudo crear la textura", HR_FILE, HR_FUNCTION, HR_LINE);
-		m_GraphicsLogger->Close("HR_CoreTestLogger");
-		exit(1);
-	}
-
-	Texture->Close();
-	delete Texture;
 
 	
-	/*!********************************************************************************************************************************************************************
-	 *
-	 *	INITIALIZE GEOMETRY TO BE RENDERED
-	 *
-	***********************************************************************************************************************************************************************/
-	//! Allocate vertex shader
+
+	/// Vertex shader ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//! Allocate pointer for use
 	m_VShader = new C_VertexShader();
-	//! Allocate pixel shader
+
+	//! Create vertex shader
+	if(m_Graphics->CreateVertexShader("Shader Files/BasicVS.hlsl","VSMain","vs_5_0",m_VShader))
+	{
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,
+			"Vertex shader created",
+			HR_FILE,
+			HR_FUNCTION,
+			HR_LINE
+		);
+	}
+
+	else
+	{
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_FATAL_ERROR,
+			"Error creating the vertex shader",
+			HR_FILE,
+			HR_FUNCTION,
+			HR_LINE
+		);
+
+		m_AppLogger->Close("HR_CoreTestLogger");
+		exit(1);
+	}
+
+	//! Set vertex shader
+	if(m_Graphics->SetVertexShader(m_VShader))
+	{
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,
+			"Vertex shader set",
+			HR_FILE,
+			HR_FUNCTION,
+			HR_LINE
+		);
+	}
+
+	else
+	{
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_FATAL_ERROR,
+			"Error setting the vertex shader",
+			HR_FILE,
+			HR_FUNCTION,
+			HR_LINE
+		);
+
+		m_AppLogger->Close("HR_CoreTestLogger");
+		exit(1);
+	}
+
+
+
+	/// Pixel shader ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//! Allocate pointer for use
 	m_PShader = new C_PixelShader();
 
-	//! Comile th vertex shader using specified file
-	if (m_VShader->Compile("Shader Files/BasicVS.hlsl", "VSMain", "vs_5_0"))
+	//! Create pixel shader
+	if(m_Graphics->CreatePixelShader("Shader Files/BasicVS.hlsl","PSMain","ps_5_0",m_PShader))
 	{
-		//! Shader compilation succedeed: report to log file.
-		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Shader de vertices compilado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
-		//! Continue the program
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,
+			"Pixel shader created",
+			HR_FILE,
+			HR_FUNCTION,
+			HR_LINE
+		);
 	}
 
 	else
 	{
-		//! Shader compilation failed: report to log file.
-		m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "No se pudo compilar shader de vertices", HR_FILE, HR_FUNCTION, HR_LINE);
-		//! Write information to file, close file
-		m_GraphicsLogger->Close("HR_CoreTestLogger");
-		//! Stop the program reporting an error
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_FATAL_ERROR,
+			"Error creating the pixel shader",
+			HR_FILE,
+			HR_FUNCTION,
+			HR_LINE
+		);
+
+		m_AppLogger->Close("HR_CoreTestLogger");
 		exit(1);
 	}
 
-	if (m_PShader->Compile("Shader Files/BasicVS.hlsl", "PSMain", "ps_5_0"))
+	//! Set pixel shader
+	if(m_Graphics->SetPixelShader(m_PShader))
 	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Shader de pixeles compilado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,
+			"Pixel shader set",
+			HR_FILE,
+			HR_FUNCTION,
+			HR_LINE
+		);
 	}
 
 	else
 	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "No se pudo compilar el shader de pixeles", HR_FILE, HR_FUNCTION, HR_LINE);
-		m_GraphicsLogger->Close("HR_CoreTestLogger");
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_FATAL_ERROR,
+			"Error setting the pixel shader",
+			HR_FILE,
+			HR_FUNCTION,
+			HR_LINE
+		);
+
+		m_AppLogger->Close("HR_CoreTestLogger");
 		exit(1);
 	}
 
-	if (m_VShader->Create(m_Graphics->m_Device))
-	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Shader de vertices creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
-	}
 
-	else
-	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "No se pudo crear shader de vertices", HR_FILE, HR_FUNCTION, HR_LINE);
-		m_GraphicsLogger->Close("HR_CoreTestLogger");
-		exit(1);
-	}
 
-	if (m_PShader->Create(m_Graphics->m_Device))
-	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Shader de pixeles creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
-	}
-
-	else
-	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "No se pudo crear shader de pixeles", HR_FILE, HR_FUNCTION, HR_LINE);
-		m_GraphicsLogger->Close("HR_CoreTestLogger");
-		exit(1);
-	}
-
-	m_VShader->Set(m_Graphics->m_DC);
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Vertex Shader configurado", HR_FILE, HR_FUNCTION, HR_LINE);
-
-	m_PShader->Set(m_Graphics->m_DC);
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Pixel Shader configurado", HR_FILE, HR_FUNCTION, HR_LINE);
-
-	//! Set vertex information
+	/// Geometry ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//! Allocate mesh for use
 	m_SquareMesh = new C_TestMesh();
 
-	if (m_SquareMesh->CreateIndexB(m_Graphics->m_Device))
+	//! Create the index buffer from mesh
+	if(m_SquareMesh->CreateIndexB(m_Graphics->m_Device))
 	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Buffer de indices creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,
+			"Test mesh's index buffer loaded",
+			HR_FILE,
+			HR_FUNCTION,
+			HR_LINE
+		);
 	}
 
 	else
 	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "No se puede crear buffer de indices", HR_FILE, HR_FUNCTION, HR_LINE);
-		m_GraphicsLogger->Close("HR_CoreTestLogger");
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_FATAL_ERROR,
+			"Error loading test mesh's index buffer",
+			HR_FILE,
+			HR_FUNCTION,
+			HR_LINE
+		);
+
+		m_AppLogger->Close("HR_CoreTestLogger");
 		exit(1);
 	}
 
-	m_SquareMesh->SetIB(m_Graphics->m_DC);
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Buffer de indices configurado", HR_FILE, HR_FUNCTION, HR_LINE);
+	//! Create the index buffer into the pipeline
+	if (m_Graphics->CreateIndexBuffer(D3D_Access::NONE, D3D_Usages::DEFAULT, m_SquareMesh->m_SolidIB))
+	{
+		//! Successful setting of the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,				//! Classify as a normal message
+			"Vertex buffer created",			//! Message clarify
+			HR_FILE,							//! File where it was made
+			HR_FUNCTION,						//! 
+			HR_LINE
+		);
+	}
 
+	else
+	{
+		//! Successful setting of the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_FATAL_ERROR,			//! Classify as a normal message
+			"Vertex buffer created",			//! Message clarify
+			HR_FILE,							//! File where it was made
+			HR_FUNCTION,						//! 
+			HR_LINE
+		);
+
+		m_AppLogger->Close("HR_CoreTestLogger");
+		exit(1);
+	}
+
+	//! Set the index buffer
+	if(m_Graphics->SetIndexBuffer(DXGI_Formats::R_32_UINT, m_SquareMesh->m_SolidIB))
+	{
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,
+			"Index buffer created",
+			HR_FILE,
+			HR_FUNCTION,
+			HR_LINE
+		);
+	}
+
+	else
+	{
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_FATAL_ERROR,
+			"Error creating index buffer",
+			HR_FILE,
+			HR_FUNCTION,
+			HR_LINE
+		);
+
+		m_AppLogger->Close("HR_CoreTestLogger");
+		exit(1);
+	}
+
+	//! Create vertex buffer from mesh
 	if (m_SquareMesh->CreateVertexB(m_Graphics->m_Device))
 	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Buffer de vertices creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
+		//! Successful setting of the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,				//! Classify as a normal message
+			"Vertex buffer created",			//! Message clarify
+			HR_FILE,							//! File where it was made
+			HR_FUNCTION,						//! 
+			HR_LINE
+		);
+	}
+
+	//! 
+	else
+	{
+		//! Successful setting of the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_FATAL_ERROR,			//! Classify as a normal message
+			"Vertex buffer created",			//! Message clarify
+			HR_FILE,							//! File where it was made
+			HR_FUNCTION,						//! 
+			HR_LINE
+		);
+
+		m_AppLogger->Close("HR_CoreTestLogger");
+		exit(1);
+	}
+
+	//! Create the vertex buffer
+	if (m_Graphics->CreateVertexBuffer(D3D_Access::NONE, D3D_Usages::DEFAULT, m_SquareMesh->m_SolidVB))
+	{
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,
+			"Vertex buffer created",
+			HR_FILE,
+			HR_FUNCTION,
+			HR_LINE
+		);
+	}
+
+	//! 
+	else
+	{
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_FATAL_ERROR,
+			"Error creating vertex buffer",
+			HR_FILE,
+			HR_FUNCTION,
+			HR_LINE
+		);
+
+		m_AppLogger->Close("HR_CoreTestLogger");
+		exit(1);
+	}
+
+	//! Set the vertices
+	if(m_Graphics->SetVertexBuffer(m_SquareMesh->m_SolidVB))
+	{
+		//! Successful setting of the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,				//! Classify as a normal message
+			"Vertex buffer created",			//! Message clarify
+			HR_FILE,							//! File where it was made
+			HR_FUNCTION,						//! 
+			HR_LINE
+		);
 	}
 
 	else
 	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "No se pudo crear buffer", HR_FILE, HR_FUNCTION, HR_LINE);
-		m_GraphicsLogger->Close("HR_CoreTestLogger");
+		//! An error was encountered setting the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_FATAL_ERROR,			//! Classify as fatal error
+			"Error creating vertex buffer",		//! Message clarify
+			HR_FILE,							//! Which file
+			HR_FUNCTION,						//! Which function
+			HR_LINE								//! Which line
+		);
+
+		m_AppLogger->Close("HR_CoreTestLogger");
 		exit(1);
 	}
 
-	m_SquareMesh->SetVB(m_Graphics->m_DC);
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Buffer de vertices configurado", HR_FILE, HR_FUNCTION, HR_LINE);
-	
-	//!Create input layout
+
+
+	/// Input Layout ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	m_InputLayout = new C_InputLayout();
-	m_InputLayout->AddInput("POSITION", 0, DXGI_Formats::RGB_32_FLOAT, 0);
-	m_InputLayout->AddInput("COLOR", 0, DXGI_Formats::RGBA_32_FLOAT, D3D11_APPEND_ALIGNED_ELEMENT);
-	if (m_InputLayout->CreateInputLayout(m_Graphics->m_Device, m_VShader->m_Blob))
+
+	m_InputLayout->Init();
+
+	//! Add the inputs of the input layout
+	m_InputLayout->AddInput("POSITION",	0,	DXGI_Formats::RGBA_32_FLOAT,		0);
+	m_InputLayout->AddInput("TEXCOORD",	0,	DXGI_Formats::RG_32_FLOAT,			16);
+
+	//! Create the input layout
+	if (m_Graphics->CreateInputLayout(m_VShader, m_InputLayout))
 	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Input layout creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
+		//! An error was encountered setting the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,				//! Classify as fatal error
+			"Input layout created successfully",//! Message clarify
+			HR_FILE,							//! Which file
+			HR_FUNCTION,						//! Which function
+			HR_LINE								//! Which line
+		);
 	}
 
 	else
 	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "No se pudo crear el input layout", HR_FILE, HR_FUNCTION, HR_LINE);
-		m_GraphicsLogger->Close("HR_CoreTestLogger");
+		//! An error was encountered setting the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_FATAL_ERROR,			//! Classify as fatal error
+			"Error creating the input layout",	//! Message clarify
+			HR_FILE,							//! Which file
+			HR_FUNCTION,						//! Which function
+			HR_LINE								//! Which line
+		);
+
+		m_AppLogger->Close("HR_CoreTestLogger");
 		exit(1);
 	}
 
-	m_InputLayout->SetInputLayout(m_Graphics->m_DC);
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Input layout configurado", HR_FILE, HR_FUNCTION, HR_LINE);
+	//! Set the input layout
+	if (m_Graphics->SetInputLayout(m_InputLayout))
+	{
+		//! An error was encountered setting the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,				//! Classify as fatal error
+			"Input layout set successfully",	//! Message clarify
+			HR_FILE,							//! Which file
+			HR_FUNCTION,						//! Which function
+			HR_LINE								//! Which line
+		);
+	}
 
-	m_SquareMesh->SetTopology(m_Graphics->m_DC, D3D_Topologies::TRIANGLE_LIST);
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Topologia de primitiva configurada", HR_FILE, HR_FUNCTION, HR_LINE);
+	else
+	{
+		//! An error was encountered setting the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_FATAL_ERROR,			//! Classify as fatal error
+			"Error setting input layout",		//! Message clarify
+			HR_FILE,							//! Which file
+			HR_FUNCTION,						//! Which function
+			HR_LINE								//! Which line
+		);
 
+		m_AppLogger->Close("HR_CoreTestLogger");
+		exit(1);
+	}
+
+
+
+	/// Viewport ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	m_Viewport = new C_Viewport();
-	m_Viewport->Create(0, 0, m_Width, m_Height, 0.0f, 1.0f);
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Viewport creado", HR_FILE, HR_FUNCTION, HR_LINE);
-	m_Viewport->Set(m_Graphics->m_DC);
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Viewport configurado", HR_FILE, HR_FUNCTION, HR_LINE);
-
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Graficos cargados con exito... Listo para dibujar", HR_FILE, HR_FUNCTION, HR_LINE);
 	
-	//! Create world space constant buffer
+	//! Create viewport
+	if (m_Graphics->CreateViewport(0, 0, m_Width, m_Height, 0.0F, 1.0F, m_Viewport))
+	{
+		//! An error was encountered setting the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,				//! Classify as fatal error
+			"Viewport created successfully",	//! Message clarify
+			HR_FILE,							//! Which file
+			HR_FUNCTION,						//! Which function
+			HR_LINE								//! Which line
+		);
+	}
+
+	else
+	{
+		//! An error was encountered setting the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_FATAL_ERROR,			//! Classify as fatal error
+			"Error creating viewport",			//! Message clarify
+			HR_FILE,							//! Which file
+			HR_FUNCTION,						//! Which function
+			HR_LINE								//! Which line
+		);
+
+		m_AppLogger->Close("HR_CoreTestLogger");
+		exit(1);
+	}
+
+	//! Set viewport
+	if (m_Graphics->SetViewport(m_Viewport))
+	{
+		//! An error was encountered setting the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,				//! Classify as fatal error
+			"Viewport set successfully",		//! Message clarify
+			HR_FILE,							//! Which file
+			HR_FUNCTION,						//! Which function
+			HR_LINE								//! Which line
+		);
+	}
+
+	else
+	{
+		//! An error was encountered setting the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_FATAL_ERROR,			//! Classify as fatal error
+			"Error setting viewport",			//! Message clarify
+			HR_FILE,							//! Which file
+			HR_FUNCTION,						//! Which function
+			HR_LINE								//! Which line
+		);
+
+		m_AppLogger->Close("HR_CoreTestLogger");
+		exit(1);
+	}
+
+
+
+	/// Topology ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	m_Graphics->SetTopology(D3D_Topologies::TRIANGLE_LIST);
+
+
+
+	/// Camera //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	m_Camera = new C_GCamera();
+
+	m_Camera->SetPosition(0.0f, 0.0f, -40.0f);
+
+	m_Camera->SetUp(0.0f, 1.0f, 0.0f);
+
+	m_Camera->SetTarget(0.0f, 0.0f, 0.0f);
+
+
+
+	/// Constant buffer /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//! Allocate buffers
 	m_WrldBuffer = new C_ConstantBuffer();
-	if (m_WrldBuffer->Create(m_Graphics->m_Device, D3D_Binds::CONST_BUFFER, D3D_Access::NONE, D3D_Usages::DEFAULT, sizeof(C_Matrix4)))
-	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Constant buffer de mundo creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
-	}
-
-	else
-	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de mundo", HR_FILE, HR_FUNCTION, HR_LINE);
-		m_GraphicsLogger->Close("HR_CoreTestLogger");
-		exit(1);
-	}
-
-	//! Create view space constant buffer
 	m_ViewBuffer = new C_ConstantBuffer();
-	if(m_ViewBuffer->Create(m_Graphics->m_Device, D3D_Binds::CONST_BUFFER, D3D_Access::NONE, D3D_Usages::DEFAULT, sizeof(C_Matrix4)))
-	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Constant buffer de vista creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
-	}
-
-	else
-	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de vista", HR_FILE, HR_FUNCTION, HR_LINE);
-		m_GraphicsLogger->Close("HR_CoreTestLogger");
-		exit(1);
-	}
-
-	//! Create projection space constant buffer
 	m_ProjBuffer = new C_ConstantBuffer();
-	if(m_ProjBuffer->Create(m_Graphics->m_Device, D3D_Binds::CONST_BUFFER, D3D_Access::NONE, D3D_Usages::DEFAULT, sizeof(C_Matrix4)))
+
+	//! Create constant buffers
+	if (m_Graphics->CreateConstantBuffer(D3D_Access::NONE, D3D_Usages::DEFAULT, sizeof(C_Matrix4), m_WrldBuffer))	/// WORLD MATRIX BUFFER -------------------------------------
 	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Constant buffer de proyeccion creado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
+		//! An error was encountered setting the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,				//! Classify as fatal error
+			"Error creating vertex buffer",		//! Message clarify
+			HR_FILE,							//! Which file
+			HR_FUNCTION,						//! Which function
+			HR_LINE								//! Which line
+		);
 	}
 
 	else
 	{
-		m_GraphicsLogger->AddEntry(MessageLevel::_ERROR, "Error al crear constant buffer de proyeccion", HR_FILE, HR_FUNCTION, HR_LINE);
-		m_GraphicsLogger->Close("HR_CoreTestLogger");
+		//! An error was encountered setting the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_FATAL_ERROR,			//! Classify as fatal error
+			"Error creating vertex buffer",		//! Message clarify
+			HR_FILE,							//! Which file
+			HR_FUNCTION,						//! Which function
+			HR_LINE								//! Which line
+		);
+
+		m_AppLogger->Close("HR_CoreTestLogger");
 		exit(1);
 	}
 
-	//! Create the camera
-	m_StaticCamera = new C_GCamera();
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Camara de gráficos", HR_FILE, HR_FUNCTION, HR_LINE);
+	if (m_Graphics->CreateConstantBuffer(D3D_Access::NONE, D3D_Usages::DEFAULT, sizeof(C_Matrix4), m_ViewBuffer))	/// VIEW MATRIX BUFFER ----------------------------------------------
+	{
+		//! An error was encountered setting the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,				//! Classify as fatal error
+			"Error creating vertex buffer",		//! Message clarify
+			HR_FILE,							//! Which file
+			HR_FUNCTION,						//! Which function
+			HR_LINE								//! Which line
+		);
+	}
 
-	/*!
-	 * Set the camera's data 
-	*/
-	//! Position
-	m_StaticCamera->SetPosition
-	(
-		C_Vector3D(0.0f, 0.0f, -40.0f)
-	);
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Posición de la camara configurada" , HR_FILE, HR_FUNCTION, HR_LINE);
+	else
+	{
+		//! An error was encountered setting the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_FATAL_ERROR,			//! Classify as fatal error
+			"Error creating vertex buffer",		//! Message clarify
+			HR_FILE,							//! Which file
+			HR_FUNCTION,						//! Which function
+			HR_LINE								//! Which line
+		);
 
-	//! Target
-	m_StaticCamera->SetTarget
-	(
-		C_Vector3D(0.0f, 0.0f, 0.0f)
-	);
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Punto de objetivo de la camara configurado", HR_FILE, HR_FUNCTION, HR_LINE);
+		m_AppLogger->Close("HR_CoreTestLogger");
+		exit(1);
+	}
 
-	//! Up vector
-	m_StaticCamera->SetUp
-	(
-		C_Vector3D(0.0f, 1.0f, 0.0f)
-	);
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Vector de arriba de la camara configurado", HR_FILE, HR_FUNCTION, HR_LINE);
+	if (m_Graphics->CreateConstantBuffer(D3D_Access::NONE, D3D_Usages::DEFAULT, sizeof(C_Matrix4), m_ProjBuffer))	/// PROJECTION MATRIX BUFFER ----------------------------------------
+	{
+		//! An error was encountered setting the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,				//! Classify as fatal error
+			"Error creating vertex buffer",		//! Message clarify
+			HR_FILE,							//! Which file
+			HR_FUNCTION,						//! Which function
+			HR_LINE								//! Which line
+		);
+	}
+
+	else
+	{
+		//! An error was encountered setting the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_FATAL_ERROR,			//! Classify as fatal error
+			"Error creating vertex buffer",		//! Message clarify
+			HR_FILE,							//! Which file
+			HR_FUNCTION,						//! Which function
+			HR_LINE								//! Which line
+		);
+
+		m_AppLogger->Close("HR_CoreTestLogger");
+		exit(1);
+	}
+
+
+
+	/// Texture -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+	m_Texture = new C_Texture();
+
+	//! Load textures
+	if (m_Graphics->CreateTexture("Texture Files/GoWLogo.png", DXGI_Formats::RGBA_8_UNORM, m_Texture))
+	{
+		//! An error was encountered setting the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,				//! Classify as fatal error
+			"Texture buffer created successfully",		//! Message clarify
+			HR_FILE,							//! Which file
+			HR_FUNCTION,						//! Which function
+			HR_LINE								//! Which line
+		);
+	}
+
+	else
+	{
+		//! An error was encountered setting the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_FATAL_ERROR,			//! Classify as fatal error
+			"Error creating texture buffer",	//! Message clarify
+			HR_FILE,							//! Which file
+			HR_FUNCTION,						//! Which function
+			HR_LINE								//! Which line
+		);
+
+		m_AppLogger->Close("HR_CoreTestLogger");
+		exit(1);
+	}
+
+
+
+	/// Shader resource view ----------------------------------------------------------------------------------------------------------------------------------------------------
+	m_ShdResourceView = new C_ShaderResource();
+
+	//! Create shader resource view
+	if (m_Graphics->CreateShaderResourceView(DXGI_Formats::RGBA_8_UNORM, m_Texture, m_ShdResourceView))
+	{
+		//! An error was encountered setting the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,				//! Classify as fatal error
+			"SRV created successfully",			//! Message clarify
+			HR_FILE,							//! Which file
+			HR_FUNCTION,						//! Which function
+			HR_LINE								//! Which line
+		);
+	}
+
+	else
+	{
+		//! An error was encountered setting the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_FATAL_ERROR,			//! Classify as fatal error
+			"Error creating SRV",		//! Message clarify
+			HR_FILE,							//! Which file
+			HR_FUNCTION,						//! Which function
+			HR_LINE								//! Which line
+		);
+
+		m_AppLogger->Close("HR_CoreTestLogger");
+		exit(1);
+	}
+
+
+
+	/// Sampler -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+	m_Sampler = new C_Sampler();
+	
+	//! Create sampler state
+	if (m_Graphics->CreateSampler(m_Sampler))
+	{
+		//! An error was encountered setting the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,			//! Classify as fatal error
+			"Sampler created successfully",		//! Message clarify
+			HR_FILE,							//! Which file
+			HR_FUNCTION,						//! Which function
+			HR_LINE								//! Which line
+		);
+	}
+
+	else
+	{
+		//! An error was encountered setting the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,			//! Classify as fatal error
+			"Sampler created successfully",		//! Message clarify
+			HR_FILE,							//! Which file
+			HR_FUNCTION,						//! Which function
+			HR_LINE								//! Which line
+		);
+
+		m_AppLogger->Close("HR_CoreTestLogger");
+		exit(1);
+	}
+
+
+
+	/// Rasterizer --------------------------------------------------------------------------------------------------------------------------------------------------------------
+	m_Raster = new C_Rasterizer();
+	
+	//! Create rasterizer
+	if (m_Graphics->CreateRasterizer(D3D_FillModes::SOLID, D3D_CullModes::FRONT, m_Raster))
+	{
+		//! An error was encountered setting the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_MESSAGE,			//! Classify as fatal error
+			"Rasterizer created successfully",		//! Message clarify
+			HR_FILE,							//! Which file
+			HR_FUNCTION,						//! Which function
+			HR_LINE								//! Which line
+		);
+	}
+
+	else
+	{
+		//! An error was encountered setting the vertex buffer
+		m_AppLogger->AddEntry
+		(
+			MessageLevel::_FATAL_ERROR,			//! Classify as fatal error
+			"Rasterizer created successfully",		//! Message clarify
+			HR_FILE,							//! Which file
+			HR_FUNCTION,						//! Which function
+			HR_LINE								//! Which line
+		);
+
+		m_AppLogger->Close("HR_CoreTestLogger");
+		exit(1);
+	}
 }
 
+
+
+/*!******************************************************************************************************************************************************************************
+
+	@brief Update the app's data.
+
+********************************************************************************************************************************************************************************/
 void C_CustomApp::OnUpdate()
 {
 	RotationFactor += 0.0005f;
@@ -321,74 +884,117 @@ void C_CustomApp::OnUpdate()
 		RotationFactor = 0.00f;
 	}
 
-	C_Matrix4 Rotation, RotX, RotY, RotZ, Scalation, Translation;
+
 
 	World.Identity();
 
-	Scalation.Scale(15.0f, 15.0f, 15.0f);
 
-	RotX.RotateX(RotationFactor, true);
-	RotY.RotateY(RotationFactor, true);
-	RotZ.RotateZ(RotationFactor, true);
-	
-	Rotation = RotX * RotY;
 
-	Translation.Translate(0.0f, 0.0f, 0.0f);
-
-	World = Scalation * Rotation * Translation;
+	//! Get world matrix
 	World.Transpose();
 }
 
+
+
+/*!******************************************************************************************************************************************************************************
+
+	@brief Performs any operation if the app's window is resized.
+
+********************************************************************************************************************************************************************************/
 void C_CustomApp::OnResize()
 {
 
 }
 
+
+
+/*!******************************************************************************************************************************************************************************
+
+	@brief Performs any operation to render something to screen.
+
+********************************************************************************************************************************************************************************/
 void C_CustomApp::OnRender()
 {
-	/*!
-		Color on the screen...
-	*/
+	//! Clear color to clear the back buffer
 	C_LinearColor Color;
 
-	Color.SetRed(0.0f);
-	Color.SetGreen(0.0f);
-	Color.SetBlue(0.0f);
+	//! Dark gray: RGBA [100, 100, 100, 255] * 1 / 2.2 = Linear [0.45, 0.45, 0.45, 1.0]
+	Color.SetRed(0.45f);
+	Color.SetGreen(0.45f);
+	Color.SetBlue(0.45f);
 	Color.SetAlpha(1.0f);
 
-	m_BackBuffer->ClearRTV(m_Graphics->m_DC, Color);
 
-	m_Depth->ClearDSV(m_Graphics->m_DC);
 
-	//! Set world matrix
+	//! Clear back buffer
+	m_Graphics->ClearRenderTarget(m_BackBuffer, Color);
 
-	m_WrldBuffer->Map(m_Graphics->m_DC, &World, sizeof(C_Matrix4));
-	m_WrldBuffer->Set(m_Graphics->m_DC, 0, 1);
 
-	//! Get view and projection matrices from camera
-	m_StaticCamera->LookAt();
-	View = m_StaticCamera->m_View;
-	View.Transpose();
 
-	m_ViewBuffer->Map(m_Graphics->m_DC, &View, sizeof(C_Matrix4));
-	m_ViewBuffer->Set(m_Graphics->m_DC, 1, 1);
+	//! Clear depth stencil buffer
+	m_Graphics->ClearDepthStencilView(m_Depth);
 
+
+
+	//! Map and set world matrix to world constant buffer
+	m_Graphics->MapConstantBuffer(&World, sizeof(C_Matrix4), m_WrldBuffer);
+	m_Graphics->SetConstantBuffer(0, 1, m_WrldBuffer);
+
+
+
+	//! Get view matrix from camera
+	m_Camera->m_View.LookAt(m_Camera->m_Position, m_Camera->m_Target, m_Camera->m_Up);
+	m_Camera->m_View.Transpose();
+
+	//! Map and set view constant buffer
+	m_Graphics->MapConstantBuffer(&m_Camera->m_View, sizeof(C_Matrix4), m_ViewBuffer);
+	m_Graphics->SetConstantBuffer(1, 1, m_ViewBuffer);
+
+
+
+	//! Calculate the aspect ratio of the projection matrix
 	float Ratio = (float)m_Width / (float)m_Height;
 
-	//! Get matrices
-	m_StaticCamera->Projection(0.4f * C_PlatformMath::m_Pi, Ratio, CAMERA_NEAR, CAMERA_FAR);
-	Proj = m_StaticCamera->m_Projection;
+	//! Get projection matrix
+	Proj.Projection(0.4f * C_PlatformMath::m_Pi, Ratio, CAMERA_NEAR, CAMERA_FAR);
 	Proj.Transpose();
 
-	m_ProjBuffer->Map(m_Graphics->m_DC, &Proj, sizeof(C_Matrix4));
-	m_ProjBuffer->Set(m_Graphics->m_DC, 2, 1);
+	//! Map and set projection constant
+	m_Graphics->MapConstantBuffer(&Proj, sizeof(C_Matrix4), m_ProjBuffer);
+	m_Graphics->SetConstantBuffer(2, 1, m_ProjBuffer);
 
-	//! Render your shit here...
-	m_SquareMesh->Draw(m_Graphics->m_DC);
 
+
+	//! Set shader resource view
+	m_Graphics->SetShaderResourceView(0, 1, m_ShdResourceView);
+
+
+
+	//! Set sampler
+	m_Graphics->SetSampler(0, 1, m_Sampler);
+
+
+
+	//!
+	m_Graphics->SetRasterizer(m_Raster);
+
+
+	//! Draw loaded data here
+	m_Graphics->DrawGeometry(m_SquareMesh->m_SolidIB->GetCount(), 0, 0);
+
+
+
+	//! Present graphics to the screen
 	m_Graphics->Render();
 }
 
+
+
+/*!******************************************************************************************************************************************************************************
+
+	@brief Performs any operation to release and deallocate app specific objects.
+
+********************************************************************************************************************************************************************************/
 void C_CustomApp::OnDestroy()
 {
 	//! Close the back buffer render target 
@@ -396,62 +1002,172 @@ void C_CustomApp::OnDestroy()
 	//! Deallocate back buffer
 	delete m_BackBuffer;
 	//! Point back buffer to null
-	m_BackBuffer = NULL;
-	//! Report 
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Back buffer cerrado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
+	m_BackBuffer = nullptr;
+	//! Report to the user
+	m_AppLogger->AddEntry
+	(
+		MessageLevel::_MESSAGE, 
+		"Back buffer deallocated successfully", 
+		HR_FILE, 
+		HR_FUNCTION, 
+		HR_LINE
+	);
 
-	//!
+
+
+	//! Deallocate the graphics pipeline
 	m_Graphics->Close();
+	//! Delete from RAM
 	delete m_Graphics;
-	m_Graphics = NULL;
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Pipeline cerrado con éxito", HR_FILE, HR_FUNCTION, HR_LINE);
+	//! Nullify the graphics pipeline pointer
+	m_Graphics = nullptr;
+	//! Report to the user
+	m_AppLogger->AddEntry
+	(
+		MessageLevel::_MESSAGE, 
+		"Graphics pipeline deallocated successfully",
+		HR_FILE, 
+		HR_FUNCTION, 
+		HR_LINE
+	);
+
+
 
 	//!
+	m_SquareMesh->Close();
 	delete m_SquareMesh;
-	m_SquareMesh = NULL;
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Geometria cerrada con exito", HR_FILE, HR_FUNCTION, HR_LINE);
+	m_SquareMesh = nullptr;
+	m_AppLogger->AddEntry
+	(
+		MessageLevel::_MESSAGE, 
+		"Geometry deallocated successfully", 
+		HR_FILE, 
+		HR_FUNCTION, 
+		HR_LINE);
+
+
 
 	//!
 	m_VShader->Close();
+	//!
 	delete m_VShader;
-	m_VShader = NULL;
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Vertex shader cerrado con éxito", HR_FILE, HR_FUNCTION, HR_LINE);
+	//!
+	m_VShader = nullptr;
+	//!
+	m_AppLogger->AddEntry
+	(
+		MessageLevel::_MESSAGE, 
+		"Vertex shader deallocated successfully",
+		HR_FILE, 
+		HR_FUNCTION, 
+		HR_LINE
+	);
+
+
 
 	//!
 	m_PShader->Close();
 	delete m_PShader;
-	m_PShader = NULL;
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Pixel shader cerrado con éxito", HR_FILE, HR_FUNCTION, HR_LINE);
+	m_PShader = nullptr;
+	m_AppLogger->AddEntry
+	(
+		MessageLevel::_MESSAGE, 
+		"Pixel shader cerrado con éxito", 
+		HR_FILE, 
+		HR_FUNCTION, 
+		HR_LINE
+	);
+
+
 
 	//!
 	m_InputLayout->Close();
 	delete m_InputLayout;
-	m_InputLayout = NULL;
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Input layout cerrado con éxito", HR_FILE, HR_FUNCTION, HR_LINE);
+	m_InputLayout = nullptr;
+	m_AppLogger->AddEntry
+	(
+		MessageLevel::_MESSAGE, 
+		"Input layout cerrado con éxito", 
+		HR_FILE, 
+		HR_FUNCTION, 
+		HR_LINE
+	);
+
+
 
 	//! Close the depth
 	m_Depth->Close();
 	delete m_Depth;
-	m_Depth = NULL;
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Profundidad cerrada con éxito", HR_FILE, HR_FUNCTION, HR_LINE);
+	m_Depth = nullptr;
+	m_AppLogger->AddEntry
+	(
+		MessageLevel::_MESSAGE, 
+		"Profundidad cerrada con éxito", 
+		HR_FILE, 
+		HR_FUNCTION, 
+		HR_LINE
+	);
+
+
 
 	//! Close the world matrix
+	m_WrldBuffer->Close();
+	//!
 	delete m_WrldBuffer;
-	m_WrldBuffer = NULL;
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Buffer de mundo cerrado con exito", HR_FILE, HR_FUNCTION, HR_LINE);
+	//!
+	m_WrldBuffer = nullptr;
+	//!
+	m_AppLogger->AddEntry
+	(
+		MessageLevel::_MESSAGE, 
+		"Buffer de mundo cerrado con exito", 
+		HR_FILE, 
+		HR_FUNCTION, 
+		HR_LINE
+	);
+
+
 
 	//! Close the view matrix
+	m_ViewBuffer->Close();
+	//!
 	delete m_ViewBuffer;
-	m_ViewBuffer = NULL;
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Buffer de vista cerrado con éxito", HR_FILE, HR_FUNCTION, HR_LINE);
+	//!
+	m_ViewBuffer = nullptr;
+	//!
+	m_AppLogger->AddEntry
+	(
+		MessageLevel::_MESSAGE, 
+		"Buffer de vista cerrado con éxito",
+		HR_FILE, 
+		HR_FUNCTION, 
+		HR_LINE
+	);
+
+
 
 	//! Close the projection matrix
+	m_ProjBuffer->Close();
+	//!
 	delete m_ProjBuffer;
-	m_ProjBuffer = NULL;
-	m_GraphicsLogger->AddEntry(MessageLevel::_MESSAGE, "Buffer de proyección cerrado con éxito", HR_FILE, HR_FUNCTION, HR_LINE);
+	//!
+	m_ProjBuffer = nullptr;
+	//!
+	m_AppLogger->AddEntry
+	(
+		MessageLevel::_MESSAGE, 
+		"Buffer de proyección cerrado con éxito", 
+		HR_FILE, 
+		HR_FUNCTION, 
+		HR_LINE
+	);
 
-	m_GraphicsLogger->Close("HR_CoreTestLogger");
-	delete m_GraphicsLogger;
+
+
+	//! Close the app's log file
+	m_AppLogger->Close("HR_CoreTestLogger");
+	delete m_AppLogger;
+	m_AppLogger = nullptr;
 }
 
 

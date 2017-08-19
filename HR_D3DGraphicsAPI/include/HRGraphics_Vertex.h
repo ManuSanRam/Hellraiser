@@ -33,23 +33,20 @@ namespace HR_SDK
 	public:
 		S_Vertex
 		(
-			float PosX,
-			float PosY,
-			float PosZ,
-			float Red,
-			float Green,
-			float Blue,
-			float Alpha
+			float _x,
+			float _y,
+			float _z,
+
+			float _u,
+			float _v
 		)
 		{
-			m_Position.m_x = PosX;
-			m_Position.m_y = PosY;
-			m_Position.m_z = PosZ;
+			m_Position.m_x = _x;
+			m_Position.m_y = _y;
+			m_Position.m_z = _z;
 
-			m_Color.SetRed(Red);
-			m_Color.SetGreen(Green);
-			m_Color.SetBlue(Blue);
-			m_Color.SetAlpha(Alpha);
+			m_TexCoords.m_x = _u;
+			m_TexCoords.m_y = _v;
 		}
 
 		S_Vertex(const S_Vertex &prm_Copy)
@@ -64,6 +61,6 @@ namespace HR_SDK
 		/*!*****************************************************************************************************************************************************************
 		 * @brief Color of the vertex.																																	   *
 		*******************************************************************************************************************************************************************/
-		C_LinearColor	m_Color;
+		C_Vector2D		m_TexCoords;
 	};
 }

@@ -84,6 +84,9 @@
     <Filter Include="Source Files\File">
       <UniqueIdentifier>{de762aaf-6162-4fc3-b663-26efb8ae00a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Module">
+      <UniqueIdentifier>{501dbd49-1cec-4e95-b0d7-28f15d186962}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\HRUtility_Color.h">
@@ -184,6 +187,9 @@
     </ClInclude>
     <ClInclude Include="include\HRUtility_Line.h">
       <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HRUtility_Module.h">
+      <Filter>Header Files\Module</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,31 +1,58 @@
 #include "HRCore_Application.h"
 #include <Windows.h>
 
-/*!************************************************************************************************************************************************************************
-*
-*	@file		HRCore_Application.cpp
-*
-*	This file contains the definition of the functions of class C_Application.
-*
-*	@date			26-09-2016
-*	@author			Manuel Aldair Santos Ramón (ManuSanRam)
-*	@copyright		Infernal Coders S.A.
-*
-***************************************************************************************************************************************************************************/
-/*!************************************************************************************************************************************************************************
- * @brief Defines optimizations for the Win32 library
-***************************************************************************************************************************************************************************/
+/*!******************************************************************************************************************************************************************************
+
+	@file		HRCore_Application.cpp
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	This file contains the definition of the functions of class C_Application.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	@date			26-09-2016
+	@author			Manuel Aldair Santos Ramón (ManuSanRam)
+	@copyright		Infernal Coders S.A.
+
+********************************************************************************************************************************************************************************/
+
+
+
+/*!******************************************************************************************************************************************************************************
+
+	@brief Defines optimizations for the Win32 library
+
+********************************************************************************************************************************************************************************/
 #define WIN32_LEAN_AND_MEAN
 
-/*!************************************************************************************************************************************************************************
- * @brief Message pump for the application's window.
- * @param hwnd Window that receives input for the pump to process
- * @param umsg Message to be processed by the pump
- * @param wparam wParameter object to process any parameter needed by any funciton
- * @param lparam lParameter object to process any parameter needed by any function
- * @return Event to control the window.
-***************************************************************************************************************************************************************************/
-static LRESULT CALLBACK wndProc(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
+
+
+/*!******************************************************************************************************************************************************************************
+	
+	@brief Message pump for the application's window.
+	
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	@param hwnd Window that receives input for the pump to process
+	@param umsg Message to be processed by the pump
+	@param wparam wParameter object to process any parameter needed by any function
+	@param lparam lParameter object to process any parameter needed by any function
+	
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	@return Event to control the window.
+
+********************************************************************************************************************************************************************************/
+static LRESULT CALLBACK wndProc
+(
+	HWND hwnd, 
+	UINT umsg, 
+	WPARAM wparam, 
+	LPARAM lparam
+);
+
+
 
 namespace HR_SDK
 {
@@ -41,7 +68,7 @@ namespace HR_SDK
 		 *	@brief Name of the App
 		 *
 		*******************************************************************************************************************************************************************/
-		LPCSTR m_AppName;
+		String m_AppName;
 		
 		/*!****************************************************************************************************************************************************************
 		 *
@@ -59,7 +86,12 @@ namespace HR_SDK
 		 *	@param prm_WindowIndex Index to the window that will be controlled
 		 *
 		*******************************************************************************************************************************************************************/
-		void StartWin(uint32 &prm_Width, uint32 &prm_Height, uint32 &prm_WindowIndex);
+		void StartWin
+		(
+			uint32 &prm_Width, 
+			uint32 &prm_Height, 
+			uint32 &prm_WindowIndex
+		);
 		/*!****************************************************************************************************************************************************************
 		 *
 		 *	@brief Closes Win32 systems and the app data
@@ -67,7 +99,10 @@ namespace HR_SDK
 		 *	@param WindowIndex Index to the window that will be controlled
 		 *
 		*******************************************************************************************************************************************************************/
-		void StopWin(uint32 &prm_WindowIndex);
+		void StopWin
+		(
+			uint32 &prm_WindowIndex
+		);
 	};
 
 	/*!********************************************************************************************************************************************************************
@@ -79,7 +114,12 @@ namespace HR_SDK
 	*	@param prm_WindowIndex Index to the window that will be controlled
 	*
 	***********************************************************************************************************************************************************************/
-	void C_Application::Window::StartWin(uint32 &prm_Width, uint32 &prm_Height, uint32 &prm_WindowIndex)
+	void C_Application::Window::StartWin
+	(
+		uint32 &prm_Width, 
+		uint32 &prm_Height, 
+		uint32 &prm_WindowIndex
+	)
 	{
 		WNDCLASSEX wc;
 		DEVMODE dmScreenSettings;
@@ -102,7 +142,7 @@ namespace HR_SDK
 		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 		wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 		wc.lpszMenuName = NULL;
-		wc.lpszClassName = m_AppName;
+		wc.lpszClassName = m_AppName.c_str();
 		wc.cbSize = sizeof(WNDCLASSEX);
 
 		// Register the window class.
@@ -141,9 +181,21 @@ namespace HR_SDK
 		}
 
 		// Create the window with the screen settings and get the handle to it.
-		HWND wind = CreateWindowEx(WS_EX_APPWINDOW, m_AppName, m_AppName,
+		HWND wind = CreateWindowEx
+		(
+			WS_EX_APPWINDOW, 
+			m_AppName.c_str(),
+			m_AppName.c_str(),
 			WS_OVERLAPPEDWINDOW | WS_CAPTION | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
-			posX, posY, Width, Height, NULL, NULL, NULL, NULL);
+			posX, 
+			posY, 
+			Width, 
+			Height, 
+			NULL, 
+			NULL, 
+			NULL, 
+			NULL
+		);
 
 		SetWindowLong(wind, GWL_STYLE, 0);
 
@@ -170,7 +222,10 @@ namespace HR_SDK
 	*	@param WindowIndex Index to the window that will be controlled
 	*
 	***********************************************************************************************************************************************************************/
-	void C_Application::Window::StopWin(uint32 &prm_WindowIndex)
+	void C_Application::Window::StopWin
+	(
+		uint32 &prm_WindowIndex
+	)
 	{
 		// Show the mouse cursor.
 		ShowCursor(true);
@@ -186,7 +241,7 @@ namespace HR_SDK
 		prm_WindowIndex = NULL;
 
 		// Remove the application instance.
-		UnregisterClass(m_AppName, GetModuleHandle(0));
+		UnregisterClass(m_AppName.c_str(), GetModuleHandle(0));
 
 		return;
 	}
@@ -194,7 +249,10 @@ namespace HR_SDK
 
 	/*!
 	*/
-	void C_Application::Run()
+	void C_Application::Run
+	(
+
+	)
 	{
 		MSG msg;
 		memset(&msg, 0, sizeof(MSG));
@@ -210,12 +268,14 @@ namespace HR_SDK
 				DispatchMessage(&msg);
 			}
 
-			//! Update scene
+			//! Update app
 			this->Update();
-			//! Render scene
+
+			//! Render app
 			this->Render();
 		}
 
+		//! Deallocate app
 		this->Destroy();
 	}
 
@@ -223,13 +283,18 @@ namespace HR_SDK
 	 * @brief Initializes the application
 	 * Loads any resource needed for the correct start of the app
 	*/
-	void C_Application::Init()
+	void C_Application::Init
+	(
+
+	)
 	{
 		m_Window = new Window();
 
 		m_WinIndex = 0;
 		m_Width = 0;
 		m_Height = 0;
+
+		m_AppLogger = nullptr;
 
 		m_Window->StartWin(m_Width, m_Height, m_WinIndex);
 
@@ -268,50 +333,57 @@ namespace HR_SDK
 
 		//! Kill the application´s window
 		m_Window->StopWin(m_WinIndex);
+
 		delete m_Window;
 	}
 }
 
-LRESULT CALLBACK wndProc(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
+LRESULT CALLBACK wndProc
+(
+	HWND hwnd, 
+	UINT umsg, 
+	WPARAM wparam, 
+	LPARAM lparam
+)
 {
 	switch (umsg)
 	{
-	case WM_SIZE:
-	{
-		//! Reset the swap chain and back buffer.
-		//! Resize the viewport according to wparam .
-	}
-	break;
+		case WM_SIZE:
+		{
+			//! Reset the swap chain and back buffer.
+			//! Resize the viewport according to wparam .
+		}
+		break;
 
-	case WM_KEYDOWN:
-	{
-		if (wparam == VK_ESCAPE)
+		case WM_KEYDOWN:
+		{
+			if (wparam == VK_ESCAPE)
+			{
+				PostQuitMessage(0);
+			}
+		}
+		break;
+
+		case WM_DESTROY:
+		{
+			PostQuitMessage(0);;
+			return 0;
+		}
+		break;
+
+		// Check if the window is being closed.
+		case WM_CLOSE:
 		{
 			PostQuitMessage(0);
+			return 0;
 		}
-	}
-	break;
+		break;
 
-	case WM_DESTROY:
-	{
-		PostQuitMessage(0);;
-		return 0;
-	}
-	break;
-
-	// Check if the window is being closed.
-	case WM_CLOSE:
-	{
-		PostQuitMessage(0);
-		return 0;
-	}
-	break;
-
-	// All other messages pass to the message handler in the system class.
-	default:
-	{
-		return DefWindowProc(hwnd, umsg, wparam, lparam);
-	}
+		// All other messages pass to the message handler in the system class.
+		default:
+		{
+			return DefWindowProc(hwnd, umsg, wparam, lparam);
+		}
 	}
 	return 0;
 }

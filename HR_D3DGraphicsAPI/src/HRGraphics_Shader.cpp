@@ -1,5 +1,3 @@
-#include "HRGraphics_Shader.h"
-
 /*!*************************************************************************************************************************************************************************
  * @file		HRGraphics_Shader.cpp																																	   *
  *																																										   *
@@ -13,6 +11,9 @@
  * @author		Manuel Aldair Santos Ramón (ManuSanRam)																													   *
  * @copyright	Infernal Coders S.A.																																	   *
 ***************************************************************************************************************************************************************************/
+#include "HRGraphics_Shader.h"
+#include <d3d11.h>
+#include <D3DX11async.h>
 
 namespace HR_SDK
 {
@@ -93,24 +94,34 @@ namespace HR_SDK
 		ID3D11PixelShader* PixelShader;
 	};
 
-	/*!*********************************************************************************************************************************************************************
-	 *																																									   *
-	 *																          VERTEX SHADER CLASS																		   *
-	 *																																									   *
-	***********************************************************************************************************************************************************************/
-	/*!*********************************************************************************************************************************************************************
-	 * @brief Compiles a shader, specifiyng the entrace point and profile to compile the information from an effects file.												   *
-	 * @param prm_FileName File path to effects file.																													   *
-	 * @param prm_EntrancePoint Entrance point to function inside effects file.																							   *
-	 * @param prm_Profile Shader profile.																																   *
-	 * @return True, if data was successfully compiled to blob. False, if there was an error in compilation.															   *
-	***********************************************************************************************************************************************************************/
-	bool C_VertexShader::Compile(const char* prm_FileName, const char* prm_EntrancePoint, const char* prm_Profile)
+	///**************************************************************************************************************************************************************************
+	 																																									   
+	/// 																		VERTEX SHADER CLASS																		   
+	 																																									   
+	///*************************************************************************************************************************************************************************/
+	/*!**************************************************************************************************************************************************************************
+		
+		@brief Compiles a shader, specifying the entrance point and profile to compile the information from an effects file.												   
+		
+	-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		@param prm_FileName File path to effects file.																													   
+		@param prm_EntrancePoint Entrance point to function inside effects file.																							   
+		@param prm_Profile Shader profile.																																   
+
+	-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		
+		@return True, if data was successfully compiled to blob. False, if there was an error in compilation.															   
+	
+	****************************************************************************************************************************************************************************/
+	bool C_VertexShader::Compile(const String& prm_FileName, const String& prm_EntrancePoint, const String& prm_Profile)
 	{
 		//! Verify the result of the shader compilation
 		HRESULT ShaderResult;
 		//! This blob saves the error, should it occur, of the shader compilation
 		ID3D10Blob* ErrorBlob;
+
+
 
 		//! Both blob objects are allocated.
 		m_Blob =		new GraphicsBlob;
@@ -118,11 +129,11 @@ namespace HR_SDK
 		//! Compile the shader, register the result of the function in HRESULT for debugging
 		ShaderResult = D3DX11CompileFromFile
 		(
-			prm_FileName,		//! Shader file path 
+			prm_FileName.c_str(),		//! Shader file path 
 			NULL,
 			NULL,
-			prm_EntrancePoint,	//! Shader function entrance - Vertex shader
-			prm_Profile,		//! Shader profile
+			prm_EntrancePoint.c_str(),	//! Shader function entrance - Vertex shader
+			prm_Profile.c_str(),		//! Shader profile
 			D3D10_SHADER_ENABLE_STRICTNESS,
 			0,
 			NULL,
@@ -234,13 +245,13 @@ namespace HR_SDK
 	 *																																									   *
 	***********************************************************************************************************************************************************************/
 	/*!*********************************************************************************************************************************************************************
-	 * @brief Compiles a shader, specifiyng the entrace point and profile to compile the information from an effects file.												   *
+	 * @brief Compiles a shader, specifying the entrance point and profile to compile the information from an effects file.												   *
 	 * @param prm_FileName File path to effects file.																													   *
 	 * @param prm_EntrancePoint Entrance point to function inside effects file.																							   *
 	 * @param prm_Profile Shader profile.																																   *
 	 * @return True, if data was successfully compiled to blob. False, if there was an error in compilation.															   *
 	***********************************************************************************************************************************************************************/
-	bool C_PixelShader::Compile(const char* FileName, const char* Entrance, const char* Profile)
+	bool C_PixelShader::Compile(const String& FileName, const String& Entrance, const String& Profile)
 	{
 		//! Verify the result of the shader compilation
 		HRESULT ShaderResult;
@@ -253,11 +264,11 @@ namespace HR_SDK
 		//! Compile the shader, register the result of the function in HRESULT for debugging
 		ShaderResult = D3DX11CompileFromFile
 		(
-			FileName,	//! Shader file path 
+			FileName.c_str(),	//! Shader file path 
 			NULL,
 			NULL,
-			Entrance,	//! Shader function entrance - Vertex shader
-			Profile,	//! Shader profile
+			Entrance.c_str(),	//! Shader function entrance - Vertex shader
+			Profile.c_str(),	//! Shader profile
 			D3D10_SHADER_ENABLE_STRICTNESS,
 			0,
 			NULL,

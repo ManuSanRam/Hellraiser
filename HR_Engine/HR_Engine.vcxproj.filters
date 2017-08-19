@@ -9,9 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Header Files\Model">
-      <UniqueIdentifier>{93052fde-8f30-4c67-b0c6-0258089ac006}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Prerequisites">
       <UniqueIdentifier>{68cacd91-e5f2-47d6-b90d-c1f0f899341b}</UniqueIdentifier>
     </Filter>
@@ -30,9 +27,6 @@
     <Filter Include="Source Files\Camera">
       <UniqueIdentifier>{ad3e3801-3ef8-4ec1-995b-97b96079ace9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Model">
-      <UniqueIdentifier>{9d57a2b8-5a40-46fe-b000-8507e46b0528}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Space Partition">
       <UniqueIdentifier>{ae985b14-8ddd-4b23-a61f-8775f568925e}</UniqueIdentifier>
     </Filter>
@@ -41,6 +35,12 @@
     </Filter>
     <Filter Include="Header Files\Resource">
       <UniqueIdentifier>{54a01f0f-ab63-4692-9ab2-b7299e4dcdd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource">
+      <UniqueIdentifier>{9d57a2b8-5a40-46fe-b000-8507e46b0528}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Scene">
+      <UniqueIdentifier>{127f3939-c435-4152-a4bd-295778a09ef5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -65,27 +65,51 @@
     <ClInclude Include="include\HREngine_Joint.h">
       <Filter>Header Files\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="include\HREngine_Skeleton.h">
-      <Filter>Header Files\Animation</Filter>
-    </ClInclude>
     <ClInclude Include="include\HREngine_Key.h">
       <Filter>Header Files\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="include\HREngine_Model.h">
-      <Filter>Header Files\Resource</Filter>
+    <ClInclude Include="include\HREngine_Face.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\HREngine_Mesh.h">
+    <ClInclude Include="include\HREngine_Resource.h">
       <Filter>Header Files\Resource</Filter>
     </ClInclude>
     <ClInclude Include="include\HREngine_Material.h">
       <Filter>Header Files\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="include\HREngine_Face.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\HREngine_Mesh.h">
+      <Filter>Header Files\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HREngine_Model.h">
+      <Filter>Header Files\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HREngine_Skeleton.h">
+      <Filter>Header Files\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HREngine_TextureResource.h">
+      <Filter>Header Files\Resource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\HREngine_Key.cpp">
+      <Filter>Source Files\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HREngine_Material.cpp">
+      <Filter>Source Files\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HREngine_Mesh.cpp">
+      <Filter>Source Files\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HREngine_Model.cpp">
+      <Filter>Source Files\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HREngine_TextureResource.cpp">
+      <Filter>Source Files\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HREngine_Skeleton.cpp">
+      <Filter>Source Files\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HREngine_Joint.cpp">
       <Filter>Source Files\Animation</Filter>
     </ClCompile>
   </ItemGroup>

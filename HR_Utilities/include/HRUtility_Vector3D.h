@@ -38,7 +38,6 @@ namespace HR_SDK
 		This object is used to describe:
 		- Positions in 3D space.
 		- Directions in 3D space.
-		- 
 																																												
 	****************************************************************************************************************************************************************************/
 	class HR_UTILITY_EXPORT C_Vector3D

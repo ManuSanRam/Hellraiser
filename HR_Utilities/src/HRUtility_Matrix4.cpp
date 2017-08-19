@@ -1,10 +1,40 @@
 #include "HRUtility_Matrix4.h"
 #include "HRUtility_PlatformMath.h"
 
+/*!******************************************************************************************************************************************************************************
+
+	@file		HRUtility_Matrix4.h
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	This file contains the declaration of 4x4 matrix class and its methods.
+	Methods of the matrix are denoted below:
+
+	- Zero matrix:
+	- Identity matrix:
+	- Transpose:
+	- Determinant:
+	- Adjoint:
+	- Inverse:
+	- Rotations on X, Y and Z axis:
+	- Roll, Pitch and Yaw rotation:
+	- Look At.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	@date		07-02-2017
+	@author		Manuel Aldair Santos Ramón [ManuSanRam]
+	@copyright	Infernal Coders S.A.
+
+********************************************************************************************************************************************************************************/
+
 namespace HR_SDK
 {
-	/*!
-	*/
+	/*!**********************************************************************************************************************************************************************
+
+		@brief Sets all matrix elements to 0
+
+	************************************************************************************************************************************************************************/
 	void		C_Matrix4::ZeroMatrix()
 	{
 		this->m_Element[0][0] = 0.0f;
@@ -28,8 +58,13 @@ namespace HR_SDK
 		this->m_Element[3][3] = 0.0f;
 	}
 
-	/*!
-	*/
+
+
+	/*!**********************************************************************************************************************************************************************
+
+		@brief Sets matrix as identity (main diagonal elements set to 1, rest set to 0)
+
+	************************************************************************************************************************************************************************/
 	void		C_Matrix4::Identity()
 	{
 		//! Transform matrix to zero matrix, emptying its content
@@ -42,35 +77,49 @@ namespace HR_SDK
 		this->m_Element[3][3] = 1.0f;
 	}
 
-	/*!
-	*/
+
+
+	/*!**********************************************************************************************************************************************************************
+
+		@brief Transposes matrix, changing order of the matrix's elements
+
+	************************************************************************************************************************************************************************/
 	void		C_Matrix4::Transpose()
 	{
 		C_Matrix4 temp(*this);
 
-		this ->m_Element[0][0] = temp.m_Element[0][0]; 
-		this ->m_Element[0][1] = temp.m_Element[1][0]; 
-		this ->m_Element[0][2] = temp.m_Element[2][0]; 
-		this ->m_Element[0][3] = temp.m_Element[3][0];
+		this->m_Element[0][0] = temp.m_Element[0][0];
+		this->m_Element[0][1] = temp.m_Element[1][0];
+		this->m_Element[0][2] = temp.m_Element[2][0];
+		this->m_Element[0][3] = temp.m_Element[3][0];
 
-		this ->m_Element[1][0] = temp.m_Element[0][1]; 
-		this ->m_Element[1][1] = temp.m_Element[1][1]; 
-		this ->m_Element[1][2] = temp.m_Element[2][1]; 
-		this ->m_Element[1][3] = temp.m_Element[3][1];
-		
-		this ->m_Element[2][0] = temp.m_Element[0][2]; 
-		this ->m_Element[2][1] = temp.m_Element[1][2]; 
-		this ->m_Element[2][2] = temp.m_Element[2][2]; 
-		this ->m_Element[2][3] = temp.m_Element[3][2];
-		
-		this ->m_Element[3][0] = temp.m_Element[0][3]; 
-		this ->m_Element[3][1] = temp.m_Element[1][3]; 
-		this ->m_Element[3][2] = temp.m_Element[2][3]; 
-		this ->m_Element[3][3] = temp.m_Element[3][3];
+		this->m_Element[1][0] = temp.m_Element[0][1];
+		this->m_Element[1][1] = temp.m_Element[1][1];
+		this->m_Element[1][2] = temp.m_Element[2][1];
+		this->m_Element[1][3] = temp.m_Element[3][1];
+
+		this->m_Element[2][0] = temp.m_Element[0][2];
+		this->m_Element[2][1] = temp.m_Element[1][2];
+		this->m_Element[2][2] = temp.m_Element[2][2];
+		this->m_Element[2][3] = temp.m_Element[3][2];
+
+		this->m_Element[3][0] = temp.m_Element[0][3];
+		this->m_Element[3][1] = temp.m_Element[1][3];
+		this->m_Element[3][2] = temp.m_Element[2][3];
+		this->m_Element[3][3] = temp.m_Element[3][3];
 	}
 
-	/*!
-	*/
+
+
+	/*!**********************************************************************************************************************************************************************
+
+		@brief Calculates the matrix's determinant
+
+	-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		@return A number representing the determinant of a matrix
+
+	************************************************************************************************************************************************************************/
 	float		C_Matrix4::Determinant()
 	{
 		float _AM, _BM, _CM, _DM, _am, _bm, _cm, _dm;
@@ -120,6 +169,17 @@ namespace HR_SDK
 		return _AM + _BM + _CM + _DM - _am - _bm - _cm - _dm;
 	}
 
+
+
+	/*!**********************************************************************************************************************************************************************
+
+		@brief Calculates the adjoint matrix
+
+	-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		@return A matrix representing the adjoint matrix of another matrix
+
+	************************************************************************************************************************************************************************/
 	C_Matrix4	C_Matrix4::Adjoint()
 	{
 		float
@@ -200,17 +260,38 @@ namespace HR_SDK
 		return Adjoint;
 	}
 
-	/*!
-	* @brief Calculates inverted matrix
-	*/
+
+
+	/*!**********************************************************************************************************************************************************************
+
+		@brief Calculates inverse matrix of this matrix
+
+	-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		@return A matrix, representing the inverse matrix of another matrix
+
+	************************************************************************************************************************************************************************/
 	C_Matrix4	C_Matrix4::Inverse()
 	{
 		return (this->Adjoint() * (1.0f / this->Determinant()));
 	}
 
-	/*!
-		@brief Rotates matrix along X axis
-	*/
+
+
+	/*!**********************************************************************************************************************************************************************
+
+		@brief Create rotation matrix along X axis
+
+	-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		@param _Angle Angle to rotate given in radians
+		@param _Id Boolean to check if matrix will be turned to identity matrix or left with its original info
+
+	-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		@return A matrix to rotate along the 'X' axis
+
+	************************************************************************************************************************************************************************/
 	C_Matrix4&	C_Matrix4::RotateX(float prm_Angle, bool prm_Id)
 	{
 		if (prm_Id)
@@ -218,17 +299,55 @@ namespace HR_SDK
 			Identity();
 		}
 
-		m_Element[1][1] = C_PlatformMath::Cosine(prm_Angle);
-		m_Element[1][2] = -C_PlatformMath::Sine(prm_Angle);
+		//! Modify elements t rotate along Z axis
+		C_Quaternion _result(1.0f, 0.0f, 0.0f, 0.0f), _localRot;
 
-		m_Element[2][1] = C_PlatformMath::Sine(prm_Angle);
-		m_Element[2][2] = C_PlatformMath::Cosine(prm_Angle);
+		_localRot.m_w = C_PlatformMath::Cosine(prm_Angle / 2.0f);
+		_localRot.m_x = 1.0f * C_PlatformMath::Sine(prm_Angle / 2.0f);
+		_localRot.m_y = 0.0f * C_PlatformMath::Sine(prm_Angle / 2.0f);
+		_localRot.m_z = 0.0f * C_PlatformMath::Sine(prm_Angle / 2.0f);
+
+		_result = _localRot * _result;
+
+		this->m_Element[0][0] = 1.0f - (2.0f * C_PlatformMath::Power(_result.m_y, 2.0f)) - (2.0f * C_PlatformMath::Power(_result.m_z, 2.0f));
+		this->m_Element[0][1] = 2.0f * (_result.m_x * _result.m_y) - 2.0f * (_result.m_w * _result.m_z);
+		this->m_Element[0][2] = 2.0f * (_result.m_x * _result.m_z) + 2.0f * (_result.m_w * _result.m_y);
+		this->m_Element[0][3] = 0.0f;
+
+		this->m_Element[1][0] = 2.0f * (_result.m_x * _result.m_y) + 2.0f * (_result.m_w * _result.m_z);
+		this->m_Element[1][1] = 1.0f - (2.0f * C_PlatformMath::Power(_result.m_x, 2.0f)) - (2.0f * C_PlatformMath::Power(_result.m_z, 2.0f));
+		this->m_Element[1][2] = 2.0f * (_result.m_y * _result.m_z) + 2.0f * (_result.m_w * _result.m_x);
+		this->m_Element[1][3] = 0.0f;
+
+		this->m_Element[2][0] = 2.0f * (_result.m_x * _result.m_z) - 2.0f * (_result.m_w * _result.m_y);
+		this->m_Element[2][1] = 2.0f * (_result.m_x * _result.m_y) - 2.0f * (_result.m_w * _result.m_z);
+		this->m_Element[2][2] = 1.0f - (2.0f * C_PlatformMath::Power(_result.m_x, 2.0f)) - (2.0f * C_PlatformMath::Power(_result.m_y, 2.0f));
+		this->m_Element[2][3] = 0.0f;
+
+		this->m_Element[3][0] = 0.0f;
+		this->m_Element[3][1] = 0.0f;
+		this->m_Element[3][2] = 0.0f;
+		this->m_Element[3][3] = 1.0f;
 
 		return *this;
 	}
 
-	/*!
-	*/
+
+
+	/*!**********************************************************************************************************************************************************************
+
+		@brief Create rotation matrix along Y axis
+
+	-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		@param _Angle Angle to rotate given in radians
+		@param _Id Boolean to check if matrix will be turned to identity matrix or left with its original info
+
+	-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		@return A matrix to rotate along the 'Y' axis
+
+	************************************************************************************************************************************************************************/
 	C_Matrix4&	C_Matrix4::RotateY(float prm_Angle, bool prm_Id)
 	{
 		if (prm_Id)
@@ -236,17 +355,55 @@ namespace HR_SDK
 			Identity();
 		}
 
-		m_Element[0][0] = C_PlatformMath::Cosine(prm_Angle);
-		m_Element[0][2] = C_PlatformMath::Sine(prm_Angle);
+		//! Modify elements t rotate along Z axis
+		C_Quaternion _result(1.0f, 0.0f, 0.0f, 0.0f), _localRot;
 
-		m_Element[2][0] = -C_PlatformMath::Sine(prm_Angle);
-		m_Element[2][2] = C_PlatformMath::Cosine(prm_Angle);
+		_localRot.m_w = C_PlatformMath::Cosine(prm_Angle / 2.0f);
+		_localRot.m_x = 0.0f * C_PlatformMath::Sine(prm_Angle / 2.0f);
+		_localRot.m_y = 1.0f * C_PlatformMath::Sine(prm_Angle / 2.0f);
+		_localRot.m_z = 0.0f * C_PlatformMath::Sine(prm_Angle / 2.0f);
+
+		_result = _localRot * _result;
+
+		this->m_Element[0][0] = 1.0f - (2.0f * C_PlatformMath::Power(_result.m_y, 2.0f)) - (2.0f * C_PlatformMath::Power(_result.m_z, 2.0f));
+		this->m_Element[0][1] = 2.0f * (_result.m_x * _result.m_y) - 2.0f * (_result.m_w * _result.m_z);
+		this->m_Element[0][2] = 2.0f * (_result.m_x * _result.m_z) + 2.0f * (_result.m_w * _result.m_y);
+		this->m_Element[0][3] = 0.0f;
+
+		this->m_Element[1][0] = 2.0f * (_result.m_x * _result.m_y) + 2.0f * (_result.m_w * _result.m_z);
+		this->m_Element[1][1] = 1.0f - (2.0f * C_PlatformMath::Power(_result.m_x, 2.0f)) - (2.0f * C_PlatformMath::Power(_result.m_z, 2.0f));
+		this->m_Element[1][2] = 2.0f * (_result.m_y * _result.m_z) + 2.0f * (_result.m_w * _result.m_x);
+		this->m_Element[1][3] = 0.0f;
+
+		this->m_Element[2][0] = 2.0f * (_result.m_x * _result.m_z) - 2.0f * (_result.m_w * _result.m_y);
+		this->m_Element[2][1] = 2.0f * (_result.m_x * _result.m_y) - 2.0f * (_result.m_w * _result.m_z);
+		this->m_Element[2][2] = 1.0f - (2.0f * C_PlatformMath::Power(_result.m_x, 2.0f)) - (2.0f * C_PlatformMath::Power(_result.m_y, 2.0f));
+		this->m_Element[2][3] = 0.0f;
+
+		this->m_Element[3][0] = 0.0f;
+		this->m_Element[3][1] = 0.0f;
+		this->m_Element[3][2] = 0.0f;
+		this->m_Element[3][3] = 1.0f;
 
 		return *this;
 	}
 
-	/*!
-	*/
+
+
+	/*!**********************************************************************************************************************************************************************
+
+		@brief Create rotation matrix along Z axis
+
+	-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		@param _Angle Angle to rotate given in radians
+		@param _Id Boolean to check if matrix will be turned to identity matrix or left with its original info
+
+	-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		@return A matrix to rotate along the 'Z' axis
+
+	************************************************************************************************************************************************************************/
 	C_Matrix4&	C_Matrix4::RotateZ(float prm_Angle, bool prm_Id)
 	{
 		//! If prm_Id is true...
@@ -257,19 +414,63 @@ namespace HR_SDK
 		}
 
 		//! Modify elements t rotate along Z axis
-		m_Element[0][0] = C_PlatformMath::Cosine(prm_Angle);
-		m_Element[0][1] = -C_PlatformMath::Sine(prm_Angle);
+		C_Quaternion _result(1.0f, 0.0f, 0.0f, 0.0f), _localRot;
 
-		m_Element[1][0] = C_PlatformMath::Sine(prm_Angle);
-		m_Element[1][1] = C_PlatformMath::Cosine(prm_Angle);
+		_localRot.m_w = C_PlatformMath::Cosine(prm_Angle / 2.0f);
+		_localRot.m_x = 0.0f * C_PlatformMath::Sine(prm_Angle / 2.0f);
+		_localRot.m_y = 0.0f * C_PlatformMath::Sine(prm_Angle / 2.0f);
+		_localRot.m_z = 1.0f * C_PlatformMath::Sine(prm_Angle / 2.0f);
+
+		_result = _localRot * _result;
+
+		this->m_Element[0][0] =  1.0f - (2.0f * C_PlatformMath::Power(_result.m_y, 2.0f)) - (2.0f * C_PlatformMath::Power(_result.m_z, 2.0f));
+		this->m_Element[0][1] = 2.0f * (_result.m_x * _result.m_y) - 2.0f * (_result.m_w * _result.m_z);
+		this->m_Element[0][2] = 2.0f * (_result.m_x * _result.m_z) + 2.0f * (_result.m_w * _result.m_y);
+		this->m_Element[0][3] = 0.0f;
+
+		this->m_Element[1][0] = 2.0f * (_result.m_x * _result.m_y) + 2.0f * (_result.m_w * _result.m_z);
+		this->m_Element[1][1] = 1.0f - (2.0f * C_PlatformMath::Power(_result.m_x, 2.0f)) - (2.0f * C_PlatformMath::Power(_result.m_z, 2.0f));
+		this->m_Element[1][2] = 2.0f * (_result.m_y * _result.m_z) + 2.0f * (_result.m_w * _result.m_x);
+		this->m_Element[1][3] = 0.0f;
+
+		this->m_Element[2][0] = 2.0f * (_result.m_x * _result.m_z) - 2.0f * (_result.m_w * _result.m_y);
+		this->m_Element[2][1] = 2.0f * (_result.m_x * _result.m_y) - 2.0f * (_result.m_w * _result.m_z);
+		this->m_Element[2][2] = 1.0f - (2.0f * C_PlatformMath::Power(_result.m_x, 2.0f)) - (2.0f * C_PlatformMath::Power(_result.m_y, 2.0f));
+		this->m_Element[2][3] = 0.0f;
+
+		this->m_Element[3][0] = 0.0f;
+		this->m_Element[3][1] = 0.0f;
+		this->m_Element[3][2] = 0.0f;
+		this->m_Element[3][3] = 1.0f;
 
 		return *this;
 	}
 
-	C_Matrix4&	C_Matrix4::Scale(float prm_SX, float prm_SY, float prm_SZ)
+
+
+	/*!**********************************************************************************************************************************************************************
+
+		@brief Calculates a scaling matrix with given X, Y and Z scaling factors.
+		W factor is left as 1
+
+	-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		@param _SX Scaling factor on X axis
+		@param _SY Scaling factor on Y axis
+		@param _SZ Scaling factor on Z axis
+
+	-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		@return A matrix to scale something
+
+	************************************************************************************************************************************************************************/
+	C_Matrix4&	C_Matrix4::Scale(bool _id, float prm_SX, float prm_SY, float prm_SZ)
 	{
 		//! If prm_Id is true...
-		Identity();
+		if (_id)
+		{
+			Identity();
+		}
 
 		//! Modify elements t rotate along Z axis
 		m_Element[0][0] *= prm_SX;
@@ -280,11 +481,30 @@ namespace HR_SDK
 		return *this;
 	}
 
-	C_Matrix4&	C_Matrix4::Translate(float prm_TX, float prm_TY, float prm_TZ)
+
+
+	/*!**********************************************************************************************************************************************************************
+
+		@brief Creates a translation matrix, to move an object in the world.
+
+	-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		@param _TX Translation factor in 'X' axis
+		@param _TY Translation factor in 'Y' axis
+		@param _TZ Translation factor in 'Z' axis
+
+	-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		@return A matrix to translate an object in 3D space
+
+	************************************************************************************************************************************************************************/
+	C_Matrix4&	C_Matrix4::Translate(bool _id, float prm_TX, float prm_TY, float prm_TZ)
 	{
 		//! If prm_Id is true...
-		
+		if (_id)
+		{
 			Identity();
+		}
 
 		//! Modify elements t rotate along Z axis
 			m_Element[3][0] = prm_TX;
@@ -295,8 +515,23 @@ namespace HR_SDK
 		return *this;
 	}
 
-	/*!
-	*/
+
+
+	/*!**********************************************************************************************************************************************************************
+
+		@brief Create look-at matrix
+
+	-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		@param _position Position from where we're looking at
+		@param _target Vector to indicate where is the point we're looking at
+		@param _up Vector orthonormal to indicate the "UP" direction
+
+	-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		@return A matrix containing rotation to look at a given target
+
+	************************************************************************************************************************************************************************/
 	C_Matrix4		C_Matrix4::LookAt
 	(
 		C_Vector3D prm_Position,
@@ -306,13 +541,13 @@ namespace HR_SDK
 	{
 		C_Vector3D XAxis, YAxis, ZAxis;
 
-		ZAxis = prm_Position - prm_Target;
+		ZAxis = prm_Target - prm_Position;
 		XAxis = prm_Up;
 
 		ZAxis.Normalize();
 		XAxis.Normalize();
 
-		XAxis = ZAxis.Cross(XAxis);
+		XAxis = XAxis.Cross(ZAxis);
 		XAxis.Normalize();
 
 		YAxis = ZAxis.Cross(XAxis);
@@ -324,17 +559,35 @@ namespace HR_SDK
 		Y = -YAxis.Dot(prm_Position);
 		Z = -ZAxis.Dot(prm_Position);
 
-		return C_Matrix4
+		*this = C_Matrix4
 		(
 			XAxis.m_x, YAxis.m_x, ZAxis.m_x, 0.0f,
 			XAxis.m_y, YAxis.m_y, ZAxis.m_y, 0.0f,
 			XAxis.m_z, YAxis.m_z, ZAxis.m_z, 0.0f,
 			X, Y, Z, 1.0f
 		);
+
+		return *this;
 	}
 
-	/*!
-	*/
+
+
+	/*!**********************************************************************************************************************************************************************
+
+		@brief Calculate a projection matrix
+
+	-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		@param _fovAngle
+		@param _aspectRatio
+		@param _nearZ
+		@param _farZ
+
+	-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		@return A matrix used to
+
+	************************************************************************************************************************************************************************/
 	C_Matrix4		C_Matrix4::Projection
 	(
 		float prm_FOVAngle,
@@ -353,12 +606,14 @@ namespace HR_SDK
 		_3rd = (prm_FarZ + prm_NearZ) / (prm_NearZ - prm_FarZ);
 		_4th = (2.0f * prm_NearZ * prm_FarZ) / (prm_NearZ - prm_FarZ);
 
-		C_Matrix4
+		*this = C_Matrix4
 		(
 			W, 0.0f, 0.0f, 0.0f,
 			0.0f, H, 0.0f, 0.0f,
 			0.0f, 0.0f, _3rd, -1.0f,
 			0.0f, 0.0f, _4th, 0.0f
 		);
+
+		return *this;
 	}
 }

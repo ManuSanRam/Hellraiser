@@ -1,7 +1,29 @@
+/*!******************************************************************************************************************************************************************************
+
+	@file		HRGraphics_Depth.h
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	This file contains the definitions of the class C_DepthStencil. 
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	@date		03-08-2017
+	@author		Manuel Santos Ramón [ManuSanRam]
+	@copyright	Infernal Coders S.A
+
+********************************************************************************************************************************************************************************/
+
 #include "HRGraphics_Depth.h"
+#include <d3d11.h>
 
 namespace HR_SDK
 {
+	/*!
+
+
+
+	*/
 	struct GraphicsDevice
 	{
 		void* GetPointer()
@@ -19,7 +41,12 @@ namespace HR_SDK
 		ID3D11Device* Device;
 	};
 
+
+
 	/*!
+
+
+
 	*/
 	struct GraphicsDeviceContext
 	{
@@ -38,7 +65,12 @@ namespace HR_SDK
 		ID3D11DeviceContext* DevCon;
 	};
 
+
+
 	/*!
+
+
+
 	*/
 	struct GraphicsDepthStencilBuffer
 	{
@@ -56,25 +88,59 @@ namespace HR_SDK
 		ID3D11Texture2D* Buffer;
 	};
 
+
+
 	/*!
+
+
+
 	*/
 	struct GraphicsDepthStencilState
 	{
+		/*!
+
+
+
+		*/
 		GraphicsDepthStencilState() : DSS(nullptr) {}
+
+
+		/*!
+
+
+
+		*/
 		void* GetPointer()
 		{
 			return reinterpret_cast<void*>(DSS);
 		}
 
+
+		/*!
+
+
+
+		*/
 		void** GetReference()
 		{
 			return reinterpret_cast<void**>(&DSS);
 		}
 
+
+		/*!
+
+
+
+		*/
 		ID3D11DepthStencilState* DSS;
 	};
 
+
+
 	/*!
+
+
+
 	*/
 	struct GraphicsDepthStencilView
 	{
@@ -92,56 +158,105 @@ namespace HR_SDK
 		ID3D11DepthStencilView* DSV;
 	};
 
-	/*!
-	*/
+
+
+	/*!**************************************************************************************************************************************************************************
+
+		@brief Creates the depth buffer
+
+	-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		@param _width
+		@param _height
+		@param _format
+		@param _usage
+		@param _bind
+		@param _device
+
+	-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		@return True, if the depth buffer was successfully created. False, if an error was encountered.
+
+	****************************************************************************************************************************************************************************/
 	bool C_DepthStencil::CreateDSBuffer
 	(
-		uint32			prm_W, 
-		uint32			prm_H,
-		DXGI_Formats::E	prm_Format,
-		D3D_Usages::E	prm_Usage,
-		D3D_Binds::E	prm_Bind,
-		GraphicsDevice*	prm_Device
+		uint32			_w, 
+		uint32			_h,
+		DXGI_Formats::E	_format,
+		D3D_Usages::E	_usage,
+		D3D_Binds::E	_bind,
+		GraphicsDevice*	_device
 	)
 	{
+		//! Allocate buffer
 		m_DSB = new GraphicsDepthStencilBuffer;
 
+		//! For error checking
 		HRESULT FuncResult;
-		D3D11_TEXTURE2D_DESC DSBDesc;
 
 		// Set up the description of the depth buffer.
-		DSBDesc.Width = prm_W;
-		DSBDesc.Height = prm_H;
+		D3D11_TEXTURE2D_DESC DSBDesc;
+		ZeroMemory(&DSBDesc, sizeof(DSBDesc));
+
+		DSBDesc.Width = _w;
+		DSBDesc.Height = _h;
 		DSBDesc.MipLevels = 1;
 		DSBDesc.ArraySize = 1;
-		DSBDesc.Format = TranslateFormat(prm_Format);
+		DSBDesc.Format = (DXGI_FORMAT)_format;
 		DSBDesc.SampleDesc.Count = 1;
 		DSBDesc.SampleDesc.Quality = 0;
-		DSBDesc.Usage = TranslateUsage(prm_Usage);
-		DSBDesc.BindFlags = TranslateBind(prm_Bind);
+		DSBDesc.Usage = D3D11_USAGE(_usage);
+		DSBDesc.BindFlags = D3D11_BIND_FLAG(_bind);
 		DSBDesc.CPUAccessFlags = 0;
 		DSBDesc.MiscFlags = 0;
 
-		// Create the texture for the depth buffer using the filled out description.
-		FuncResult = reinterpret_cast<ID3D11Device*>(prm_Device->GetPointer())->CreateTexture2D(&DSBDesc, NULL, reinterpret_cast<ID3D11Texture2D**>(m_DSB->GetReference()));
+		//! Reinterpret pointers for fast management
+		ID3D11Device* device = reinterpret_cast<ID3D11Device*>(_device->GetPointer());
+		ID3D11Texture2D** buffer = reinterpret_cast<ID3D11Texture2D**>(m_DSB->GetReference());
+
+		//! Create the texture for the depth buffer using the filled out description.
+		FuncResult = device->CreateTexture2D(&DSBDesc, NULL, buffer);
+
+		//! Check if there were errors while creating the buffer
 		if (FAILED(FuncResult))
 		{
+			//! Error was found: couldn't continue
 			return false;
 		}
+
+		//! Everythng is A-OK!
 		return true;
 	}
 
-	/*!
-	*/
+
+
+	/*!**************************************************************************************************************************************************************************
+
+		@brief Creates the depth state
+
+	-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		@paramv_device
+		@param _devContext
+
+	-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		@return
+
+	****************************************************************************************************************************************************************************/
 	bool C_DepthStencil::CreateDSState
 	(
-		GraphicsDevice*				prm_Device, 
-		GraphicsDeviceContext*		prm_DC
+		GraphicsDevice*				_device, 
+		GraphicsDeviceContext*		_devContext
 	)
 	{
+		//! Allocate the depth-stencil state for its use
 		m_DSS = new GraphicsDepthStencilState;
 
+		//! For checking errors
 		HRESULT FuncResult;
+		
+		//! Set up the descriptor to create the depth-stencil state
 		D3D11_DEPTH_STENCIL_DESC DSSDesc;
 		ZeroMemory(&DSSDesc, sizeof(DSSDesc));
 		
@@ -160,38 +275,68 @@ namespace HR_SDK
 		DSSDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 		DSSDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-		FuncResult = reinterpret_cast<ID3D11Device*>(prm_Device->GetPointer())->CreateDepthStencilState
+		//! Manage pointers by reinterpretation
+		ID3D11Device* device = reinterpret_cast<ID3D11Device*>(_device->GetPointer());
+		ID3D11DepthStencilState** dss_ref = reinterpret_cast<ID3D11DepthStencilState**>(m_DSS->GetReference());
+
+		//! Create state and check for any errors
+		FuncResult = device->CreateDepthStencilState
 		(
 			&DSSDesc, 
-			reinterpret_cast<ID3D11DepthStencilState**>(m_DSS->GetReference())
+			dss_ref
 		);
+
+		//! If creation failed
 		if (FAILED(FuncResult))
 		{
+			//! Error was encountered. Stop the function and exit
 			return false;
 		}
 
-		reinterpret_cast<ID3D11DeviceContext*>(prm_DC->GetPointer())->OMSetDepthStencilState(
-			reinterpret_cast<ID3D11DepthStencilState*>(m_DSS->GetPointer()), 1);
-		if (m_DSS == NULL)
-		{
-			return false;
-		}
+		//! Creation was successful, so continue
 
+		//! Manage pointers by reinterpretation
+		ID3D11DeviceContext* devCon = reinterpret_cast<ID3D11DeviceContext*>(_devContext->GetPointer());
+		ID3D11DepthStencilState* dss_p = reinterpret_cast<ID3D11DepthStencilState*>(m_DSS->GetPointer());
+
+		//! Set the state
+		devCon->OMSetDepthStencilState
+		(
+			dss_p,
+			1
+		);
+
+		//! Everything is A-OK!
 		return true;
 	}
 
-	/*!
-	*/
+
+
+	/*!**************************************************************************************************************************************************************************
+
+		@brief Creates the depth view
+
+	-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		@param _device
+
+	-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		@return
+
+	****************************************************************************************************************************************************************************/
 	bool C_DepthStencil::CreateDSView
 	(
-		GraphicsDevice*				prm_Device, 
-		GraphicsDeviceContext*		prm_DC,
-		DXGI_Formats::E				prm_Format
+		GraphicsDevice*				_device
 	)
 	{
+		//! Allocate the pointer for its use
 		m_DSV = new GraphicsDepthStencilView;
 
+		//! For error checking
 		HRESULT FuncResult;
+
+		//! Set up the descriptor for depth-stencil view
 		D3D11_DEPTH_STENCIL_VIEW_DESC DSVDesc;
 		ZeroMemory(&DSVDesc, sizeof(DSVDesc));
 
@@ -199,81 +344,129 @@ namespace HR_SDK
 		DSVDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 		DSVDesc.Texture2D.MipSlice = 0;
 
-		FuncResult = reinterpret_cast<ID3D11Device*>(prm_Device->GetPointer())->CreateDepthStencilView
+		//! Manage pointers by reinterpretation
+		ID3D11Device* device = reinterpret_cast<ID3D11Device*>(_device->GetPointer());
+		ID3D11Resource* dsb_p = reinterpret_cast<ID3D11Resource*>(m_DSB->GetPointer());
+		ID3D11DepthStencilView** dsv_r = reinterpret_cast<ID3D11DepthStencilView**>(m_DSV->GetReference());
+
+		//! Create the depth-stencil view
+		FuncResult = device->CreateDepthStencilView
 		(
-			reinterpret_cast<ID3D11Resource*>(m_DSB->GetPointer()), 
+			dsb_p,
 			&DSVDesc, 
-			reinterpret_cast<ID3D11DepthStencilView**>(m_DSV->GetReference())
+			dsv_r
 		);
 
+		//! Check for errors
 		if (FAILED(FuncResult))
 		{
+			//! Error was encountered. Exit the function
 			return false;
 		}
 
+		//! Everything is A-OK!
 		return true;
 	}
 
-	/*!
-	*/
+
+
+	/*!**************************************************************************************************************************************************************************
+
+		@brief Clears the depth buffer whenever the depth of the rendered geometry changes
+
+	-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		@param _DC
+
+	****************************************************************************************************************************************************************************/
 	void C_DepthStencil::ClearDSV
 	(
-		GraphicsDeviceContext* prm_DC
+		GraphicsDeviceContext* _devContext
 	)
 	{
-		reinterpret_cast<ID3D11DeviceContext*>(prm_DC->GetPointer())->ClearDepthStencilView
+		ID3D11DeviceContext* devCont = reinterpret_cast<ID3D11DeviceContext*>(_devContext->GetPointer()); 
+		ID3D11DepthStencilView* dsv = reinterpret_cast<ID3D11DepthStencilView*>(m_DSV->GetPointer());
+
+		devCont->ClearDepthStencilView
 		(
-			reinterpret_cast<ID3D11DepthStencilView*>(m_DSV->GetPointer()),
+			dsv,
 			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
 			1.0f,
 			0
 		);
 	}
 
-	/*!
-	*/
-	void C_DepthStencil::Close()
+
+
+	/*!**************************************************************************************************************************************************************************
+
+		@brief Closes and deallocates all DEPTH objects and from the pipeline
+
+	****************************************************************************************************************************************************************************/
+	void C_DepthStencil::Close
+	(
+
+	)
 	{
-		//! Check if Depth Stencil View exists
+		//! Check if DSV is allocated
 		if (m_DSV)
 		{
-			//! Check if 
-			if (m_DSV->DSV)
+			ID3D11DepthStencilView* dsv = reinterpret_cast<ID3D11DepthStencilView*>(m_DSV->GetPointer());
+
+			//! Check if dsv is allocated
+			if (dsv)
 			{
-				reinterpret_cast<ID3D11DepthStencilView*>(m_DSV->GetPointer())->Release();
+				//! Release the Direct X 11 depth-stencil view that is allocated
+				dsv->Release();
 			}
+
+			delete m_DSV;
+
 		}
 
-		else
-		{
-			m_DSV = NULL;
-		}
+		//! Point DSV to 0 address 
+		m_DSV = NULL;
 
+
+
+		//! Check if DSS is allocated
 		if (m_DSS)
 		{
-			if (m_DSS->DSS)
+			ID3D11DepthStencilState* dss = reinterpret_cast<ID3D11DepthStencilState*>(m_DSS->GetPointer());
+
+			if (dss)
 			{
-				reinterpret_cast<ID3D11DepthStencilState*>(m_DSS->GetPointer())->Release();
+				//! Release the Direct X 11 depth-stencil state that is allocated
+				dss->Release();
 			}
+
+			//! If it is, delete the allocated memory
+			delete m_DSS;
+
 		}
 
-		else
-		{
-			m_DSS = NULL;
-		}
+		//! Point DSS to 0 address
+		m_DSS = NULL;
+		
 
+
+		//! Check if DSB is allocated
 		if (m_DSB)
 		{
-			if (m_DSB->Buffer)
+			ID3D11Texture2D* dsb = reinterpret_cast<ID3D11Texture2D*>(m_DSB->GetPointer());
+
+			if (dsb)
 			{
-				reinterpret_cast<ID3D11Texture2D*>(m_DSB->GetPointer())->Release();
+				//! Release the Direct X 11 texture buffer where the depth buffer is allocated
+				dsb->Release();
 			}
+
+			delete m_DSB;
+
 		}
 
-		else
-		{
-			m_DSB = NULL;
-		}
+		//! Point DSB to 0 address
+		m_DSB = NULL;
 
 	}
 }

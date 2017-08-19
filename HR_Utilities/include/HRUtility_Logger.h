@@ -2,21 +2,33 @@
 
 #include "HRUtility_Prerequisites.h"
 
-/*!*************************************************************************************************************************************************************************
-* @file		HRUtility_Logger.h
-*
-* This file contains the logger subsystem used by the engine to send message to the user of when a certain event has ocurred.
-* The file contains two classes:
-* - Logger entry.
-*	Creates a message to the user. Warns of any runtime events.
-*
-* - Logger.
-*	Manages messages and presents them in a format to the user.
-*
-* @date        03-10-2016
-* @author		Manuel Aldair Santos Ramón (ManuSanRam)
-* @copyright	Infernal Coders S.A.
-***************************************************************************************************************************************************************************/
+/*!******************************************************************************************************************************************************************************
+	
+	@file		HRUtility_Logger.h
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	This file contains the logger subsystem used by the engine to send message to the user of when a certain event has ocurred.
+	The file contains two classes:
+	- Logger entry.
+		Creates a message to the user. Warns of any runtime events.
+	
+	- Logger.
+		Manages messages and presents them in a format to the user.
+
+	- System logger module.
+		Module to create global instances of logger object
+
+	- Logger global instance.
+		Global instance of the engine's main logger
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	@date       03-10-2016
+	@author		Manuel Aldair Santos Ramón (ManuSanRam)
+	@copyright	Infernal Coders S.A.
+
+********************************************************************************************************************************************************************************/
 
 #include "HRUtility_StringUtil.h"
 #include "HRUtility_Time.h"
@@ -90,30 +102,40 @@ namespace HR_SDK
 	/*!********************************************************************************************************************************************************************
 	 * @brief Destructor
 	***********************************************************************************************************************************************************************/
-	~C_Logger()
+	virtual ~C_Logger()
 	{
 		
 	}
 
 	/*!********************************************************************************************************************************************************************
-	 * @brief Initializes the logger
+	
+	@brief Initializes the logger
+	
 	***********************************************************************************************************************************************************************/
-	void				Init(const String& prm_FileName);
+	void				Init(const String& _FileName);
 	/*!********************************************************************************************************************************************************************
-	 * @brief Adds a new entry to the 
+	
+	@brief Adds a new entry to the 
+	
 	***********************************************************************************************************************************************************************/
-	void				AddEntry(MessageLevel::E prm_Level, const String& prm_Message, const String& File, const String& Function, uint32 Line);
+	void				AddEntry(MessageLevel::E _level, const String& _message, const String& _file, const String& _function, uint32 _line);
 	/*!********************************************************************************************************************************************************************
-	 * @brief Close the logger.
+	
+	@brief Close the logger.
+	
 	***********************************************************************************************************************************************************************/
-	void				Close(const String& LogFileTitle);
+	void				Close(const String& _loggerTitle);
 
 	/*!********************************************************************************************************************************************************************
-	 * @brief Saves the entries to be printed 
+	
+	@brief Saves the entries to be printed 
+	
 	***********************************************************************************************************************************************************************/
 	Vector<Shared_Ptr<S_LoggerEntry>>		m_MessageList;
 	/*!********************************************************************************************************************************************************************
-	 * @brief File to write the entries
+	
+	@brief File to write the entries
+	
 	***********************************************************************************************************************************************************************/
 	C_Filestream*							m_LoggerFile;
   };

@@ -95,7 +95,7 @@ namespace HR_SDK
 		//! Check if any changes were made
 		if (m_Perform)
 		{
-			//! Perform recalculation of view matrix
+			//! Recalculate view matrix
 			m_View.LookAt(m_Position, m_Target, m_Up);
 		}
 	}
@@ -151,7 +151,10 @@ namespace HR_SDK
 		const C_Vector3D& prm_Axis
 	)
 	{
+		C_Matrix4 rotation;
 
+		return rotation;
+		//m_Position *= rotation;
 	}
 
 	/*!**************************************************************************************************************************************************************************
@@ -167,9 +170,9 @@ namespace HR_SDK
 	)
 	{
 		C_Matrix4 rotation;
-		rotation.RotateX(prm_PitchValue, true);
+		rotation.RotateY(prm_PitchValue, true);
 
-		m_Front = rotation * m_Front;
+		//m_Up *= rotation;
 	}
 
 	/*!**************************************************************************************************************************************************************************
@@ -184,7 +187,11 @@ namespace HR_SDK
 		float prm_YawValue
 	)
 	{
+		C_Matrix4 rotation;
 
+		rotation.RotateX(prm_YawValue, true);
+
+		//m_Right *= rotation;
 	}
 
 	/*!**************************************************************************************************************************************************************************
@@ -199,7 +206,11 @@ namespace HR_SDK
 		float prm_RollValue
 	)
 	{
+		C_Matrix4 rotation;
 
+		rotation.RotateZ(prm_RollValue, true);
+
+		//m_Front *= rotation;
 	}
 
 }

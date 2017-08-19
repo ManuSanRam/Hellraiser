@@ -1,10 +1,14 @@
-#include "HRGraphics_Sampler.h"
+
 
 /*!
 
 	@file	HRGraphics_ShaderResource.cpp
 
 */
+
+#include "HRGraphics_Sampler.h"
+
+#include <d3d11.h>
 
 namespace HR_SDK
 {
@@ -22,7 +26,7 @@ namespace HR_SDK
 
 		/*!
 		*/
-		void** GetReference() { return reinterpret_cast<void**>(Device); }
+		void** GetReference() { return reinterpret_cast<void**>(&Device); }
 
 		/*!
 		*/
@@ -43,7 +47,7 @@ namespace HR_SDK
 
 		/*!
 		*/
-		void** GetReference() { return reinterpret_cast<void**>(DevCon); }
+		void** GetReference() { return reinterpret_cast<void**>(&DevCon); }
 
 		/*!
 		*/
@@ -64,7 +68,7 @@ namespace HR_SDK
 
 		/*!
 		*/
-		void** GetReference() { return reinterpret_cast<void**>(SamplerState); }
+		void** GetReference() { return reinterpret_cast<void**>(&SamplerState); }
 
 		/*!
 		*/
@@ -120,6 +124,9 @@ namespace HR_SDK
 			{
 				temp->Release();
 			}
+
+			delete m_Sampler;
+			m_Sampler = NULL;
 		}
 	}
 

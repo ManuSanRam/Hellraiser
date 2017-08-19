@@ -1,159 +1,117 @@
 #include "HRCoreTest_TestMesh.h"
 
-struct HR_SDK::GraphicsDevice
-{
-	void* GetPointer()
-	{
-		return reinterpret_cast<void*>(Device);
-	}
 
-	void** GetReference()
-	{
-		return reinterpret_cast<void**>(&Device);
-	}
 
-	ID3D11Device* Device;
-};
+/*!******************************************************************************************************************************************************************************
 
-struct HR_SDK::GraphicsDeviceContext
-{
-	void* GetPointer()
-	{
-		return reinterpret_cast<void*>(DevCon);
-	}
+	@file		HRCoreTest_TestMesh.cpp
 
-	void** GetReference()
-	{
-		return reinterpret_cast<void**>(&DevCon);
-	}
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	ID3D11DeviceContext* DevCon;
-};
+	This file contains the declaration of the test mesh object, used to test the graphics pipeline and the rendering.
 
-struct HR_SDK::GraphicsSwapChain
-{
-	void* GetPointer()
-	{
-		return reinterpret_cast<void*>(SwapChain);
-	}
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	void** GetReference()
-	{
-		return reinterpret_cast<void**>(&SwapChain);
-	}
+	@date		11-08-2017
+	@author		Manuel Santos Ramón [ManuSanRam]
+	@copyright	Infernal Coders S.A
 
-	IDXGISwapChain* SwapChain;
-};
+********************************************************************************************************************************************************************************/
 
-struct HR_SDK::GraphicsVertexBuffer
-{
-	void* GetPointer()
-	{
-		return reinterpret_cast<void*>(VB);
-	}
 
-	void** GetReference()
-	{
-		return reinterpret_cast<void**>(&VB);
-	}
 
-	ID3D11Buffer* VB;
-};
-
-struct HR_SDK::GraphicsIndexBuffer
-{
-	void* GetPointer()
-	{
-		return reinterpret_cast<void*>(IB);
-	}
-
-	void** GetReference()
-	{
-		return reinterpret_cast<void**>(&IB);
-	}
-
-	ID3D11Buffer* IB;
-};
-
-bool C_TestMesh::CreateVertexB(GraphicsDevice* prm_Device)
+bool C_TestMesh::CreateVertexB
+(
+	GraphicsDevice* prm_Device
+)
 {
 	S_Vertex V1
 	(
 		-1.0f, -1.0f, -1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f
+		0.0f, 0.0f
 	);
 
 	S_Vertex V2
 	(
 		-1.0f, 1.0f, -1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f
+		0.0f, 1.0f
 	);
 
 	S_Vertex V3
 	(
 		1.0f, 1.0f, -1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f
+		1.0f, 1.0f
 	);
-
 
 	S_Vertex V4
 	(
 		1.0f, -1.0f, -1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f
+		1.0f, 0.0f
 	);
+
 
 
 	S_Vertex V5
 	(
 		-1.0f, -1.0f, 1.0f,
-		0.22f, 0.0f, 0.0f, 1.0f
+		1.0f, 0.0f
 	);
 
 	S_Vertex V6
 	(
 		-1.0f, 1.0f, 1.0f,
-		0.22f, 0.0f, 0.0f, 1.0f
+		1.0f, 1.0f
 	);
 
 	S_Vertex V7
 	(
 		1.0f, 1.0f, 1.0f,
-		0.22f, 0.0f, 0.0f, 1.0f
+		0.0f, 1.0f
 	);
 
 	S_Vertex V8
 	(
 		1.0f, -1.0f, 1.0f,
-		0.22f, 0.0f, 0.0f, 1.0f
+		0.0f, 0.0f
 	);
 
-	m_SolidVB.AddVertex(V1);
-	m_SolidVB.AddVertex(V2);
-	m_SolidVB.AddVertex(V3);
-	m_SolidVB.AddVertex(V4);
-	m_SolidVB.AddVertex(V5);
-	m_SolidVB.AddVertex(V6);
-	m_SolidVB.AddVertex(V7);
-	m_SolidVB.AddVertex(V8);
 
 
-	if (!m_SolidVB.m_Vertices.size())
+	m_SolidVB = new C_VBuffer();
+
+
+
+	m_SolidVB->AddVertex(V1);
+	m_SolidVB->AddVertex(V2);
+	m_SolidVB->AddVertex(V3);
+	m_SolidVB->AddVertex(V4);
+	m_SolidVB->AddVertex(V5);
+	m_SolidVB->AddVertex(V6);
+	m_SolidVB->AddVertex(V7);
+	m_SolidVB->AddVertex(V8);
+
+
+
+	if (!m_SolidVB->m_Vertices.size())
 	{
 		return false;
 	}
 
-	if (m_SolidVB.Create(prm_Device, D3D_Binds::VERTEX_BUFFER, D3D_Access::NONE, D3D_Usages::DEFAULT))
-	{
-		return true;
-	}
 
-	else
-	{
-		return false;
-	}
+
+	return true;
+
+
+
 }
 
-bool C_TestMesh::CreateIndexB(GraphicsDevice* prm_Device)
+
+
+
+bool C_TestMesh::CreateIndexB
+(
+	GraphicsDevice* prm_Device
+)
 {
 	uint32 Indices[]{
 		//! Front
@@ -181,62 +139,48 @@ bool C_TestMesh::CreateIndexB(GraphicsDevice* prm_Device)
 		4, 3, 7
 
 	};
+
+
+
+	m_SolidIB = new C_IBuffer32();
+
+
+
 	for (auto indc : Indices)
 	{
-		m_SolidIB.AddIndex(indc);
+		m_SolidIB->AddIndex(indc);
 	}
 
-	if (!m_SolidIB.m_Indices.size())
+
+
+	if (!m_SolidIB->m_Indices.size())
 	{
 		return false;
 	}
 
-	if (m_SolidIB.Create(prm_Device, D3D_Binds::INDEX_BUFFER, D3D_Access::NONE, D3D_Usages::DEFAULT))
+	return true;
+}
+
+
+
+void C_TestMesh::Close
+(
+
+)
+{
+	if (m_SolidVB)
 	{
-		return true;
+		m_SolidVB->Close();
+		delete m_SolidVB;
 	}
 
-	else
+	m_SolidVB = nullptr;
+
+	if (m_SolidIB)
 	{
-		return false;
+		m_SolidIB->Close();
+		delete m_SolidIB;
 	}
-}
 
-void C_TestMesh::SetIB
-(
-	GraphicsDeviceContext*	prm_DC
-)
-{
-	m_SolidIB.SetBuffer(prm_DC, DXGI_Formats::R_32_UINT);
-}
-
-void C_TestMesh::SetVB
-(
-	GraphicsDeviceContext*	prm_DC
-)
-{
-	m_SolidVB.SetBuffer(prm_DC);
-}
-
-void C_TestMesh::SetTopology
-(
-	GraphicsDeviceContext*	prm_DC,
-	D3D_Topologies::E prm_Topology
-)
-{
-	reinterpret_cast<ID3D11DeviceContext*>(prm_DC->GetPointer())->IASetPrimitiveTopology
-	(
-		TranslateTopology(prm_Topology)
-	);
-}
-
-void C_TestMesh::Draw
-(
-	GraphicsDeviceContext*	prm_DC
-)
-{
-	reinterpret_cast<ID3D11DeviceContext*>(prm_DC->GetPointer())->DrawIndexed
-	(
-		m_SolidIB.GetCount(), 0, 0
-	);
+	m_SolidIB = nullptr;
 }

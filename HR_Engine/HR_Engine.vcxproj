@@ -73,29 +73,29 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)\binary\$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)\intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
-    <IncludePath>$(SolutionDir)\HR_Utilities\include\;$(SolutionDir)\HR_D3DGraphicsAPI\include\;$(SolutionDir)\HR_Core\include\;$(ASSIMP)\include\assimp\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\;$(ASSIMP)\Asset Import Libs\$(Configuration)\$(PlatformTarget)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\HR_Utilities\include\;$(SolutionDir)\HR_D3DGraphicsAPI\include\;$(SolutionDir)\HR_Core\include\;$(ASSIMP)\include\assimp\;$(DXSDK_DIR)Include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\;$(ASSIMP)\Asset Import Libs\$(Configuration)\$(PlatformTarget)\;$(DXSDK_DIR)Lib\$(PlatformTarget)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)\binary\$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)\intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
-    <IncludePath>$(SolutionDir)\HR_Utilities\include\;$(SolutionDir)\HR_D3DGraphicsAPI\include\;$(SolutionDir)\HR_Core\include\;$(ASSIMP)\include\assimp\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\;$(ASSIMP)\Asset Import Libs\$(Configuration)\$(PlatformTarget)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\HR_Utilities\include\;$(SolutionDir)\HR_D3DGraphicsAPI\include\;$(SolutionDir)\HR_Core\include\;$(ASSIMP)\include\assimp\;$(DXSDK_DIR)Include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\;$(ASSIMP)\Asset Import Libs\$(Configuration)\$(PlatformTarget)\;$(DXSDK_DIR)Lib\$(PlatformTarget)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)\binary\$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)\intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
-    <IncludePath>$(SolutionDir)\HR_Utilities\include\;$(SolutionDir)\HR_D3DGraphicsAPI\include\;$(SolutionDir)\HR_Core\include\;$(ASSIMP)\include\assimp\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\;$(ASSIMP)\Asset Import Libs\$(Configuration)\$(PlatformTarget)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\HR_Utilities\include\;$(SolutionDir)\HR_D3DGraphicsAPI\include\;$(SolutionDir)\HR_Core\include\;$(ASSIMP)\include\assimp\;$(DXSDK_DIR)Include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\;$(ASSIMP)\Asset Import Libs\$(Configuration)\$(PlatformTarget)\;$(DXSDK_DIR)Lib\$(PlatformTarget)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)\binary\$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)\intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
-    <IncludePath>$(SolutionDir)\HR_Utilities\include\;$(SolutionDir)\HR_D3DGraphicsAPI\include\;$(SolutionDir)\HR_Core\include\;$(ASSIMP)\include\assimp\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\;$(ASSIMP)\Asset Import Libs\$(Configuration)\$(PlatformTarget)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\HR_Utilities\include\;$(SolutionDir)\HR_D3DGraphicsAPI\include\;$(SolutionDir)\HR_Core\include\;$(ASSIMP)\include\assimp\;$(DXSDK_DIR)Include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\;$(ASSIMP)\Asset Import Libs\$(Configuration)\$(PlatformTarget)\;$(DXSDK_DIR)Lib\$(PlatformTarget)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -110,7 +110,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>HR_Utilities.lib;d3d11.lib;d3dcompiler.lib;d3dx11.lib;HR_D3DGraphicsAPI.lib;HR_Core.lib;assimp-vc140-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>HR_Utilities.lib;dxgi.lib;d3d11.lib;d3dx11.lib;d3dcompiler.lib;D3DCompiler.lib;HR_D3DGraphicsAPI.lib;HR_Core.lib;assimp-vc140-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <BuildLog>
       <Path>$(SolutionDir)\intermediate\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName).log</Path>
@@ -131,7 +131,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>HR_Utilities.lib;d3d11.lib;d3dcompiler.lib;d3dx11.lib;HR_D3DGraphicsAPI.lib;HR_Core.lib;assimp-vc140-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>HR_Utilities.lib;dxgi.lib;d3d11.lib;d3dx11.lib;d3dcompiler.lib;D3DCompiler.lib;HR_D3DGraphicsAPI.lib;HR_Core.lib;assimp-vc140-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <BuildLog>
       <Path>$(SolutionDir)\intermediate\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName).log</Path>
@@ -153,7 +153,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>HR_Utilities.lib;d3d11.lib;d3dcompiler.lib;d3dx11.lib;HR_D3DGraphicsAPI.lib;HR_Core.lib;assimp-vc140-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>HR_Utilities.lib;dxgi.lib;d3d11.lib;d3dx11.lib;d3dcompiler.lib;D3DCompiler.lib;HR_D3DGraphicsAPI.lib;HR_Core.lib;assimp-vc140-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <BuildLog>
       <Path>$(SolutionDir)\intermediate\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName).log</Path>
@@ -175,7 +175,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>$(SolutionDir)\library\$(Configuration)\$(PlatformTarget)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>HR_Utilities.lib;d3d11.lib;d3dcompiler.lib;d3dx11.lib;HR_D3DGraphicsAPI.lib;HR_Core.lib;assimp-vc140-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>HR_Utilities.lib;dxgi.lib;d3d11.lib;d3dx11.lib;d3dcompiler.lib;D3DCompiler.lib;HR_D3DGraphicsAPI.lib;HR_Core.lib;assimp-vc140-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <BuildLog>
       <Path>$(SolutionDir)\intermediate\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName).log</Path>
@@ -194,10 +194,18 @@
     <ClInclude Include="include\HREngine_Node.h" />
     <ClInclude Include="include\HREngine_Octree.h" />
     <ClInclude Include="include\HREngine_Prerequisites.h" />
+    <ClInclude Include="include\HREngine_Resource.h" />
     <ClInclude Include="include\HREngine_Skeleton.h" />
+    <ClInclude Include="include\HREngine_TextureResource.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\HREngine_Joint.cpp" />
     <ClCompile Include="src\HREngine_Key.cpp" />
+    <ClCompile Include="src\HREngine_Material.cpp" />
+    <ClCompile Include="src\HREngine_Mesh.cpp" />
+    <ClCompile Include="src\HREngine_Model.cpp" />
+    <ClCompile Include="src\HREngine_Skeleton.cpp" />
+    <ClCompile Include="src\HREngine_TextureResource.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

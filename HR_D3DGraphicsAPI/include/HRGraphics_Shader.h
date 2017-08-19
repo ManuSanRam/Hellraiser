@@ -13,14 +13,13 @@
  * @author		Manuel Aldair Santos Ramón (ManuSanRam)																													   *
  * @copyright	Infernal Coders S.A.																																	   *
 ***************************************************************************************************************************************************************************/
-/*!*************************************************************************************************************************************************************************
- *																		INTERNAL INCLUSIONS																				   *
-***************************************************************************************************************************************************************************/
+
+
+
 #include "HRGraphics_Prerequisites.h"
 
-/*!*************************************************************************************************************************************************************************
- *																		EXTERNAL INCLUSIONS																				   *
-***************************************************************************************************************************************************************************/
+
+
 #include <HRUtility_Datastream.h>
 
 namespace HR_SDK
@@ -31,14 +30,12 @@ namespace HR_SDK
 	struct GraphicsVertexShader;
 	struct GraphicsPixelShader;
 
-	/*!*********************************************************************************************************************************************************************
-	 * @brief Macro for inclusion of files for data compilation																											   *
-	***********************************************************************************************************************************************************************/
+	
+
 	#define D3D_COMPILE_STANDARD_FILE_INCLUDE ((ID3DInclude*)(UINT_PTR)1)
 
-	/*!*********************************************************************************************************************************************************************
-	 * @brief Defines an interface to create shaders																													   *
-	***********************************************************************************************************************************************************************/
+	
+	
 	class HR_D3DGRAPHICSAPI_EXPORT C_ShaderBase
 	{
 	public:
@@ -49,7 +46,7 @@ namespace HR_SDK
 		 * @param prm_Profile Shader profile.																															   *
 		 * @return True, if data was successfully compiled to blob. False, if there was an error in compilation.														   *
 		*******************************************************************************************************************************************************************/
-		virtual bool Compile(const char* FileName, const char* Entrance, const char* Profile) = 0;
+		virtual bool Compile(const String& FileName, const String& Entrance, const String& Profile) = 0;
 		/*!*****************************************************************************************************************************************************************
 		 * @brief Creates the shader from the data compiled to the blob. This one is a virtual function																	   *				   
 		 * @param prm_Device Device that creates the shader.																											   *
@@ -102,7 +99,7 @@ namespace HR_SDK
 		 * @param prm_Profile Shader profile.																															   *
 		 * @return True, if data was successfully compiled to blob. False, if there was an error in compilation.														   *
 		*******************************************************************************************************************************************************************/
-		bool Compile(const char* FileName, const char* Entrance, const char* Profile);
+		bool Compile(const String& FileName, const String& Entrance, const String& Profile);
 		/*!*****************************************************************************************************************************************************************
 		 * @brief Creates the shader from the data compiled to the blob.																								   *
 		 * @param prm_Device Device that creates the shader.																											   *
@@ -126,11 +123,19 @@ namespace HR_SDK
 	};
 
 	/*!
+
+		@class C_PixelShader
+
+		@brief Pixel shader object class
+
 	*/
 	class HR_D3DGRAPHICSAPI_EXPORT C_PixelShader : public C_ShaderBase
 	{
 	public:
 		/*!
+
+			@brief Constructor [Default]
+
 		*/
 		C_PixelShader()
 		{
@@ -138,20 +143,31 @@ namespace HR_SDK
 		}
 
 		/*!
+
+			@brief Destructor
+
 		*/
 		~C_PixelShader()
 		{
 
 		}
 
-		/*!*****************************************************************************************************************************************************************
-		 * @brief Compiles a shader, specifiyng the entrace point and profile to compile the information from an effects file.											   *
-		 * @param prm_FileName File path to effects file.																												   *
-		 * @param prm_EntrancePoint Entrance point to function inside effects file.																						   *
-		 * @param prm_Profile Shader profile.																															   *
-		 * @return True, if data was successfully compiled to blob. False, if there was an error in compilation.														   *
-		*******************************************************************************************************************************************************************/
-		bool Compile(const char* FileName, const char* Entrance, const char* Profile);
+		/*!**********************************************************************************************************************************************************************
+
+			@brief Compiles a shader, specifying the entrance point and profile to compile the information from an effects file.	
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@param prm_FileName File path to effects file.																												 
+			@param prm_EntrancePoint Entrance point to function inside effects file.																			
+			@param prm_Profile Shader profile.																	
+
+		-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			@return True, if data was successfully compiled to blob. False, if there was an error in compilation.												
+
+		************************************************************************************************************************************************************************/
+		bool Compile(const String& FileName, const String& Entrance, const String& Profile);
 		/*!*****************************************************************************************************************************************************************
 		 * @brief Creates the shader from the data compiled to the blob.																								   *
 		 * @param prm_Device Device that creates the shader.																											   *

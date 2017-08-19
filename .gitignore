@@ -6,6 +6,7 @@ documentation/latex/
 intermediate/
 library/
 ipch/
-externals/Log Files/GraphicsLog.html
+binary/Log Files/CoreTestLog.html
 *.opendb
 .vs/Hellraiser Engine/v15/
+*.swatch

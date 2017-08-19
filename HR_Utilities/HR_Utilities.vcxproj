@@ -203,6 +203,7 @@
     <ClInclude Include="include\HRUtility_MacroUtil.h" />
     <ClInclude Include="include\HRUtility_Math.h" />
     <ClInclude Include="include\HRUtility_MemoryAllocators.h" />
+    <ClInclude Include="include\HRUtility_Module.h" />
     <ClInclude Include="include\HRUtility_PlatformMath.h" />
     <ClInclude Include="include\HRUtility_Matrix3.h" />
     <ClInclude Include="include\HRUtility_Matrix4.h" />
