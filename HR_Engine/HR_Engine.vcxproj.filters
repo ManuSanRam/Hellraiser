@@ -42,6 +42,12 @@
     <Filter Include="Header Files\Scene">
       <UniqueIdentifier>{127f3939-c435-4152-a4bd-295778a09ef5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Resource\Particles">
+      <UniqueIdentifier>{ac426ef5-a9e3-4e41-9922-0dd73c862df1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\Particles">
+      <UniqueIdentifier>{4abc892f-ad6c-4d24-8b35-0c0c810b4371}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\HREngine_Prerequisites.h">
@@ -89,6 +95,15 @@
     <ClInclude Include="include\HREngine_TextureResource.h">
       <Filter>Header Files\Resource</Filter>
     </ClInclude>
+    <ClInclude Include="include\HREngine_ParticleSystem.h">
+      <Filter>Header Files\Resource\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HREngine_Emitter.h">
+      <Filter>Header Files\Resource\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HREngine_Force.h">
+      <Filter>Header Files\Resource\Particles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\HREngine_Key.cpp">
@@ -111,6 +126,15 @@
     </ClCompile>
     <ClCompile Include="src\HREngine_Joint.cpp">
       <Filter>Source Files\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HREngine_ParticleSystem.cpp">
+      <Filter>Source Files\Resource\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HREngine_Force.cpp">
+      <Filter>Source Files\Resource\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HREngine_Emitter.cpp">
+      <Filter>Source Files\Resource\Particles</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

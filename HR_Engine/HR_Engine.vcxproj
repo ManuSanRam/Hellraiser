@@ -182,9 +182,11 @@
     </BuildLog>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\HREngine_Force.h" />
     <ClInclude Include="include\HREngine_CameraManager.h" />
     <ClInclude Include="include\HREngine_CompCamera.h" />
     <ClInclude Include="include\HREngine_Defines.h" />
+    <ClInclude Include="include\HREngine_Emitter.h" />
     <ClInclude Include="include\HREngine_Face.h" />
     <ClInclude Include="include\HREngine_Joint.h" />
     <ClInclude Include="include\HREngine_Key.h" />
@@ -193,17 +195,21 @@
     <ClInclude Include="include\HREngine_Model.h" />
     <ClInclude Include="include\HREngine_Node.h" />
     <ClInclude Include="include\HREngine_Octree.h" />
+    <ClInclude Include="include\HREngine_ParticleSystem.h" />
     <ClInclude Include="include\HREngine_Prerequisites.h" />
     <ClInclude Include="include\HREngine_Resource.h" />
     <ClInclude Include="include\HREngine_Skeleton.h" />
     <ClInclude Include="include\HREngine_TextureResource.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\HREngine_Emitter.cpp" />
     <ClCompile Include="src\HREngine_Joint.cpp" />
     <ClCompile Include="src\HREngine_Key.cpp" />
     <ClCompile Include="src\HREngine_Material.cpp" />
     <ClCompile Include="src\HREngine_Mesh.cpp" />
     <ClCompile Include="src\HREngine_Model.cpp" />
+    <ClCompile Include="src\HREngine_Force.cpp" />
+    <ClCompile Include="src\HREngine_ParticleSystem.cpp" />
     <ClCompile Include="src\HREngine_Skeleton.cpp" />
     <ClCompile Include="src\HREngine_TextureResource.cpp" />
   </ItemGroup>

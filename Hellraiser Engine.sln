@@ -43,6 +43,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HR_CoreTest", "HR_CoreTest\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HR_EngineTest", "HR_EngineTest\HR_EngineTest.vcxproj", "{F1AD713A-274B-4F7F-A350-658E08B0C660}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HR_OpenCLAPI", "HR_OpenCLAPI\HR_OpenCLAPI.vcxproj", "{A63E1D0B-892C-4341-8CB9-727B35B61DFE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -115,6 +117,14 @@ Global
 		{F1AD713A-274B-4F7F-A350-658E08B0C660}.Release|x64.Build.0 = Release|x64
 		{F1AD713A-274B-4F7F-A350-658E08B0C660}.Release|x86.ActiveCfg = Release|Win32
 		{F1AD713A-274B-4F7F-A350-658E08B0C660}.Release|x86.Build.0 = Release|Win32
+		{A63E1D0B-892C-4341-8CB9-727B35B61DFE}.Debug|x64.ActiveCfg = Debug|x64
+		{A63E1D0B-892C-4341-8CB9-727B35B61DFE}.Debug|x64.Build.0 = Debug|x64
+		{A63E1D0B-892C-4341-8CB9-727B35B61DFE}.Debug|x86.ActiveCfg = Debug|Win32
+		{A63E1D0B-892C-4341-8CB9-727B35B61DFE}.Debug|x86.Build.0 = Debug|Win32
+		{A63E1D0B-892C-4341-8CB9-727B35B61DFE}.Release|x64.ActiveCfg = Release|x64
+		{A63E1D0B-892C-4341-8CB9-727B35B61DFE}.Release|x64.Build.0 = Release|x64
+		{A63E1D0B-892C-4341-8CB9-727B35B61DFE}.Release|x86.ActiveCfg = Release|Win32
+		{A63E1D0B-892C-4341-8CB9-727B35B61DFE}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

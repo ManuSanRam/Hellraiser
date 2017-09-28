@@ -1,5 +1,7 @@
 #include "HRUtility_Logger.h"
 
+#include "HRUtility_Datastream.h"
+
 namespace HR_SDK
 {
 	/*!********************************************************************************************************************************************************************
@@ -48,8 +50,10 @@ namespace HR_SDK
 		String EntryMsg(Holder.size() + 1, 0);
 		EntryMsg.insert(EntryMsg.begin(), Holder.c_str(), Holder.c_str() + Holder.size());
 
+		//! Get formatted message
 		Entry->m_Message = EntryMsg;
 
+		//! Push entry to stack
 		m_MessageList.push_back(Entry);
 	}
 

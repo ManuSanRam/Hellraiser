@@ -32,7 +32,6 @@
 
 #include "HRUtility_StringUtil.h"
 #include "HRUtility_Time.h"
-#include "HRUtility_Datastream.h"
 
 namespace HR_SDK
 {

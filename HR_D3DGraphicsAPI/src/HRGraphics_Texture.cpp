@@ -1,23 +1,32 @@
-/*!************************************************************************************************************************************************************************
-*
-*	@file		HRCore_Application.h
-*
-*	This file contains the declaration of class C_Application.
-*	This class is used as an interface to create, control and render applications in any platform.
-*	The basic functions of this class are:
-*	- Initialize: Starts the application, passing any parameters to correctly start up the application.
-*	- Update: Updates the application's window and the logic of the application.
-*	-
-*
-*	@date			26-09-2016
-*	@author			Manuel Aldair Santos Ramón (ManuSanRam)
-*	@copyright		Infernal Coders S.A.
-*
-***************************************************************************************************************************************************************************/
 #include "HRGraphics_Texture.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "externals/stb_image.h"
 #include <d3d11.h>
+
+
+
+/*!******************************************************************************************************************************************************************************
+
+	@file		HRGraphics_Texture.cpp
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	This file contains the declaration of class C_Application.
+	This class is used as an interface to create, control and render applications in any platform.
+	The basic functions of this class are:
+	- Initialize: Starts the application, passing any parameters to correctly start up the application.
+	- Update: Updates the application's window and the logic of the application.
+	-
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	@date			26-09-2016
+	@author			Manuel Aldair Santos Ramón (ManuSanRam)
+	@copyright		Infernal Coders S.A.
+
+********************************************************************************************************************************************************************************/
+
+
 
 namespace HR_SDK
 {
@@ -69,6 +78,9 @@ namespace HR_SDK
 		ID3D11Texture2D* Texture;
 	};
 	
+
+
+
 	bool C_Texture::CreateFromFile
 	(
 		const String&			_FileName,
@@ -130,6 +142,9 @@ namespace HR_SDK
 		stbi_image_free(ImageData);
 		return true;
 	}
+
+
+
 
 	void C_Texture::Close()
 	{
